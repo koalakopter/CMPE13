@@ -43,21 +43,21 @@ int main()
         printf("Atan2 returned %f and should return %f\r\n", mathAtan2, .4918);
 
         //test for AddTwoNumbers
-        int test;
-        test = AddTwoNumbers(5, 2);
-        printf("Performing the AddTwoNumbers function yields: %d \n", (int) test);
+        int test, x = 13, y = 10;
+        test = AddTwoNumbers(x, y);
+        printf("Adding %d and %d with AddTwoNumbers yields: %d \n", (int) x, (int) y, (int) test);
 
         //test for IncrementByOne
-        int test2;
+        int test2, z = 68;
         test2 = IncrementByOne(68);
-        printf("Performing the IncrementByOne function yields: %d \n", (int) test2);
-        
+        printf("Performing the IncrementByOne function on: %d yields: %d \n", (int)z, (int) test2);
+
         //testing the Bigger function, which takes two inputs and returns the greater number
         int big = 420;
         int small = 69;
-        
+
         int compare = Bigger(big, small);
-        printf("Comparing two numbers, %d and %d. Should return: %d", (int)big, (int)small, (int)big);
+        printf("Comparing two numbers, %d and %d. Should return: %d \n", (int) big, (int) small, (int) big);
         /*************************************************************************************************/
 
         // You can never return from main() in an embedded system (one that lacks an operating system).
@@ -66,6 +66,7 @@ int main()
     }
 }
 //defining the "Bigger" Function
+
 int Bigger(int x, int y)
 {
     if (x >= y) {
