@@ -51,6 +51,13 @@ int main()
         int test2;
         test2 = IncrementByOne(68);
         printf("Performing the IncrementByOne function yields: %d \n", (int) test2);
+        
+        //testing the Bigger function, which takes two inputs and returns the greater number
+        int big = 420;
+        int small = 69;
+        
+        int compare = Bigger(big, small);
+        printf("Comparing two numbers, %d and %d. Should return: %d", (int)big, (int)small, (int)big);
         /*************************************************************************************************/
 
         // You can never return from main() in an embedded system (one that lacks an operating system).
