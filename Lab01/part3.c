@@ -5,6 +5,7 @@
 
 //CMPE13 Support Library
 #include "BOARD.h"
+#include "SimpleMath.h"
 
 // Microchip libraries
 #include <xc.h>
