@@ -57,7 +57,7 @@ int main()
         int small = 69;
 
         int compare = Bigger(big, small);
-        printf("Comparing two numbers, %d and %d. Should return: %d \n", (int) big, (int) small, (int) big);
+        printf("Comparing two numbers, %d and %d. Should return: %d \n", (int) big, (int) small, (int) compare);
         /*************************************************************************************************/
 
         // You can never return from main() in an embedded system (one that lacks an operating system).
