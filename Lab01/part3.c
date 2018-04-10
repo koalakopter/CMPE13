@@ -28,7 +28,7 @@
 #define DY (QY-PY)
 //define bigger function
 
-int Bigger(int x, int y);
+
 
 int main()
 {
@@ -66,15 +66,6 @@ int main()
         while (1);
     }
 }
-//defining the "Bigger" Function
 
-int Bigger(int x, int y)
-{
-    if (x >= y) {
-        return x;
-    } else {
-        return y;
-    }
-}
 
 
