@@ -23,6 +23,7 @@
  *****************************************************************************/
 double Round(double operand);
 
+double AbsoluteValue(double operand);
 
 
 
@@ -46,7 +47,15 @@ int their_main(void)
     /******************************************************************************
      * Your code goes in between this comment and the following one with asterisks.
      *****************************************************************************/
+    //welcome messages
     printf("Welcome to the calculator!\n");
+    printf("Please choose a program to perform\n");
+    printf("Available commands: *, /, +, -, v, a, c, f, t, r\n");
+    
+    char command[5];
+    scanf("%c", &command);
+    
+    printf("Chosen command was: %c", command);
 
 
 
@@ -60,7 +69,14 @@ int their_main(void)
 /********************************************************************************
  * Define the Absolute Value function here.
  ********************************************************************************/
-
+double AbsoluteValue(double x)
+{
+    if (x >= 0) {
+        return x;
+    } else {
+        return x*-1;
+    }
+}
 
 
 /*********************************************************************************
