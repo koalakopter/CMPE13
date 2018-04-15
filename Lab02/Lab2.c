@@ -31,9 +31,9 @@ double CelsiusToFarenheit(double operand);
 
 double Tangent(double operand);
 
-double Average(double operand);
+double Average(double operand, double operand2);
 
-double Multiplication(double operand, double operand2); 
+double Multiplication(double operand, double operand2);
 
 double Division(double operand, double operand2);
 
@@ -65,10 +65,10 @@ int their_main(void)
     printf("Welcome to the calculator!\n");
     printf("Please choose a program to perform\n");
     printf("Available commands: *, /, +, -, v, a, c, f, t, r\n");
-    
+
     char command[5];
     scanf("%c", &command);
-    
+
     printf("Chosen command was: %c", command);
 
 
@@ -92,30 +92,71 @@ double AbsoluteValue(double x)
     }
 }
 
-
 /*********************************************************************************
  * Define the Fahrenheit to Celsius function here.
  ********************************************************************************/
-
-
+double FarenheitToCelsius(double x)
+{
+    x = (x - 32.0)*(5 / 9);
+    return x;
+}
 
 /*********************************************************************************
  * Define the Celsius to Fahrenheit function here.
  ********************************************************************************/
-
-
+double CelsiusToFarenheit(double x)
+{
+    x = (x * 1.8) + 32;
+    return x;
+}
 
 /********************************************************************************
  * Define the Average function here.
  *******************************************************************************/
-
-
+double Average(double x, double y)
+{
+    return (x + y) / 2.0;
+}
 
 /*********************************************************************************
  * Define the Tangent function that takes input in degrees (Note: Your tangent 
  * function relies on a call from the tangent function of math.h which uses 
  * radians).
  ********************************************************************************/
+double Tangent(double x)
+{
+    x = x * (M_PI / 180.0);
+    return tan(x);
+}
+
+//arithmetic operations
+
+double Multiplication(double x, double y)
+{
+    double z = x * y;
+    return z;
+}
+
+double Division(double x, double y)
+{
+    if (y = 0) {
+        return 0;
+    } else {
+        return x / y;
+    }
+}
+
+double Subtraction(double x, double y)
+{
+    double z = x - y;
+    return z;
+}
+
+double Addition(double x, double y)
+{
+    double z = x + y;
+    return z;
+}
 
 /*********************************************************************************
  * Define the Round function here.
