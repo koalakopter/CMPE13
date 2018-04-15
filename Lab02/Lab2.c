@@ -25,7 +25,21 @@ double Round(double operand);
 
 double AbsoluteValue(double operand);
 
+double FarenheitToCelsius(double operand);
 
+double CelsiusToFarenheit(double operand);
+
+double Tangent(double operand);
+
+double Average(double operand);
+
+double Multiplication(double operand, double operand2); 
+
+double Division(double operand, double operand2);
+
+double Addition(double operand, double operand2);
+
+double Subtraction(double operand, double operand2);
 
 /******************************************************************************
  * Your function prototypes go in between this comment and the preceding one with asterisks
