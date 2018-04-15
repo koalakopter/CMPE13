@@ -16,7 +16,7 @@
 // **** Set macros and preprocessor directives ****
 
 // **** Define global, module-level, or external variables here ****
-
+double operand, operand2;
 // **** Declare function prototypes ****
 /******************************************************************************
  * Your function prototypes go in between this comment and the following one with asterisks.
@@ -62,109 +62,113 @@ int their_main(void)
      * Your code goes in between this comment and the following one with asterisks.
      *****************************************************************************/
     //welcome messages
-    printf("Welcome to the calculator!\n");
-    printf("Please choose a program to perform\n");
-    printf("Available commands: *, /, +, -, v, a, c, f, t, r\n");
+    while (1) {
+        printf("Welcome to the calculator!\n");
+        printf("Please choose a program to perform\n");
+        printf("Available commands: (mult)*\n (div)/\n (add)+\n (sub)-\n (avg)v\n |abs|a\n (F->C)c\n (C->F)f\n (tan)t\n (round)r\n");
 
-    char command[5];
-    scanf("%c", &command);
-
-    printf("Chosen command was: %c", command);
-
+        char command;
+        scanf("%c", &command);
 
 
+        printf("\nChosen command was: %c", command);
+        
+        printf("Please input a number:")
+        
+        scanf("%f", &operand);
+        printf("chosen operand is %f", operand); //for test
+    }
+        /******************************************************************************
+         * Your code goes in between this comment and the preceding one with asterisks
+         *****************************************************************************/
+        while (1);
+    }
 
-    /******************************************************************************
-     * Your code goes in between this comment and the preceding one with asterisks
-     *****************************************************************************/
-    while (1);
-}
+    /********************************************************************************
+     * Define the Absolute Value function here.
+     ********************************************************************************/
+    double AbsoluteValue(double x)
+    {
+        if (x >= 0) {
+            return x;
+        } else {
+            return x*-1;
+        }
+    }
 
-/********************************************************************************
- * Define the Absolute Value function here.
- ********************************************************************************/
-double AbsoluteValue(double x)
-{
-    if (x >= 0) {
+    /*********************************************************************************
+     * Define the Fahrenheit to Celsius function here.
+     ********************************************************************************/
+    double FarenheitToCelsius(double x)
+    {
+        x = (x - 32.0)*(5 / 9);
         return x;
-    } else {
-        return x*-1;
     }
-}
 
-/*********************************************************************************
- * Define the Fahrenheit to Celsius function here.
- ********************************************************************************/
-double FarenheitToCelsius(double x)
-{
-    x = (x - 32.0)*(5 / 9);
-    return x;
-}
-
-/*********************************************************************************
- * Define the Celsius to Fahrenheit function here.
- ********************************************************************************/
-double CelsiusToFarenheit(double x)
-{
-    x = (x * 1.8) + 32;
-    return x;
-}
-
-/********************************************************************************
- * Define the Average function here.
- *******************************************************************************/
-double Average(double x, double y)
-{
-    return (x + y) / 2.0;
-}
-
-/*********************************************************************************
- * Define the Tangent function that takes input in degrees (Note: Your tangent 
- * function relies on a call from the tangent function of math.h which uses 
- * radians).
- ********************************************************************************/
-double Tangent(double x)
-{
-    x = x * (M_PI / 180.0);
-    return tan(x);
-}
-
-//arithmetic operations
-
-double Multiplication(double x, double y)
-{
-    double z = x * y;
-    return z;
-}
-
-double Division(double x, double y)
-{
-    if (y = 0) {
-        return 0;
-    } else {
-        return x / y;
+    /*********************************************************************************
+     * Define the Celsius to Fahrenheit function here.
+     ********************************************************************************/
+    double CelsiusToFarenheit(double x)
+    {
+        x = (x * 1.8) + 32;
+        return x;
     }
-}
 
-double Subtraction(double x, double y)
-{
-    double z = x - y;
-    return z;
-}
+    /********************************************************************************
+     * Define the Average function here.
+     *******************************************************************************/
+    double Average(double x, double y)
+    {
+        return (x + y) / 2.0;
+    }
 
-double Addition(double x, double y)
-{
-    double z = x + y;
-    return z;
-}
+    /*********************************************************************************
+     * Define the Tangent function that takes input in degrees (Note: Your tangent 
+     * function relies on a call from the tangent function of math.h which uses 
+     * radians).
+     ********************************************************************************/
+    double Tangent(double x)
+    {
+        x = x * (M_PI / 180.0);
+        return tan(x);
+    }
 
-/*********************************************************************************
- * Define the Round function here.
- * In order to receive the extra credit your calculator MUST ALSO CORRECTLY utilize
- * this function.
- ********************************************************************************/
-double Round(double operand)
-{
-    return operand;
-}
+    //arithmetic operations
+
+    double Multiplication(double x, double y)
+    {
+        double z = x * y;
+        return z;
+    }
+
+    double Division(double x, double y)
+    {
+        if (y = 0) {
+            return 0;
+        } else {
+            return x / y;
+        }
+    }
+
+    double Subtraction(double x, double y)
+    {
+        double z = x - y;
+        return z;
+    }
+
+    double Addition(double x, double y)
+    {
+        double z = x + y;
+        return z;
+    }
+
+    /*********************************************************************************
+     * Define the Round function here.
+     * In order to receive the extra credit your calculator MUST ALSO CORRECTLY utilize
+     * this function.
+     ********************************************************************************/
+    double Round(double operand)
+    {
+        return operand;
+    }
 
