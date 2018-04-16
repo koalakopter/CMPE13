@@ -17,6 +17,7 @@
 
 // **** Define global, module-level, or external variables here ****
 double operand, operand2, output;
+char command;
 int out;
 // **** Declare function prototypes ****
 /******************************************************************************
@@ -64,11 +65,14 @@ int their_main(void)
      *****************************************************************************/
     //welcome messages
     while (1) {
+        //reset inputs
+        operand = 0;
+        operand2 = 0;
         printf("Welcome to the calculator!\n");
         printf("Please choose a program to perform\n");
         printf("Available commands: (mult)*\n (div)/\n (add)+\n (sub)-\n (avg)v\n |abs|a\n (F->C)c\n (C->F)f\n (tan)t\n (round)r\n");
 
-        char command;
+
         scanf("%c", &command);
 
 
@@ -79,48 +83,56 @@ int their_main(void)
         scanf("%f", &operand);
         printf("chosen operand is %f\n", operand); //for test
 
+        //if a second operator is needed
+        if (command == '*', '/', '+', '-', 'v') {
+            printf("\nPlease input a second number:");
+            scanf("%f", &operand2);
+            printf("chosen second operand is %f\n", operand2); //for test
+        }
+
         //absolute value
-        if (command = 'a') {
+        if (command == 'a') {
             output = AbsoluteValue(operand);
             printf("The Absolute Value of %f is: %f\n\n", operand, output);
         }//Fahrenheit to Celsius
-        else if (command = 'c') {
+        else if (command == 'c') {
             output = FarenheitToCelsius(operand);
             printf("%f in Celsius is: %f", operand, output);
         }//Celsius to Fahrenheit
-        else if (command = 'f') {
+        else if (command == 'f') {
             output = CelsiusToFarenheit(operand);
             printf("%f in Fahrenheit is: %f", operand, output);
             //average value
-        } else if (command = 'v') {
+        } else if (command == 'v') {
             output = Average(operand, operand2);
             printf("The average of %f and %f is: %f", operand, operand2, output);
             //tangent
-        } else if (command = 't') {
+        } else if (command == 't') {
             output = Tangent(operand);
             printf("Tangent of %f degrees is: %f", operand, output);
             //multiplication
-        } else if (command = '*') {
+        } else if (command == '*') {
             output = Multiplication(operand, operand2);
             printf("Multiplying %f and %f results in: %f", operand, operand2, output);
             //division
-        } else if (command = '/') {
+        } else if (command == '/') {
             output = Division(operand, operand2);
             printf("Dividing %f and %f results in: %f", operand, operand2, output);
             //addition
-        } else if (command = '+') {
+        } else if (command == '+') {
             output = Addition(operand, operand2);
             printf("Adding %f and %f results in: %f", operand, operand2, output);
             //subtraction
-        } else if (command = '-') {
+        } else if (command == '-') {
             output = Subtraction(operand, operand2);
             printf("Subtracting %f and %f results in: %f", operand, operand2, output);
         }//round (extra credit)
-        else if (command = 'r') {
+        else if (command == 'r') {
             output = Round(operand);
             printf("Rounding %f to the nearest integer gives: %f", operand, output);
         } else {
             printf("Not a valid command, Please try again");
+            
         }
     }
     /******************************************************************************
@@ -214,14 +226,13 @@ double Addition(double x, double y)
  ********************************************************************************/
 double Round(double operand)
 {
-    if(operand >= 0){
+    if (operand >= 0) {
         out = operand + 0.5;
         return out;
-    }
-    else {
+    } else {
         out = operand - 0.5;
         return out;
     }
-        
+
 }
 
