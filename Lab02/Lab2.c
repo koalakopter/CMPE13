@@ -16,7 +16,7 @@
 // **** Set macros and preprocessor directives ****
 
 // **** Define global, module-level, or external variables here ****
-double operand, operand2;
+double operand, operand2, output;
 // **** Declare function prototypes ****
 /******************************************************************************
  * Your function prototypes go in between this comment and the following one with asterisks.
@@ -73,10 +73,34 @@ int their_main(void)
 
         printf("\nChosen command was: %c", command);
         
-        printf("Please input a number:")
+        printf("\nPlease input a number:");
         
         scanf("%f", &operand);
-        printf("chosen operand is %f", operand); //for test
+        printf("chosen operand is %f\n", operand); //for test
+        
+        //absolute value
+        if (command = 'a')
+        {
+            output = AbsoluteValue(operand);
+            printf("The Absolute Value of %f is: %f\n\n", operand, output);
+        }
+        //Fahrenheit to Celsius
+        else if (command = 'c')
+        {
+            output = FarenheitToCelsius(operand);
+            printf("%f in Celsius is: %f", operand, output);
+        }
+        //Celsius to Fahrenheit
+        else if (command = 'f')
+        {
+            output = CelsiusToFarenheit(operand);
+            printf("%f in Fahrenheit is: %f", operand, output);
+        }
+        else if (command = 'v')
+        {
+            output = Average(operand, operand2);
+            printf("The average of %f and %f is: %f", operand, operand2, output);
+        }
     }
         /******************************************************************************
          * Your code goes in between this comment and the preceding one with asterisks
