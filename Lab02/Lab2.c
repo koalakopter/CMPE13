@@ -68,25 +68,26 @@ int their_main(void)
         //reset inputs
         operand = 0;
         operand2 = 0;
+        command = '\0';
+        
         printf("Welcome to Julian's calculator program!\n");
-        printf("Please choose a program to perform\n");
         printf("Available commands: (mult)*\n (div)/\n (add)+\n (sub)-\n (avg)v\n |abs|a\n (F->C)c\n (C->F)f\n (tan)t\n (round)r\n");
 
-
-        scanf("%c", &command);
+        printf("Please choose a command to perform\n");
+        scanf(" %c", &command);
 
 
         printf("\nChosen command was: %c", command);
 
         printf("\nPlease input a number:");
 
-        scanf("%f", &operand);
+        scanf(" %f", &operand);
         printf("chosen operand is %f\n", operand); //for test
 
         //if a second operator is needed
-        if (command == '*' || '/' || '+' || '-' || 'v') {
+        if (command == '*' || command == '/' || command == '+' || command == '-' || command == 'v') {
             printf("\nPlease input a second number:");
-            scanf("%f", &operand2);
+            scanf(" %f", &operand2);
             printf("chosen second operand is %f\n", operand2); //for test
         }
 
@@ -135,6 +136,9 @@ int their_main(void)
             
         }
         printf("\n\n\n\n"); //newline buffer to make things look nicer
+        
+        char stuff;
+        //some other stuff for cleanliness
     }
     /******************************************************************************
      * Your code goes in between this comment and the preceding one with asterisks
@@ -201,7 +205,8 @@ double Multiplication(double x, double y)
 
 double Division(double x, double y)
 {
-    if (y = 0) {
+    if (y == 0) {
+        printf("\nERROR DIVIDE BY ZERO WHAT HAVE YOU DONE\n");
         return 0;
     } else {
         return x / y;
@@ -216,7 +221,7 @@ double Subtraction(double x, double y)
 
 double Addition(double x, double y)
 {
-    double z = x + y;
+    double z = x + y
     return z;
 }
 
