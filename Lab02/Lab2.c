@@ -221,7 +221,7 @@ double Subtraction(double x, double y)
 
 double Addition(double x, double y)
 {
-    double z = x + y
+    double z = x + y;
     return z;
 }
 
