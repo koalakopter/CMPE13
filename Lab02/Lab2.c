@@ -27,9 +27,9 @@ double Round(double operand);
 
 double AbsoluteValue(double operand);
 
-double FarenheitToCelsius(double operand);
+double FahrenheitToCelsius(double operand);
 
-double CelsiusToFarenheit(double operand);
+double CelsiusToFahrenheit(double operand);
 
 double Tangent(double operand);
 
@@ -68,7 +68,7 @@ int their_main(void)
         //reset inputs
         operand = 0;
         operand2 = 0;
-        printf("Welcome to the calculator!\n");
+        printf("Welcome to Julian's calculator program!\n");
         printf("Please choose a program to perform\n");
         printf("Available commands: (mult)*\n (div)/\n (add)+\n (sub)-\n (avg)v\n |abs|a\n (F->C)c\n (C->F)f\n (tan)t\n (round)r\n");
 
@@ -84,7 +84,7 @@ int their_main(void)
         printf("chosen operand is %f\n", operand); //for test
 
         //if a second operator is needed
-        if (command == '*', '/', '+', '-', 'v') {
+        if (command == '*' || '/' || '+' || '-' || 'v') {
             printf("\nPlease input a second number:");
             scanf("%f", &operand2);
             printf("chosen second operand is %f\n", operand2); //for test
@@ -96,12 +96,12 @@ int their_main(void)
             printf("The Absolute Value of %f is: %f\n\n", operand, output);
         }//Fahrenheit to Celsius
         else if (command == 'c') {
-            output = FarenheitToCelsius(operand);
-            printf("%f in Celsius is: %f", operand, output);
+            output = FahrenheitToCelsius(operand);
+            printf("%fFahrenheit in Celsius is: %f", operand, output);
         }//Celsius to Fahrenheit
         else if (command == 'f') {
-            output = CelsiusToFarenheit(operand);
-            printf("%f in Fahrenheit is: %f", operand, output);
+            output = CelsiusToFahrenheit(operand);
+            printf("%fCelsius in Fahrenheit is: %f", operand, output);
             //average value
         } else if (command == 'v') {
             output = Average(operand, operand2);
@@ -134,6 +134,7 @@ int their_main(void)
             printf("Not a valid command, Please try again");
             
         }
+        printf("\n\n\n\n"); //newline buffer to make things look nicer
     }
     /******************************************************************************
      * Your code goes in between this comment and the preceding one with asterisks
@@ -156,7 +157,7 @@ double AbsoluteValue(double x)
 /*********************************************************************************
  * Define the Fahrenheit to Celsius function here.
  ********************************************************************************/
-double FarenheitToCelsius(double x)
+double FahrenheitToCelsius(double x)
 {
     x = (x - 32.0)*(5 / 9);
     return x;
@@ -165,7 +166,7 @@ double FarenheitToCelsius(double x)
 /*********************************************************************************
  * Define the Celsius to Fahrenheit function here.
  ********************************************************************************/
-double CelsiusToFarenheit(double x)
+double CelsiusToFahrenheit(double x)
 {
     x = (x * 1.8) + 32;
     return x;
