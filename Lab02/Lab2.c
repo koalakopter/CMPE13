@@ -19,6 +19,7 @@
 double operand, operand2, output;
 char command;
 int out;
+#define FRACTION 5/9 
 // **** Declare function prototypes ****
 /******************************************************************************
  * Your function prototypes go in between this comment and the following one with asterisks.
@@ -70,8 +71,9 @@ int their_main(void)
         operand2 = 0;
         command = '\0';
         
+        //welcome messages
         printf("Welcome to Julian's calculator program!\n");
-        printf("Available commands: (mult)*\n (div)/\n (add)+\n (sub)-\n (avg)v\n |abs|a\n (F->C)c\n (C->F)f\n (tan)t\n (round)r\n");
+        printf("Available commands: \n (mult)*\n (div)/\n (add)+\n (sub)-\n (avg)v\n |abs|a\n (F->C)c\n (C->F)f\n (tan)t\n (round)r\n");
 
         printf("Please choose a command to perform\n");
         scanf(" %c", &command);
@@ -90,7 +92,7 @@ int their_main(void)
             scanf(" %f", &operand2);
             printf("chosen second operand is %f\n", operand2); //for test
         }
-
+        /*COMMAND STATEMENTS WITH OUTPUT STRINGS SECTIONS*/
         //absolute value
         if (command == 'a') {
             output = AbsoluteValue(operand);
@@ -98,11 +100,11 @@ int their_main(void)
         }//Fahrenheit to Celsius
         else if (command == 'c') {
             output = FahrenheitToCelsius(operand);
-            printf("%fFahrenheit in Celsius is: %f", operand, output);
+            printf("%f Fahrenheit in Celsius is: %f", operand, output);
         }//Celsius to Fahrenheit
         else if (command == 'f') {
             output = CelsiusToFahrenheit(operand);
-            printf("%fCelsius in Fahrenheit is: %f", operand, output);
+            printf("%f Celsius in Fahrenheit is: %f", operand, output);
             //average value
         } else if (command == 'v') {
             output = Average(operand, operand2);
@@ -137,7 +139,7 @@ int their_main(void)
         }
         printf("\n\n\n\n"); //newline buffer to make things look nicer
         
-        char stuff;
+        //char stuff;
         //some other stuff for cleanliness
     }
     /******************************************************************************
@@ -163,7 +165,7 @@ double AbsoluteValue(double x)
  ********************************************************************************/
 double FahrenheitToCelsius(double x)
 {
-    x = (x - 32.0)*(5 / 9);
+    x = (x - 32.0)*FRACTION; 
     return x;
 }
 
