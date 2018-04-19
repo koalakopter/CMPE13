@@ -76,7 +76,7 @@ int their_main(void)
         printf("Available commands: \n (mult)*\n (div)/\n (add)+\n (sub)-\n (avg)v\n |abs|a\n (F->C)c\n (C->F)f\n (tan)t\n (round)r\n");
 
         printf("Please choose a command to perform\n");
-        scanf(" %c", &command);
+        scanf(" %c%*c", &command);
 
 
         printf("\nChosen command was: %c", command);
@@ -135,12 +135,10 @@ int their_main(void)
             printf("Rounding %f to the nearest integer gives: %f", operand, output);
         } else {
             printf("Not a valid command, Please try again");
-            
+            command = '0';
         }
         printf("\n\n\n\n"); //newline buffer to make things look nicer
         
-        //char stuff;
-        //some other stuff for cleanliness
     }
     /******************************************************************************
      * Your code goes in between this comment and the preceding one with asterisks
