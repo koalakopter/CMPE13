@@ -31,7 +31,7 @@ int MatrixEquals(float a[3][3], float b[3][3])
     return 1;
 }
 
-int counter; //just to keep track of things
+float counter; //just to keep track of things
 
 void MatrixMultiply(float a[3][3], float b[3][3], float c[3][3])
 {
@@ -88,10 +88,14 @@ void MatrixScalarAdd(float s, float a[3][3], float b[3][3])
 //calculates the cross product, or determinant, of a 3 by 3 matrix
 //formula for a cross product 
 // a11[(a22*a33)-(a23*a32)] - a12[(a21*a33)-(a23*a31)] + a13[(a21*a32)-(a22*a31)]
-float MatrixDeterminat(a[3][3])
+// arrays start at zero so subtract 1 from every subscript
+
+float MatrixDeterminant(float a[3][3])
 {
     counter = 0;
-
+    counter += ((a[1][1] * a[2][2])-(a[1][2] * a[2][1])) * a[0][0];
+    counter -= ((a[1][0] * a[2][2])-(a[1][2] * a[2][0])) * a[0][1];
+    counter += ((a[1][0] * a[2][1])-(a[1][1] * a[2][0])) * a[0][2];
     return counter;
 }
 
