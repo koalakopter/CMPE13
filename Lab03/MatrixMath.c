@@ -99,6 +99,18 @@ float MatrixDeterminant(float a[3][3])
     return counter;
 }
 
+//calculates the trace of a matrix,
+//which is just the sum of the elements in a top-left to bottom-right diagonal
+float MatrixTrace(float a[3][3])
+{
+    counter = 0;
+    for(x = 0; x < 3; x++)
+    {
+        counter += a[x][x];
+    }
+    return counter;
+}
+
 //prints the contents of a 3 by 3 matrix into a nice little grid
 
 void MatrixPrint(float a[3][3])
