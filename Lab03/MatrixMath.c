@@ -31,11 +31,17 @@ int MatrixEquals(float a[3][3], float b[3][3])
     return 1;
 }
 
+int counter; //just to keep track of things
 void MatrixMultiply(float a[3][3], float b[3][3], float c[3][3])
 {
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
-
+            counter = 0; //start the counter at zero
+            counter += (a[x][0]*b[0][y]);
+            counter += (a[x][1]*b[1][y]);
+            counter += (a[x][2]*b[2][y]);
+            
+            c[x][y] = counter;
         }
 
     }
