@@ -14,7 +14,7 @@
 
 // User libraries
 #include "MatrixMath.h"
-#include "MatrixMath.c"
+
 // **** Set macros and preprocessor directives ****
 
 // **** Define global, module-level, or external variables here ****
@@ -28,9 +28,24 @@ int main()
     /******************************************************************************
      * Your code goes in between this comment and the following one with asterisks.
      *****************************************************************************/
-   //me test
-    //float one[3][3] = {{1,2,3},{4,5,6},{7,8,9}};
-    //float two[3][3] = {{1,2,3},{4,5,6},{7,8,9}};
+    //me test
+    float one[3][3] = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}};
+    float two[3][3] = {
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9}};
+    
+    int x,y;
+    for (x = 0; x < 3; x++) {
+        for (y = 0; y < 3; y++) {
+            printf("%f and %f \n", one[x][y], two[x][y]);
+            }
+        }
+    int z = MatrixEquals(one, two);
+    printf ("result is %d, should be one", z);
 
 
     /******************************************************************************
