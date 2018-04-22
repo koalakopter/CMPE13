@@ -32,20 +32,22 @@ int MatrixEquals(float a[3][3], float b[3][3])
 }
 
 int counter; //just to keep track of things
+
 void MatrixMultiply(float a[3][3], float b[3][3], float c[3][3])
 {
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
             counter = 0; //start the counter at zero
-            counter += (a[x][0]*b[0][y]);
-            counter += (a[x][1]*b[1][y]);
-            counter += (a[x][2]*b[2][y]);
-            
+            counter += (a[x][0] * b[0][y]);
+            counter += (a[x][1] * b[1][y]);
+            counter += (a[x][2] * b[2][y]);
+
             c[x][y] = counter;
         }
 
     }
 }
+//adds two 3 by 3 matrices together, self-explanatory
 
 void MatrixAdd(float a[3][3], float b[3][3], float c[3][3])
 {
@@ -55,6 +57,42 @@ void MatrixAdd(float a[3][3], float b[3][3], float c[3][3])
         }
 
     }
+}
+
+//multiplies a 3 by 3 matrix by a scalar
+//s is the scalar
+
+void MatrixScalarMultiply(float s, float a[3][3], float b[3][3])
+{
+    for (x = 0; x < 3; x++) {
+        for (y = 0; y < 3; y++) {
+            b[x][y] = (s * a[x][y]);
+        }
+
+    }
+}
+
+//adds a 3 by 3 matrix with a scalar
+//x is the scalar
+
+void MatrixScalarAdd(float s, float a[3][3], float b[3][3])
+{
+    for (x = 0; x < 3; x++) {
+        for (y = 0; y < 3; y++) {
+            b[x][y] = (s + a[x][y]);
+        }
+
+    }
+}
+
+//calculates the cross product, or determinant, of a 3 by 3 matrix
+//formula for a cross product 
+// a11[(a22*a33)-(a23*a32)] - a12[(a21*a33)-(a23*a31)] + a13[(a21*a32)-(a22*a31)]
+float MatrixDeterminat(a[3][3])
+{
+    counter = 0;
+
+    return counter;
 }
 
 //prints the contents of a 3 by 3 matrix into a nice little grid
