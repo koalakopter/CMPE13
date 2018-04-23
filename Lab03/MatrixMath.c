@@ -1,4 +1,5 @@
 #include "MatrixMath.h"
+#include <stdio.h>
 
 /* Im gonna need this a lot
      for (x = 0; x < 3; x++) {
@@ -101,14 +102,34 @@ float MatrixDeterminant(float a[3][3])
 
 //calculates the trace of a matrix,
 //which is just the sum of the elements in a top-left to bottom-right diagonal
+
 float MatrixTrace(float a[3][3])
 {
     counter = 0;
-    for(x = 0; x < 3; x++)
-    {
+    for (x = 0; x < 3; x++) {
         counter += a[x][x];
     }
     return counter;
+}
+
+//Transpose the matrix into the output matrix
+//flip the columns and rows, is all it really does
+
+void MatrixTranspose(float a[3][3], float b[3][3])
+{
+    float c[3][3];
+    //setting matrix c equal to a, just in case the two arguments are the same matrix
+    for (x = 0; x < 3; x++) {
+        for (y = 0; y < 3; y++) {
+            c[x][y] = a[x][y];
+        }
+    }
+    //flip the rows and columns, referencing only the copied matrix, c
+    for (x = 0; x < 3; x++) {
+        for (y = 0; y < 3; y++) {
+            b[x][y] = c[y][x]; //flip the rows and columns
+        }
+    }
 }
 
 //prints the contents of a 3 by 3 matrix into a nice little grid
@@ -118,7 +139,7 @@ void MatrixPrint(float a[3][3])
     for (x = 0; x < 3; x++) {
         printf("\n | ");
         for (y = 0; y < 3; y++) {
-            printf("%f, ", a[x][y]);
+            printf("%f, ", (double) a[x][y]); //cast to double so we don't get stinky error messages
         }
         printf(" | ");
     }
