@@ -93,7 +93,7 @@ void MatrixScalarAdd(float s, float a[3][3], float b[3][3])
 
 float MatrixDeterminant(float a[3][3])
 {
-    counter = 0;
+    counter = 0.0;
     counter += ((a[1][1] * a[2][2])-(a[1][2] * a[2][1])) * a[0][0];
     counter -= ((a[1][0] * a[2][2])-(a[1][2] * a[2][0])) * a[0][1];
     counter += ((a[1][0] * a[2][1])-(a[1][1] * a[2][0])) * a[0][2];
@@ -132,6 +132,41 @@ void MatrixTranspose(float a[3][3], float b[3][3])
     }
 }
 
+//Matrix Inverse function
+
+void MatrixInverse(float a[3][3], float b[3][3])
+{
+    float c[3][3];
+    //setting matrix c equal to a, just in case the two arguments are the same matrix
+    for (x = 0; x < 3; x++) {
+        for (y = 0; y < 3; y++) {
+            c[x][y] = a[x][y];
+        }
+    }
+
+    //actual function stuff now
+    float det = MatrixDeterminant(c);
+    if(det == 0){
+        
+    }
+    det = 1.0 / det;
+
+    //not very fun calculations
+    b[0][0] = (c[1][1] * c[2][2]) - (c[1][2] * c[2][1]);
+    b[0][1] = (c[0][2] * c[2][1]) - (c[0][1] * c[2][2]);
+    b[0][2] = (c[0][1] * c[1][2]) - (c[0][2] * c[1][1]);
+
+    b[1][0] = (c[1][2] * c[2][0]) - (c[1][0] * c[2][2]);
+    b[1][1] = (c[0][0] * c[2][2]) - (c[0][2] * c[2][0]);
+    b[1][2] = (c[0][2] * c[1][0]) - (c[0][0] * c[1][2]);
+
+    b[2][0] = (c[1][0] * c[2][1]) - (c[1][1] * c[2][0]);
+    b[2][1] = (c[0][1] * c[2][0]) - (c[0][0] * c[2][1]);
+    b[2][2] = (c[0][0] * c[1][1]) - (c[0][1] * c[1][0]);
+    
+    //multiply by the determinant
+    MatrixScalarMultiply(det, b, b);
+}
 //prints the contents of a 3 by 3 matrix into a nice little grid
 
 void MatrixPrint(float a[3][3])
