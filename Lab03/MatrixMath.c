@@ -133,6 +133,7 @@ void MatrixTranspose(float a[3][3], float b[3][3])
 }
 
 //Matrix Inverse function
+//returns the same matrix if determinant is zero (not invertable)
 
 void MatrixInverse(float a[3][3], float b[3][3])
 {
@@ -146,26 +147,24 @@ void MatrixInverse(float a[3][3], float b[3][3])
 
     //actual function stuff now
     float det = MatrixDeterminant(c);
-    if(det == 0){
+    //do nothing if the determinant is zero
+    if (det != 0) {
+        //not very fun calculations
+        b[0][0] = (c[1][1] * c[2][2]) - (c[1][2] * c[2][1]);
+        b[0][1] = (c[0][2] * c[2][1]) - (c[0][1] * c[2][2]);
+        b[0][2] = (c[0][1] * c[1][2]) - (c[0][2] * c[1][1]);
+
+        b[1][0] = (c[1][2] * c[2][0]) - (c[1][0] * c[2][2]);
+        b[1][1] = (c[0][0] * c[2][2]) - (c[0][2] * c[2][0]);
+        b[1][2] = (c[0][2] * c[1][0]) - (c[0][0] * c[1][2]);
+
+        b[2][0] = (c[1][0] * c[2][1]) - (c[1][1] * c[2][0]);
+        b[2][1] = (c[0][1] * c[2][0]) - (c[0][0] * c[2][1]);
+        b[2][2] = (c[0][0] * c[1][1]) - (c[0][1] * c[1][0]);
         
+        //multiply by the determinant
+        MatrixScalarMultiply(1.0 / det, b, b);
     }
-    det = 1.0 / det;
-
-    //not very fun calculations
-    b[0][0] = (c[1][1] * c[2][2]) - (c[1][2] * c[2][1]);
-    b[0][1] = (c[0][2] * c[2][1]) - (c[0][1] * c[2][2]);
-    b[0][2] = (c[0][1] * c[1][2]) - (c[0][2] * c[1][1]);
-
-    b[1][0] = (c[1][2] * c[2][0]) - (c[1][0] * c[2][2]);
-    b[1][1] = (c[0][0] * c[2][2]) - (c[0][2] * c[2][0]);
-    b[1][2] = (c[0][2] * c[1][0]) - (c[0][0] * c[1][2]);
-
-    b[2][0] = (c[1][0] * c[2][1]) - (c[1][1] * c[2][0]);
-    b[2][1] = (c[0][1] * c[2][0]) - (c[0][0] * c[2][1]);
-    b[2][2] = (c[0][0] * c[1][1]) - (c[0][1] * c[1][0]);
-    
-    //multiply by the determinant
-    MatrixScalarMultiply(det, b, b);
 }
 //prints the contents of a 3 by 3 matrix into a nice little grid
 
