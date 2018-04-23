@@ -63,6 +63,19 @@ int main()
      
     float det = MatrixDeterminant(five);
     printf("determinant is  %f", det);
+    /*
+    MatrixPrint(three);
+    float meme = MatrixTrace(three);
+    printf("trace is %f", meme);
+    
+    MatrixPrint(three);
+    MatrixTranspose(three, three);
+    MatrixPrint(three);*/
+    
+
+    MatrixPrint(five);
+    MatrixInverse(five, five);
+    MatrixPrint(five);
    
 
     /******************************************************************************
