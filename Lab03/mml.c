@@ -134,7 +134,7 @@ int main()
     printf("MatrixScalarMultiply Function tested: %d out of 2 tests successful \n", count3);
 
     //test for MatrixMultiply
-    int count4;
+    int count4 = 0;
     float thirteen[3][3] = {
         {1, 2, 3},
         {4, 6, -3},
@@ -177,7 +177,7 @@ int main()
     printf("MatrixMultiply Function tested: %d out of 2 tests successful \n", count4);
 
     //testing MatrixAdd
-    int count5;
+    int count5 = 0;
     float twenty[3][3] = {
         {-1, -2, -3},
         {-4, -5, -6},
@@ -195,10 +195,10 @@ int main()
     };
     float twentyThree[3][3];
     float twentyFour[3][3];
-    
+
     MatrixAdd(twenty, twentyOne, twentyThree);
     MatrixAdd(twentyTwo, twentyTwo, twentyFour);
-    
+
     int testNine = MatrixEquals(twentyThree, twelve);
     int testTen = MatrixEquals(twentyFour, thirteen);
     if (testNine == 1) {
@@ -208,6 +208,33 @@ int main()
         count5++;
     }
     printf("MatrixAdd Function tested: %d out of 2 tests successful \n", count5);
+
+    //testing MatrixDeterminant function
+    int count6 = 0;
+    float testEleven = MatrixDeterminant(six);
+    float testTwelve = MatrixDeterminant(ten);
+
+    if (testEleven == 0) {
+        count6++;
+    }
+    if (testTwelve == 992.0) {
+        count6++;
+    }
+    printf("MatrixDeterminant Function tested: %d out of 2 tests successful \n", count6);
+    
+    //testing MatrixTrace function
+    int count7 = 0;
+    float testThirteen = MatrixTrace(six);
+    float testFourteen = MatrixTrace(ten);
+
+    if (testThirteen == -45.0) {
+        count7++;
+    }
+    if (testFourteen == -12.0) {
+        count7++;
+    }
+    printf("MatrixTrace Function tested: %d out of 2 tests successful \n", count7);
+    
 
 
 
