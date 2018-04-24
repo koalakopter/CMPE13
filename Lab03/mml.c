@@ -18,16 +18,8 @@
 // **** Set macros and preprocessor directives ****
 
 // **** Define global, module-level, or external variables here ****
-
+int functionPassed;
 // **** Declare function prototypes ****
-//checks if a function passes a test, and if it does, increment a counter
-
-void Checker(int check, int counter)
-{
-    if (check != 1.0) {
-        counter++;
-    }
-}
 
 int main()
 {
@@ -67,6 +59,9 @@ int main()
     if (testTwo == 0) {
         count1++;
     }
+    if (count1 == 2) {
+        functionPassed++;
+    }
     printf("MatrixEquals Function tested: %d out of 2 tests successful \n", count1);
 
     //Testing MatrixScalarAdd
@@ -99,6 +94,9 @@ int main()
     if (testFour == 1) {
         count2++;
     }
+    if (count2 == 2) {
+        functionPassed++;
+    }
     printf("MatrixScalarAdd Function tested: %d out of 2 tests successful \n", count2);
 
     //test for MatrixScalarMultiply
@@ -130,6 +128,9 @@ int main()
     }
     if (testSix == 1) {
         count3++;
+    }
+    if (count3 == 2) {
+        functionPassed++;
     }
     printf("MatrixScalarMultiply Function tested: %d out of 2 tests successful \n", count3);
 
@@ -174,6 +175,9 @@ int main()
     if (testEight == 1) {
         count4++;
     }
+    if (count4 == 2) {
+        functionPassed++;
+    }
     printf("MatrixMultiply Function tested: %d out of 2 tests successful \n", count4);
 
     //testing MatrixAdd
@@ -207,6 +211,9 @@ int main()
     if (testTen == 1) {
         count5++;
     }
+    if (count5 == 2) {
+        functionPassed++;
+    }
     printf("MatrixAdd Function tested: %d out of 2 tests successful \n", count5);
 
     //testing MatrixDeterminant function
@@ -220,8 +227,11 @@ int main()
     if (testTwelve == 992.0) {
         count6++;
     }
+    if (count6 == 2) {
+        functionPassed++;
+    }
     printf("MatrixDeterminant Function tested: %d out of 2 tests successful \n", count6);
-    
+
     //testing MatrixTrace function
     int count7 = 0;
     float testThirteen = MatrixTrace(six);
@@ -233,11 +243,101 @@ int main()
     if (testFourteen == -12.0) {
         count7++;
     }
+    if (count7 == 2) {
+        functionPassed++;
+    }
     printf("MatrixTrace Function tested: %d out of 2 tests successful \n", count7);
-    
 
+    //Testing for Matrix Transpose
+    int count8 = 0;
+    float twentyFive[3][3] = {
+        {1, 4, 7},
+        {2, 5, 8},
+        {3, 6, 9}
+    };
+    float twentySix[3][3] = {
+        {0, 0, 0},
+        {0, 0, 0},
+        {0, 0, 0}
+    };
 
+    MatrixTranspose(one, one);
+    MatrixTranspose(twentySix, twentySix);
 
+    int testFifteen = MatrixEquals(one, twentyFive);
+    int testSixteen = MatrixEquals(twentySix, twelve);
+
+    if (testFifteen == 1) {
+        count8++;
+    }
+    if (testSixteen == 1) {
+        count8++;
+    }
+    if (count8 == 2) {
+        functionPassed++;
+    }
+    printf("MatrixTranspose Function tested: %d out of 2 tests successful \n", count8);
+
+    //test for Matrix Inverse
+    int count9 = 0;
+    //case1: invertable
+    float twentySeven[3][3] = {
+        {2, -3, 6},
+        {-4, 1, 5},
+        {2, 1, -4}
+    };
+    //case2: if the inverse matrix doesn't exist, return the same matrix
+    float twentyEight[3][3] = {
+        {2, 4, 6},
+        {8, 10, 12},
+        {14, 16, 18}
+    };
+    float twentyNine[3][3] = {
+        {1.0 / 4, 1.0 / 6, 7.0 / 12},
+        {1.0 / 6, 5.0 / 9, 17.0 / 18},
+        {1.0 / 6, 2.0 / 9, 5.0 / 18}
+    };
+    float thirty [3][3];
+    float thirtyOne [3][3];
+    MatrixInverse(twentyEight, thirtyOne);
+    MatrixInverse(twentySeven, thirty);
+
+    int testSeventeen = MatrixEquals(thirty, twentyNine);
+    int testEighteen = MatrixEquals(twentySix, thirtyOne);
+    if (testSeventeen == 1) {
+        count9++;
+    }
+    if (testEighteen == 1) {
+        count9++;
+    }
+    if (count9 == 2) {
+        functionPassed++;
+    }
+    printf("MatrixInverse Function tested: %d out of 2 tests successful \n", count9);
+
+    double passPercent = (functionPassed / 9.0)*100.0;
+    printf("\nPassed %d out of 9 functions: %f %% success rate \n", functionPassed, passPercent);
+    //TEST FOR MATRIX PRINT FUNCTION
+
+    // for loop creates matrix that looks like this
+    /*
+     1 2 3
+     4 5 6
+     7 8 9
+     */
+    int x, y;
+    float value = 1;
+    float array[3][3];
+    for (x = 0; x < 3; x++) {
+        for (y = 0; y < 3; y++) {
+            array[x][y] = value;
+            value++;
+            printf(" %f, ", (double)value);
+        }
+        printf("\n");
+    }
+    printf("\nEXPECTED OUTPUT OF ARRAY:\n");
+    MatrixPrint(array);
     /******************************************************************************
      * Your code goes in between this comment and the preceding one with asterisks
      *****************************************************************************/
