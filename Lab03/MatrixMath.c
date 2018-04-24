@@ -13,6 +13,7 @@
 int x;
 //counter for columns
 int y;
+float counter; //just to keep track of things
 
 //test equality of two 3 by 3 matricies
 //returns 1 if true, 0 if false
@@ -31,8 +32,6 @@ int MatrixEquals(float a[3][3], float b[3][3])
     //returns 1 if every pair is equal
     return 1;
 }
-
-float counter; //just to keep track of things
 
 void MatrixMultiply(float a[3][3], float b[3][3], float c[3][3])
 {
@@ -67,6 +66,7 @@ void MatrixScalarMultiply(float s, float a[3][3], float b[3][3])
 {
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
+            b[x][y] += 0;
             b[x][y] = (s * a[x][y]);
         }
 
@@ -80,7 +80,7 @@ void MatrixScalarAdd(float s, float a[3][3], float b[3][3])
 {
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
-            b[x][y] = (s + a[x][y]);
+            b[x][y] = (0.0 + s + a[x][y]);
         }
 
     }
