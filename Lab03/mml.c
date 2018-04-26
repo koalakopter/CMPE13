@@ -328,15 +328,16 @@ int main()
     int x, y;
     float value = 1;
     float array[3][3];
+    printf("\nEXPECTED OUTPUT OF ARRAY \n");
     for (x = 0; x < 3; x++) {
         for (y = 0; y < 3; y++) {
             array[x][y] = value;
+            printf(" %f, ", (double) value);
             value++;
-            printf(" %f, ", (double)value);
         }
         printf("\n");
     }
-    printf("\nEXPECTED OUTPUT OF ARRAY:\n");
+    printf("\nOUTPUT OF ARRAY WITH MatrixPrint():\n");
     MatrixPrint(array);
     /******************************************************************************
      * Your code goes in between this comment and the preceding one with asterisks
