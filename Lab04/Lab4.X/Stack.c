@@ -29,7 +29,7 @@ int StackPop(struct Stack *stack, float *value)
 
 int StackIsEmpty(const struct Stack *stack)
 {
-    if (stack->initialized != TRUE || stack->stackItems[stack->currentItemIndex] != -1) {
+    if (stack->initialized != TRUE || stack->currentItemIndex != -1) {
         return STANDARD_ERROR;
     }
     return SUCCESS;
