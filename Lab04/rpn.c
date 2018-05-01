@@ -15,12 +15,13 @@
 
 // **** Define global, module-level, or external variables here ****
 
-#define INPUT_SIZE 62
-#define ARRAY_SIZE 60
+#define INPUT_SIZE 60
+#define ARBITRARY_SIZE 69
+
 
 //declare the stack
 struct Stack stax;
-float value;
+
 
 // **** Declare function prototypes ****
 /*
@@ -43,28 +44,34 @@ int their_main(void)
 
     /******************************** Your custom code goes below here *******************************/
     printf("\nWelcome to Julian's Reverse Polish Notation calculator for Lab IV\n");
+    printf("Please enter floats followed by operators (*, /, -, +) in RPN notation\n");
     
     //string to store the user's input
     char input[INPUT_SIZE];
+    //used to store other tokens
+    char *token_holder[ARBITRARY_SIZE];
+    //used to hold result of strtok()
     char *token;
+    
+    //used to store operators
+    float op1, op2;
+    
     StackInit(&stax);
     
+    //take in user's input
     fgets(input, INPUT_SIZE, stdin);
-    printf("You inputted the string: %s", input);
+    printf("You inputted the string: %s.n", input);
     
+    //tokenizes the user string, looking for spaces
     token = strtok(input, " ");
-    value = atof(token);
-    
-    int x = StackPush(&stax, value);
-    //makes errors go away
-    x = x;
-    
-    printf("THE TOKEN IS: %f", value);
     
     while(token != NULL)
     {
-        token = strtok(NULL, " ");
-        printf("THE TOKEN IS: %s\n", token);
+        //if operator is detected, pop the two values off the stack
+        if(*token == '*' || *token == '/' || *token == '+' || *token == '-'){
+            StackPop(&stax, &op1);
+            StackPop(&stax, &op2);
+        }
     }
     
     
