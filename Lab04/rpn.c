@@ -9,11 +9,18 @@
 #include <plib.h>
 
 // User libraries
-
+#include "Stack.h"
 
 // **** Set macros and preprocessor directives ****
 
 // **** Define global, module-level, or external variables here ****
+
+#define INPUT_SIZE 62
+#define ARRAY_SIZE 60
+
+//declare the stack
+struct Stack stax;
+float value;
 
 // **** Declare function prototypes ****
 /*
@@ -35,8 +42,34 @@ int their_main(void)
 #endif // LAB4_TESTING
 
     /******************************** Your custom code goes below here *******************************/
-    printf("Welcome to CMPE13 Lab4 Blank. Please remove before starting.\r\n");
-
+    printf("\nWelcome to Julian's Reverse Polish Notation calculator for Lab IV\n");
+    
+    //string to store the user's input
+    char input[INPUT_SIZE];
+    char *token;
+    StackInit(&stax);
+    
+    fgets(input, INPUT_SIZE, stdin);
+    printf("You inputted the string: %s", input);
+    
+    token = strtok(input, " ");
+    value = atof(token);
+    
+    int x = StackPush(&stax, value);
+    //makes errors go away
+    x = x;
+    
+    printf("THE TOKEN IS: %f", value);
+    
+    while(token != NULL)
+    {
+        token = strtok(NULL, " ");
+        printf("THE TOKEN IS: %s\n", token);
+    }
+    
+    
+        
+    
 
     /*************************************************************************************************/
 
@@ -60,6 +93,5 @@ int their_main(void)
 int ProcessBackspaces(char *rpn_sentence) {
     return 0;
 }
-
 
 
