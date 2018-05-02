@@ -113,19 +113,18 @@ int their_main(void)
             } else {
                 //convert the input into a float if not an operator
                 valid++;
-                
+
                 //declare error if token is not a digit
                 //printf("this is what you typed: %f",(double)*token);
                 //cast token to a float to check ASCII values
-                checker = (float)*token;
-                if (checker < 48 || checker > 57)
-                {
+                checker = (float) *token;
+                if (checker < 48 || checker > 57) {
                     printf("ERROR! UNEXPECTED CHARACTER IN BAGGING AREA (floats and operators only please)\n");
                     error = 1;
                     token = NULL;
                     break;
                 }
-                
+
                 //if three numbers appear in a row, its not a valid RPN string, so error
                 if (valid >= 3) {
                     printf("ERROR! Not a valid RPN string! (Too many operators before operand)\n");
@@ -136,7 +135,7 @@ int their_main(void)
                     break;
                 }
                 value = atof(token);
-                printf("You inputted the value: %f\n", (double)value);
+                //printf("You inputted the value: %f\n", (double)value);
                 //then push that value onto the stack
                 x = StackPush(&stax, value);
                 //check if stack is full (if StackPush is not successful, stack is full)
@@ -150,6 +149,12 @@ int their_main(void)
                 token = strtok(NULL, " ");
             }
         }
+        //error if extra stuff on the stack at the end (greater than 1 item left))
+        if (StackGetSize(&stax) >= 2 || error == 1) {
+            error = 1;
+            printf("Invalid RPN string, stuff left on stack. Valid strings should end with an operator");
+        }
+
         //Prints an exit message if no error was found
         if (error != 1) {
             StackPop(&stax, &result);
