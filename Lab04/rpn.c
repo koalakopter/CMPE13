@@ -57,7 +57,10 @@ int their_main(void)
     //used to store operators
     float op1, op2;
     float value, result;
+    //pretend these are booleans
     int x, y;
+    //counter for invalid RPN string
+    int valid = 0;
     //initalize the stack
     StackInit(&stax);
 
@@ -81,8 +84,9 @@ int their_main(void)
                 
                 if (x == 0 || y == 0){
                     printf("ERROR! Not enough operands before operand!\n");
-                    break;
+                    //reset the token to restart the function
                     token = NULL;
+                    break;
                 }
                 
                 //do ALL the math!
@@ -106,16 +110,29 @@ int their_main(void)
                 StackPush(&stax, result);
                 //tokenize the next thingie
                 token = strtok(NULL, " ");
+                valid = 1;
             }
             else {
                 //convert the input into a float
+                valid++;
+                //if three numbers in a row, its not a valid RPN string
+                if (valid >= 3)
+                {
+                    printf("ERROR! Not a valid RPN string! (Too many operators before operand)\n");
+                    //reset the token to restart the function
+                    token = NULL;
+                    break;  
+                }
                 value = atof(token);
                 printf("You inputted the value: %f\n", (double)value);
                 //then push that value onto the stack
                 x = StackPush(&stax, value);
+                //check if stack is full (if StackPush is not successful, stack is full)
                 if (x == 0)
                 {
-                    printf("ERROR! Too many operands on the stack!");
+                    printf("ERROR! Too many operands on the stack!\n");
+                    token = NULL;
+                    break;
                 }
                 //tokenize the next thing
                 token = strtok(NULL, " ");
