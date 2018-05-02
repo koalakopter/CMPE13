@@ -51,6 +51,7 @@ int their_main(void)
 
     //string to store the user's input
     char input[INPUT_SIZE];
+    char buffer[INPUT_SIZE];
     //used to hold result of strtok()
     char *token;
     //used to store operators
@@ -69,7 +70,8 @@ int their_main(void)
     while (TRUE) {
         printf("\nPlease enter floats followed by operators (*, /, -, +) in RPN notation\n");
         //take in user's input
-        fgets(input, INPUT_SIZE, stdin);
+        fgets(buffer, INPUT_SIZE, stdin);
+        sprintf(input, "%s", buffer);
         
         //tokenize the first part of the user input
         token = strtok(input, " ");
@@ -82,7 +84,8 @@ int their_main(void)
 
         //keeps going until the end of the string is reached
         while (token != NULL) {
-            //if operator is detected, pop the two values off the stack
+            
+            //if operator is detected, pop the first two values off the stack
             if (*token == '*' || *token == '/' || *token == '+' || *token == '-') {
                 x = StackPop(&stax, &op1);
                 y = StackPop(&stax, &op2);
@@ -122,6 +125,11 @@ int their_main(void)
                 //printf("this is what you typed: %f",(double)*token);
                 //cast token to a float to check ASCII values
                 checker = (float) *token;
+                //break if character is a null (no idea why this needs to happen)
+                if (checker == 0)
+                {
+                    break;
+                }
                 if ((checker < 48 || checker > 57) && error != 1) {
                     printf("ERROR! Invalid character in RPN string\n");
                     error = 1;
@@ -129,7 +137,7 @@ int their_main(void)
                     break;
                 }
 
-                //if three numbers appear in a row, its not a valid RPN string, so error
+                /*//if three numbers appear in a row, its not a valid RPN string, so error
                 if (valid >= 3 && error != 1) {
                     printf("ERROR! Not enough operators before operand!\n");
                     //reset the token to restart the function
@@ -137,7 +145,7 @@ int their_main(void)
                     valid = 0;
                     error = 1;
                     break;
-                }
+                }*/
                 value = atof(token);
                 //printf("You inputted the value: %f\n", (double)value);
                 //then push that value onto the stack
