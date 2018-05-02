@@ -56,7 +56,7 @@ int their_main(void)
     char *token;
     //used to store operators
     float op1, op2;
-    float value;
+    float value, result;
     //initalize the stack
     StackInit(&stax);
 
@@ -76,13 +76,33 @@ int their_main(void)
             if (*token == '*' || *token == '/' || *token == '+' || *token == '-') {
                 StackPop(&stax, &op1);
                 StackPop(&stax, &op2);
-                printf("you did a thing!");
-                token = NULL;
+                
+                //do ALL the math!
+                if(*token  == '*') {
+                    result = op1 * op2;
+                }
+                else if(*token  == '/') {
+                    if(op2 == 0){
+                        printf("Why would you ever divide by zero? I'm changing that zero to a one for you, thank me later\n");
+                        op2 = 0;
+                    }
+                    result = op1 / op2;
+                }
+                else if(*token  == '+') {
+                    result = op1 + op2;
+                }
+                else if(*token  == '-') {
+                    result = op1 - op2;
+                }
+                printf("Result is: %f\n", (double)result);
+                StackPush(&stax, result);
+                //tokenize the next thingie
+                token = strtok(NULL, " ");
             }
             else {
                 //convert the input into a float
                 value = atof(token);
-                printf("You inputted the value: %f\n", value);
+                printf("You inputted the value: %f\n", (double)value);
                 //then push that value onto the stack
                 StackPush(&stax, value);
                 //tokenize the next thing
