@@ -35,48 +35,64 @@ int ProcessBackspaces(char *rpn_sentence);
 
 #ifndef LAB4_TESTING
 
-int main() {
+int main()
+{
     BOARD_Init();
 #else
+
 int their_main(void)
 {
 #endif // LAB4_TESTING
 
     /******************************** Your custom code goes below here *******************************/
     printf("\nWelcome to Julian's Reverse Polish Notation calculator for Lab IV\n");
-    printf("Please enter floats followed by operators (*, /, -, +) in RPN notation\n");
-    
+   
+
     //string to store the user's input
     char input[INPUT_SIZE];
     //used to store other tokens
     char *token_holder[ARBITRARY_SIZE];
     //used to hold result of strtok()
     char *token;
-    
     //used to store operators
     float op1, op2;
-    
+    float value;
+    //initalize the stack
     StackInit(&stax);
+
     
-    //take in user's input
-    fgets(input, INPUT_SIZE, stdin);
-    printf("You inputted the string: %s.n", input);
-    
+
     //tokenizes the user string, looking for spaces
-    token = strtok(input, " ");
-    
-    while(token != NULL)
-    {
-        //if operator is detected, pop the two values off the stack
-        if(*token == '*' || *token == '/' || *token == '+' || *token == '-'){
-            StackPop(&stax, &op1);
-            StackPop(&stax, &op2);
+    while (42069) {
+        printf("Please enter floats followed by operators (*, /, -, +) in RPN notation\n");
+        //take in user's input
+        fgets(input, INPUT_SIZE, stdin);
+        
+        token = strtok(input, " ");
+        
+
+        while (token != NULL) {
+            //if operator is detected, pop the two values off the stack
+            if (*token == '*' || *token == '/' || *token == '+' || *token == '-') {
+                StackPop(&stax, &op1);
+                StackPop(&stax, &op2);
+                printf("you did a thing!");
+                token = NULL;
+            }
+            else {
+                //convert the input into a float
+                value = atof(token);
+                printf("You inputted the value: %f\n", value);
+                //then push that value onto the stack
+                StackPush(&stax, value);
+                //tokenize the next thing
+                token = strtok(NULL, " ");
+            }
         }
     }
-    
-    
-        
-    
+
+
+
 
     /*************************************************************************************************/
 
@@ -84,8 +100,6 @@ int their_main(void)
     // This will result in the processor restarting, which is almost certainly not what you want!
     while (1);
 }
-
-
 
 /**
  * Extra Credit: Define ProcessBackspaces() here - This function should read through an array of
@@ -97,7 +111,8 @@ int their_main(void)
  *                     place.
  * @return Returns the size of the resultant string in `rpn_sentence`.
  */
-int ProcessBackspaces(char *rpn_sentence) {
+int ProcessBackspaces(char *rpn_sentence)
+{
     return 0;
 }
 
