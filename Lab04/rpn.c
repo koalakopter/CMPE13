@@ -66,15 +66,19 @@ int their_main(void)
 
 
     //tokenizes the user string, looking for spaces
-    //translation: while (true)
-    while (42069) {
+    while (TRUE) {
         printf("\nPlease enter floats followed by operators (*, /, -, +) in RPN notation\n");
         //take in user's input
         fgets(input, INPUT_SIZE, stdin);
-
+        
+        //tokenize the first part of the user input
         token = strtok(input, " ");
         valid = 0;
         error = 0;
+        //clear the stack of stuff
+        for (x = 0; x < 20; x++) {
+            StackPop(&stax, &result);
+        }
 
         //keeps going until the end of the string is reached
         while (token != NULL) {
@@ -83,7 +87,7 @@ int their_main(void)
                 x = StackPop(&stax, &op1);
                 y = StackPop(&stax, &op2);
 
-                if (x == 0 || y == 0) {
+                if ((x == 0 || y == 0) && error != 1) {
                     printf("ERROR! Not enough operands before operand!\n");
                     //reset the token to restart the function
                     token = NULL;
@@ -118,16 +122,16 @@ int their_main(void)
                 //printf("this is what you typed: %f",(double)*token);
                 //cast token to a float to check ASCII values
                 checker = (float) *token;
-                if (checker < 48 || checker > 57) {
-                    printf("ERROR! UNEXPECTED CHARACTER IN BAGGING AREA (floats and operators only please)\n");
+                if ((checker < 48 || checker > 57) && error != 1) {
+                    printf("ERROR! Invalid character in RPN string\n");
                     error = 1;
                     token = NULL;
                     break;
                 }
 
                 //if three numbers appear in a row, its not a valid RPN string, so error
-                if (valid >= 3) {
-                    printf("ERROR! Not a valid RPN string! (Too many operators before operand)\n");
+                if (valid >= 3 && error != 1) {
+                    printf("ERROR! Not enough operators before operand!\n");
                     //reset the token to restart the function
                     token = NULL;
                     valid = 0;
@@ -140,7 +144,7 @@ int their_main(void)
                 x = StackPush(&stax, value);
                 //check if stack is full (if StackPush is not successful, stack is full)
                 if (x == 0) {
-                    printf("ERROR! Too many operands on the stack!\n");
+                    printf("ERROR! No more room on stack!\n");
                     token = NULL;
                     error = 1;
                     break;
@@ -150,9 +154,13 @@ int their_main(void)
             }
         }
         //error if extra stuff on the stack at the end (greater than 1 item left))
-        if (StackGetSize(&stax) >= 2 || error == 1) {
+        if (StackGetSize(&stax) >= 2 && error != 1) {
             error = 1;
-            printf("Invalid RPN string, stuff left on stack. Valid strings should end with an operator");
+            printf("ERROR: Invalid RPN Calculation: more or less than one item on the stack");
+            //empty the stack
+            for (x = 0; x < 20; x++) {
+                StackPop(&stax, &result);
+            }
         }
 
         //Prints an exit message if no error was found
