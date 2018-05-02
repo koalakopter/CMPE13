@@ -57,12 +57,14 @@ int their_main(void)
     //used to store operators
     float op1, op2;
     float value, result;
+    int x, y;
     //initalize the stack
     StackInit(&stax);
 
     
 
     //tokenizes the user string, looking for spaces
+    //translation: while (true)
     while (42069) {
         printf("Please enter floats followed by operators (*, /, -, +) in RPN notation\n");
         //take in user's input
@@ -74,8 +76,14 @@ int their_main(void)
         while (token != NULL) {
             //if operator is detected, pop the two values off the stack
             if (*token == '*' || *token == '/' || *token == '+' || *token == '-') {
-                StackPop(&stax, &op1);
-                StackPop(&stax, &op2);
+                x = StackPop(&stax, &op1);
+                y = StackPop(&stax, &op2);
+                
+                if (x == 0 || y == 0){
+                    printf("ERROR! Not enough operands before operand!\n");
+                    break;
+                    token = NULL;
+                }
                 
                 //do ALL the math!
                 if(*token  == '*') {
@@ -104,7 +112,11 @@ int their_main(void)
                 value = atof(token);
                 printf("You inputted the value: %f\n", (double)value);
                 //then push that value onto the stack
-                StackPush(&stax, value);
+                x = StackPush(&stax, value);
+                if (x == 0)
+                {
+                    printf("ERROR! Too many operands on the stack!");
+                }
                 //tokenize the next thing
                 token = strtok(NULL, " ");
             }
