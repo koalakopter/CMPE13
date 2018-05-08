@@ -42,9 +42,12 @@ int main()
     int x;
     int y = LinkedListPrint(one);
     x = LinkedListSize(three);
-    //compare = CompareStrings(*one, *two);
-    printf("\nI did a thing! %d", x);
-    printf("\nme test, me smart! %d", y);
+    
+    int a = CompareStrings(one, two);
+    printf("ASASHIO IS GUD IN RANKED? %d", a);
+    
+    LinkedListSwapData(one, four);
+    LinkedListPrint(one);
 
     // You can never return from main() in an embedded system (one that lacks an operating system).
     // This will result in the processor restarting, which is almost certainly not what you want!
