@@ -61,6 +61,7 @@ char *LinkedListRemove(ListItem *item)
 }
 
 //creates an item after a certain place in a linkedlist
+
 ListItem *LinkedListCreateAfter(ListItem *item, char *data)
 {
     ListItem *newItem = LinkedListNew(data);
@@ -101,50 +102,57 @@ int LinkedListPrint(ListItem *list)
 {
     //return NULL if the pointer points nowhere
     if (list == NULL) {
-        return STANDARD_ERROR;
+       //return STANDARD_ERROR;
     }
     //else, print out the list like normal
     //get the first item of the list and print from there
     list = LinkedListGetFirst(list);
-    while (list != NULL) {
+    printf("[ ");
+    //keep going until the nextItem is NULL, or the head of the list is reached
+    while ((list->nextItem) != NULL) {
         //prints the head item (has a special character in front and a newline)
-        if ((list->previousItem) == NULL) {
+        /*if ((list->previousItem) == NULL) {
             printf("\n{%s, ", list->data);
         }//prints the last item in the list (has special character in back and a newline at the end))
         else if ((list->nextItem) == NULL) {
             printf("%s}\n", list->data);
-        }           
-        //prints out the middle items without any special formatting
+        }
+            //prints out the middle items without any special formatting
         else {
             printf("%s, ", list->data);
         }
+        list = list->nextItem;*/
+        //printf("Data Piece: %c  \n", list->data);
+        printf("%c, ", list->data);
         list = list->nextItem;
+        
+
     }
+    printf(" ]");
     return SUCCESS;
 }
 
 //LinkedListSize function
+
 int LinkedListSize(ListItem *list)
 {
     //return zero if the argument is pointing to an empty list
-    if(list == NULL)
-    {
+    if (list == NULL) {
         return 0;
     }
-    
+
     int count = 1;
     //start at the head of the list
     list = LinkedListGetFirst(list);
-    
+
     //keep going until nextItem is NULL, aka reach the head item
-    while((list->nextItem) != NULL)
-    {
+    while ((list->nextItem) != NULL) {
         //slowly move up the list and increment the counter
         list = list->nextItem;
         count = count + 1;
     }
     return count;
-    
+
 }
 
 
