@@ -75,7 +75,7 @@ ListItem *LinkedListCreateAfter(ListItem *item, char *data)
     }//if passed an item not at the head, insert the item into the list
     else {
         newItem->previousItem = item;
-        
+
         //the new item points to the item you passed as an argument originally pointed to
         newItem->nextItem = item->nextItem;
         newItem->data = data;
@@ -104,7 +104,7 @@ int LinkedListPrint(ListItem *list)
 {
     //return NULL if the pointer points nowhere
     if (list == NULL) {
-       //return STANDARD_ERROR;
+        //return STANDARD_ERROR;
     }
     //else, print out the list like normal
     //get the first item of the list and print from there
@@ -141,6 +141,28 @@ int LinkedListSize(ListItem *list)
     }
     return count;
 
+}
+
+int LinkedListSwapData(ListItem *firstItem, ListItem *secondItem)
+{
+    //error flag if one of the items passed in is NULL
+    if (firstItem == NULL || secondItem == NULL) {
+        return STANDARD_ERROR;
+    }
+    //otherwise, proceed as normal
+    //create a temporary holder to store the data as its switched around
+    ListItem *inventory = malloc(sizeof (ListItem));
+
+    //store the data in inventory temporarily
+    inventory->data = firstItem -> data;
+    //swap the data around, second going to first, first
+    firstItem->data = secondItem->data;
+    
+    secondItem->data = inventory->data;
+    
+    //exit routine
+    free(inventory);
+    return SUCCESS;
 }
 
 
