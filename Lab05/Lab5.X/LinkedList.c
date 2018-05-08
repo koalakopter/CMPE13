@@ -26,18 +26,19 @@ ListItem *LinkedListNew(char *data)
 
 int CompareStrings(ListItem *first, ListItem *second)
 {
-    int x;
+    //cast the characters to int, to find out their ASCII value
+    int x = (int)(first->data);
+    int y = (int)(second->data);
     //if the data is not null, set the length of that string to x
     //if ((first->data) != NULL && (second->data != NULL)) {
-    x = strcmp(first->data, second ->data);
     //}
 
     //compare the lengths 
     //case 1, first str is alphabetically before second str
-    if (x < 0) {
+    if (x < y) {
         return -1;
     }//case 2, second str is alphabetically before first str
-    else if (x > 0) {
+    else if (x > y) {
         return 1;
     }//case 3, they are equal
     else {
@@ -109,14 +110,14 @@ int LinkedListPrint(ListItem *list)
     //else, print out the list like normal
     //get the first item of the list and print from there
     list = LinkedListGetFirst(list);
-    printf("[ ");
+    printf("\n[ ");
     //keep going until the nextItem is NULL, or the head of the list is reached
     while ((list->nextItem) != NULL) {
         printf("%c, ", list->data);
         list = list->nextItem;
     }
     //prints out the last item in the list
-    printf("%c ]", list->data);
+    printf("%c ]\n", list->data);
     return SUCCESS;
 }
 
@@ -157,12 +158,27 @@ int LinkedListSwapData(ListItem *firstItem, ListItem *secondItem)
     inventory->data = firstItem -> data;
     //swap the data around, second going to first, first
     firstItem->data = secondItem->data;
-    
+
     secondItem->data = inventory->data;
-    
+
     //exit routine
     free(inventory);
     return SUCCESS;
 }
 
+//sorts a list from LOWEST to HIGHEST
+
+int LinkedListSort(ListItem *list)
+{
+    //again ERROR if passed an invalid list
+    if (list == NULL) {
+        return STANDARD_ERROR;
+    }
+    //go to the beginning of the list
+    list = LinkedListGetFirst(list);
+    while ((list->data) != NULL) {
+        
+    }
+    return SUCCESS;
+}
 
