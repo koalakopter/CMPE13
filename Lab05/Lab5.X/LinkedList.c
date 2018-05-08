@@ -27,8 +27,8 @@ ListItem *LinkedListNew(char *data)
 int CompareStrings(ListItem *first, ListItem *second)
 {
     //cast the characters to int, to find out their ASCII value
-    int x = (int)(first->data);
-    int y = (int)(second->data);
+    int x = (int) (first->data);
+    int y = (int) (second->data);
     //if the data is not null, set the length of that string to x
     //if ((first->data) != NULL && (second->data != NULL)) {
     //}
@@ -67,11 +67,13 @@ ListItem *LinkedListCreateAfter(ListItem *item, char *data)
 {
     ListItem *newItem = LinkedListNew(data);
     //check if you are trying to put it at the head of list
-    if (item->nextItem == NULL) {
+    if ((item->nextItem) == NULL) {
         newItem->previousItem = item;
         //no nextItem since its at the head
         newItem->nextItem = NULL;
         newItem->data = data;
+        
+        //makes the item passed in point to the newItem you just made
         item->nextItem = newItem;
     }//if passed an item not at the head, insert the item into the list
     else {
@@ -100,7 +102,7 @@ ListItem *LinkedListGetFirst(ListItem *list)
 }
 
 //LinkedListPrint function
-
+//%c only works on single char, %s works on everything else I guess
 int LinkedListPrint(ListItem *list)
 {
     //return NULL if the pointer points nowhere
@@ -113,11 +115,11 @@ int LinkedListPrint(ListItem *list)
     printf("\n[ ");
     //keep going until the nextItem is NULL, or the head of the list is reached
     while ((list->nextItem) != NULL) {
-        printf("%c, ", list->data);
+        printf("%s, ", list->data);
         list = list->nextItem;
     }
     //prints out the last item in the list
-    printf("%c ]\n", list->data);
+    printf("%s ]\n", list->data);
     return SUCCESS;
 }
 
@@ -181,4 +183,3 @@ int LinkedListSort(ListItem *list)
     }
     return SUCCESS;
 }
-
