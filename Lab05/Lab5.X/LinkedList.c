@@ -75,6 +75,8 @@ ListItem *LinkedListCreateAfter(ListItem *item, char *data)
     }//if passed an item not at the head, insert the item into the list
     else {
         newItem->previousItem = item;
+        
+        //the new item points to the item you passed as an argument originally pointed to
         newItem->nextItem = item->nextItem;
         newItem->data = data;
         //makes the item passed in as an argument point to this new item we created
@@ -110,25 +112,11 @@ int LinkedListPrint(ListItem *list)
     printf("[ ");
     //keep going until the nextItem is NULL, or the head of the list is reached
     while ((list->nextItem) != NULL) {
-        //prints the head item (has a special character in front and a newline)
-        /*if ((list->previousItem) == NULL) {
-            printf("\n{%s, ", list->data);
-        }//prints the last item in the list (has special character in back and a newline at the end))
-        else if ((list->nextItem) == NULL) {
-            printf("%s}\n", list->data);
-        }
-            //prints out the middle items without any special formatting
-        else {
-            printf("%s, ", list->data);
-        }
-        list = list->nextItem;*/
-        //printf("Data Piece: %c  \n", list->data);
         printf("%c, ", list->data);
         list = list->nextItem;
-        
-
     }
-    printf(" ]");
+    //prints out the last item in the list
+    printf("%c ]", list->data);
     return SUCCESS;
 }
 
