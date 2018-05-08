@@ -40,10 +40,11 @@ int main()
     ListItem *test = LinkedListNew('m');
     
     int x;
-    LinkedListPrint(test);
+    int y = LinkedListPrint(one);
     x = LinkedListSize(three);
     //compare = CompareStrings(*one, *two);
-    printf("I did a thing! %d", x);
+    printf("\nI did a thing! %d", x);
+    printf("\nme test, me smart! %d", y);
 
     // You can never return from main() in an embedded system (one that lacks an operating system).
     // This will result in the processor restarting, which is almost certainly not what you want!
