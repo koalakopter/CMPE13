@@ -14,6 +14,7 @@
 // User libraries
 #include "LinkedList.h"
 
+
 // **** Set any macros or preprocessor directives here ****
 
 // **** Declare any data types here ****
@@ -29,24 +30,32 @@ int main()
     //
     // Your testing code goes after here
     //
-    char f = 'f';
-    char h = 'h';
-    char g = 'g';
-    ListItem *one = LinkedListNew(f);
-    ListItem *two = LinkedListCreateAfter(one, g);
-    ListItem *three = LinkedListCreateAfter(two,h);
-    ListItem *four = LinkedListCreateAfter(two, 'i');
+    static char *dog = "dog"; //testing code from sort.c
+    char ijn[20] = "Yamato";
+    char kms[20] = "Bismarck";
+    char usn[20] = "Iowa";
+    char rn[20] = "King_George_V";
     
-    ListItem *test = LinkedListNew('m');
+    ListItem *one = LinkedListNew(ijn);
+    ListItem *two = LinkedListCreateAfter(one, kms);
+    ListItem *three = LinkedListCreateAfter(two, rn);
+    ListItem *four = LinkedListCreateAfter(two, usn);
     
-    int x;
+    ListItem *five = LinkedListCreateAfter(three, dog);
+
     int y = LinkedListPrint(one);
-    x = LinkedListSize(three);
+    int x = LinkedListSize(three);
     
+
     int a = CompareStrings(one, two);
     printf("ASASHIO IS GUD IN RANKED? %d", a);
-    
+
     LinkedListSwapData(one, four);
+    //LinkedListPrint(one);
+    
+
+    //test the print
+    LinkedListSort(one);
     LinkedListPrint(one);
 
     // You can never return from main() in an embedded system (one that lacks an operating system).
