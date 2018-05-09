@@ -26,13 +26,23 @@ ListItem *LinkedListNew(char *data)
 
 int CompareStrings(ListItem *first, ListItem *second)
 {
-    //cast the characters to int, to find out their ASCII value
-    int x = (int) (first->data);
-    int y = (int) (second->data);
-    //if the data is not null, set the length of that string to x
-    //if ((first->data) != NULL && (second->data != NULL)) {
-    //}
+    //first, compare the length of the strings
 
+    //length of first string
+    int a = strlen(first->data);
+    //length of second string
+    int b = strlen(second->data);
+
+    //compare lengths
+    if (a < b) {
+        return -1;
+    } else if (b > a) {
+        return 1;
+    }
+    
+    //else, compare alphabetically
+    int x = strcmp(first->data, second->data);
+    int y = 0;
     //compare the lengths 
     //case 1, first str is alphabetically before second str
     if (x < y) {
@@ -72,7 +82,7 @@ ListItem *LinkedListCreateAfter(ListItem *item, char *data)
         //no nextItem since its at the head
         newItem->nextItem = NULL;
         newItem->data = data;
-        
+
         //makes the item passed in point to the newItem you just made
         item->nextItem = newItem;
     }//if passed an item not at the head, insert the item into the list
@@ -103,6 +113,7 @@ ListItem *LinkedListGetFirst(ListItem *list)
 
 //LinkedListPrint function
 //%c only works on single char, %s works on everything else I guess
+
 int LinkedListPrint(ListItem *list)
 {
     //return NULL if the pointer points nowhere
@@ -169,6 +180,7 @@ int LinkedListSwapData(ListItem *firstItem, ListItem *secondItem)
 }
 
 //sorts a list from LOWEST to HIGHEST
+//and then, sorts alphabetically
 
 int LinkedListSort(ListItem *list)
 {
@@ -178,8 +190,39 @@ int LinkedListSort(ListItem *list)
     }
     //go to the beginning of the list
     list = LinkedListGetFirst(list);
-    while ((list->data) != NULL) {
-        
+    //creates a temporary storage unit to hold the next item in the list
+    ListItem *next = malloc(sizeof (ListItem));
+    next = list->nextItem;
+
+    //outer loop iteration
+    while ((list->nextItem) != NULL) {
+        //inner loop
+        while ((next->nextItem) != NULL) {
+            //swaps the values if list < next
+            if (CompareStrings(list, next) >= 0) {
+                LinkedListSwapData(list, next);
+            }
+            //check the head item (aka if next == NULL)
+
+            //move next onto the next piece of data
+            next = next->nextItem;
+        }
+        if ((next->nextItem) == NULL) {
+            if (CompareStrings(list, next) >= 0) {
+                LinkedListSwapData(list, next);
+            }
+        }
+        LinkedListPrint(list);
+        //end of inner loop
+
+        //move list one up
+        list = list->nextItem;
+        //move the next pointer back to list + 1
+        next = list->nextItem;
     }
+    //end of outer loop
+
+    //exit routine
+    free(next);
     return SUCCESS;
 }
