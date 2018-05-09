@@ -26,6 +26,17 @@ ListItem *LinkedListNew(char *data)
 
 int CompareStrings(ListItem *first, ListItem *second)
 {
+    //check for null strings
+    if (first == NULL && second != NULL) {
+        return -1;
+    }
+    if (first != NULL && second == NULL) {
+        return 1;
+    }
+    if (first == NULL && second == NULL) {
+        return 0;
+    }
+    
     //first, compare the length of the strings
 
     //length of first string
@@ -71,7 +82,7 @@ char *LinkedListRemove(ListItem *item)
 
     //set the previous item to point to the argument's next item and vice versa
     if ((item->previousItem) != NULL) {
-        item->previousItem->nextItem= item->nextItem;
+        item->previousItem->nextItem = item->nextItem;
     }
     if ((item->nextItem) != NULL) {
         item->nextItem->previousItem = item->previousItem;
