@@ -30,33 +30,32 @@ int main()
     //
     // Your testing code goes after here
     //
-    static char *dog = "dog"; //testing code from sort.c
+    static char *dog = "Dog"; //testing code from sort.c
     char ijn[20] = "Yamato";
-    char kms[20] = "Bismarck";
+    char km[20] = "Bismarck";
     char usn[20] = "Iowa";
     char rn[20] = "King_George_V";
     
     ListItem *one = LinkedListNew(ijn);
-    ListItem *two = LinkedListCreateAfter(one, kms);
+    ListItem *two = LinkedListCreateAfter(one, km);
     ListItem *three = LinkedListCreateAfter(two, rn);
-    ListItem *four = LinkedListCreateAfter(two, usn);
+    ListItem *four = LinkedListCreateAfter(three, usn);
     
-    ListItem *five = LinkedListCreateAfter(three, dog);
-
+    ListItem *five = LinkedListCreateAfter(two, dog);
+    
+    //int x = CompareStrings(two, four); //Bismarck < Iowa
     int y = LinkedListPrint(one);
     int x = LinkedListSize(three);
+    //int x = strcmp(ijn, usn);
     
-
-    int a = CompareStrings(one, two);
-    printf("ASASHIO IS GUD IN RANKED? %d", a);
-
-    LinkedListSwapData(one, four);
-    //LinkedListPrint(one);
+    LinkedListSwapData(four, two);
+    LinkedListPrint(two);
     
+    printf("ASASHIO IS GUD IN RANKED? %d", x);
 
-    //test the print
     LinkedListSort(one);
     LinkedListPrint(one);
+    
 
     // You can never return from main() in an embedded system (one that lacks an operating system).
     // This will result in the processor restarting, which is almost certainly not what you want!
