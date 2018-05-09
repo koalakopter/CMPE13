@@ -30,6 +30,7 @@ int main()
     //
     // Your testing code goes after here
     //
+    //testing code, WW2 Era battleships + dog
     static char *dog = "Dog"; //testing code from sort.c
     char ijn[20] = "Yamato";
     char km[20] = "Bismarck";
@@ -40,20 +41,31 @@ int main()
     ListItem *two = LinkedListCreateAfter(one, km);
     ListItem *three = LinkedListCreateAfter(two, rn);
     ListItem *four = LinkedListCreateAfter(three, usn);
-    
     ListItem *five = LinkedListCreateAfter(two, dog);
+    ListItem *six = LinkedListCreateAfter(four, "Vittorio Veneto");
     
-    //int x = CompareStrings(two, four); //Bismarck < Iowa
-    int y = LinkedListPrint(one);
+    //BEGIN TESTING FRAMEWORK
+    //test print function
+    printf("Test PRINT Function: expect Yamato, Bismarck, Dog, King_George_V, Iowa, Vittorio Veneto\n");
+    LinkedListPrint(one);
+    
+    //test size function
     int x = LinkedListSize(three);
-    //int x = strcmp(ijn, usn);
+    printf("SIZE OF LIST IS: %d, we expect '5'\n", x);
     
+    //test swap data function
     LinkedListSwapData(four, two);
+    printf("SWAPPED data four(Iowa), and two (Bismarck), expect those swapped in the following test:\n");
     LinkedListPrint(two);
     
-    printf("ASASHIO IS GUD IN RANKED? %d", x);
-
+    //test Remove function
+    LinkedListRemove(six);
+    printf("REMOVED Vittorio Veneto from list\n");
+    LinkedListPrint(five);
+    
+    //test sort function
     LinkedListSort(one);
+    printf("SORTED list: Expected: Dog, Iowa, Yamato, Bismarck, KGV\n");
     LinkedListPrint(one);
     
 
