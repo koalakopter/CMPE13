@@ -39,7 +39,7 @@ int CompareStrings(ListItem *first, ListItem *second)
     } else if (b > a) {
         return 1;
     }
-    
+
     //else, compare alphabetically
     int x = strcmp(first->data, second->data);
     int y = 0;
@@ -67,13 +67,23 @@ char *LinkedListRemove(ListItem *item)
     //can't free after a return, so make a temp storage
     ListItem *temp = LinkedListNew(NULL);
     temp->data = item->data;
+    temp->nextItem = item->nextItem;
+
+    //set the previous item to point to the argument's next item and vice versa
+    if ((item->previousItem) != NULL) {
+        item->previousItem->nextItem= item->nextItem;
+    }
+    if ((item->nextItem) != NULL) {
+        item->nextItem->previousItem = item->previousItem;
+    }
+    //exit routine
     free(item);
     return temp->data;
 }
 
 //creates an item after a certain place in a linkedlist
 
-ListItem *LinkedListCreateAfter(ListItem *item, char *data)
+ListItem * LinkedListCreateAfter(ListItem *item, char *data)
 {
     ListItem *newItem = LinkedListNew(data);
     //check if you are trying to put it at the head of list
@@ -98,7 +108,7 @@ ListItem *LinkedListCreateAfter(ListItem *item, char *data)
     return newItem;
 }
 
-ListItem *LinkedListGetFirst(ListItem *list)
+ListItem * LinkedListGetFirst(ListItem * list)
 {
     //if passed in a NULL item, return NULL
     if (list == NULL) {
@@ -114,7 +124,7 @@ ListItem *LinkedListGetFirst(ListItem *list)
 //LinkedListPrint function
 //%c only works on single char, %s works on everything else I guess
 
-int LinkedListPrint(ListItem *list)
+int LinkedListPrint(ListItem * list)
 {
     //return NULL if the pointer points nowhere
     if (list == NULL) {
@@ -136,7 +146,7 @@ int LinkedListPrint(ListItem *list)
 
 //LinkedListSize function
 
-int LinkedListSize(ListItem *list)
+int LinkedListSize(ListItem * list)
 {
     //return zero if the argument is pointing to an empty list
     if (list == NULL) {
@@ -157,7 +167,7 @@ int LinkedListSize(ListItem *list)
 
 }
 
-int LinkedListSwapData(ListItem *firstItem, ListItem *secondItem)
+int LinkedListSwapData(ListItem *firstItem, ListItem * secondItem)
 {
     //error flag if one of the items passed in is NULL
     if (firstItem == NULL || secondItem == NULL) {
@@ -182,7 +192,7 @@ int LinkedListSwapData(ListItem *firstItem, ListItem *secondItem)
 //sorts a list from LOWEST to HIGHEST
 //and then, sorts alphabetically
 
-int LinkedListSort(ListItem *list)
+int LinkedListSort(ListItem * list)
 {
     //again ERROR if passed an invalid list
     if (list == NULL) {
@@ -207,12 +217,12 @@ int LinkedListSort(ListItem *list)
             //move next onto the next piece of data
             next = next->nextItem;
         }
+        //check the last element of the list, since that wasn't checked in the loop
         if ((next->nextItem) == NULL) {
             if (CompareStrings(list, next) >= 0) {
                 LinkedListSwapData(list, next);
             }
         }
-        LinkedListPrint(list);
         //end of inner loop
 
         //move list one up
