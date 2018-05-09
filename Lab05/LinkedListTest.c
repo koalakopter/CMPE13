@@ -42,16 +42,16 @@ int main()
     ListItem *three = LinkedListCreateAfter(two, rn);
     ListItem *four = LinkedListCreateAfter(three, usn);
     ListItem *five = LinkedListCreateAfter(two, dog);
-    ListItem *six = LinkedListCreateAfter(four, "Vittorio Veneto");
+    ListItem *six = LinkedListCreateAfter(four, "Littorio");
     
     //BEGIN TESTING FRAMEWORK
     //test print function
-    printf("Test PRINT Function: expect Yamato, Bismarck, Dog, King_George_V, Iowa, Vittorio Veneto\n");
+    printf("Test PRINT Function: expect Yamato, Bismarck, Dog, King_George_V, Iowa, Littorio\n");
     LinkedListPrint(one);
     
     //test size function
     int x = LinkedListSize(three);
-    printf("SIZE OF LIST IS: %d, we expect '5'\n", x);
+    printf("SIZE OF LIST IS: %d, we expect '6'\n", x);
     
     //test swap data function
     LinkedListSwapData(four, two);
@@ -60,7 +60,7 @@ int main()
     
     //test Remove function
     LinkedListRemove(six);
-    printf("REMOVED Vittorio Veneto from list\n");
+    printf("REMOVED Littorio from list\n");
     LinkedListPrint(five);
     
     //test sort function
@@ -68,6 +68,9 @@ int main()
     printf("SORTED list: Expected: Dog, Iowa, Yamato, Bismarck, KGV\n");
     LinkedListPrint(one);
     
+    //test GetFirst Function
+    six = LinkedListGetFirst(one);
+    printf("Testing the GetFirst() function, expect 'Dog' after sort: %s\n", six->data);
 
     // You can never return from main() in an embedded system (one that lacks an operating system).
     // This will result in the processor restarting, which is almost certainly not what you want!
