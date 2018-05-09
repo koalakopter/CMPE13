@@ -26,17 +26,22 @@ ListItem *LinkedListNew(char *data)
 
 int CompareStrings(ListItem *first, ListItem *second)
 {
+    //if either list elemnt is null, return 42069, since ERROR is -1, and we are using that
+    if (first == NULL || second == NULL) {
+        return 42069;
+    }
+
     //check for null strings
-    if (first == NULL && second != NULL) {
+    if (first->data == NULL && second->data != NULL) {
         return -1;
     }
-    if (first != NULL && second == NULL) {
+    if (first->data != NULL && second->data == NULL) {
         return 1;
     }
-    if (first == NULL && second == NULL) {
+    if (first->data == NULL && second->data == NULL) {
         return 0;
     }
-    
+
     //first, compare the length of the strings
 
     //length of first string
@@ -83,9 +88,15 @@ char *LinkedListRemove(ListItem *item)
     //set the previous item to point to the argument's next item and vice versa
     if ((item->previousItem) != NULL) {
         item->previousItem->nextItem = item->nextItem;
+    }        //if there is no previous item, set the next item's previous item to NULL
+    else {
+        item->nextItem->previousItem = NULL;
     }
+
     if ((item->nextItem) != NULL) {
         item->nextItem->previousItem = item->previousItem;
+    } else {
+        item->previousItem->nextItem = NULL;
     }
     //exit routine
     free(item);
@@ -227,6 +238,7 @@ int LinkedListSort(ListItem * list)
 
             //move next onto the next piece of data
             next = next->nextItem;
+
         }
         //check the last element of the list, since that wasn't checked in the loop
         if ((next->nextItem) == NULL) {
