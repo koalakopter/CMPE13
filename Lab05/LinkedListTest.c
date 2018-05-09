@@ -44,33 +44,38 @@ int main()
     ListItem *five = LinkedListCreateAfter(two, dog);
     ListItem *six = LinkedListCreateAfter(four, "Littorio");
     
+    //haha the swiss don't have a navy XD TOPKEK
+    ListItem *swissNavy = LinkedListCreateAfter(six, NULL);
+    
     //BEGIN TESTING FRAMEWORK
+    printf("\nSTART OF TESTING\n");
     //test print function
-    printf("Test PRINT Function: expect Yamato, Bismarck, Dog, King_George_V, Iowa, Littorio\n");
+    printf("Test PRINT Function: expect Yamato, Bismarck, Dog, King_George_V, Iowa, Littorio, NULL\n");
     LinkedListPrint(one);
+    //printf("COMPARE STRINGSSS %d\n", CompareStrings(four, two));
     
     //test size function
     int x = LinkedListSize(three);
-    printf("SIZE OF LIST IS: %d, we expect '6'\n", x);
+    printf("SIZE OF LIST IS: %d, we expect '7'\n", x);
     
     //test swap data function
     LinkedListSwapData(four, two);
-    printf("SWAPPED data four(Iowa), and two (Bismarck), expect those swapped in the following test:\n");
+    printf("\nSWAPPED data four(Iowa), and two (Bismarck), expect those swapped in the following test:");
     LinkedListPrint(two);
     
     //test Remove function
     LinkedListRemove(six);
-    printf("REMOVED Littorio from list\n");
+    printf("\nREMOVED Littorio from list");
     LinkedListPrint(five);
     
     //test sort function
     LinkedListSort(one);
-    printf("SORTED list: Expected: Dog, Iowa, Yamato, Bismarck, KGV\n");
+    printf("SORTED list: Expected: NULL, Dog, Iowa, Yamato, Bismarck, KGV\n");
     LinkedListPrint(one);
     
     //test GetFirst Function
-    six = LinkedListGetFirst(one);
-    printf("Testing the GetFirst() function, expect 'Dog' after sort: %s\n", six->data);
+    six = LinkedListGetFirst(swissNavy);
+    printf("Testing the GetFirst() function, expect 'NULL' after sort: %s\n", six->data);
 
     // You can never return from main() in an embedded system (one that lacks an operating system).
     // This will result in the processor restarting, which is almost certainly not what you want!
