@@ -102,22 +102,22 @@ char *LinkedListRemove(ListItem *item)
         return NULL;
     }
     //can't free after a return, so make a temp storage
-    char *temp = item->data; 
+    char *temp = item->data;
 
     //case1: first list item
     if (item->nextItem != NULL && item->previousItem == NULL) {
         item->nextItem->previousItem = NULL;
-        
+
         //case2: last list item
     } else if (item->previousItem != NULL && item->nextItem == NULL) {
         item->previousItem->nextItem = NULL;
-        
+
         //case3: middle item
     } else if (item->nextItem != NULL && item->previousItem != NULL) { \
         item->previousItem->nextItem = item->nextItem;
         item->nextItem->previousItem = item->previousItem;
     }
-    
+
     //exit routine
     free(temp);
     return temp;
