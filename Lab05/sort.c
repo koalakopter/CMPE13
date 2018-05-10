@@ -16,10 +16,7 @@
 // User libraries
 #include "LinkedList.h"
 
-
 // **** Set any macros or preprocessor directives here ****
-#define TRUE 1
-#define BOOLEAN int
 
 // **** Declare any data types here ****
 
@@ -48,42 +45,38 @@ int main()
      * and displays the number of occurrences of each word in the list as
      * described by UnsortedWordCount() below.
      */
-
-    // Initialize an unsorted word list.
-    ListItem *unsortedWordList = NULL;
-    if (!InitializeUnsortedWordList(&unsortedWordList) || !unsortedWordList) {
-        printf("ERROR: Failed to initialize word list\n");
-        while (TRUE);
-    }
-
-    // Print the list
-    LinkedListPrint(unsortedWordList);
-
-    // Get the word counts for every string in the list
-    int g = LinkedListSize(unsortedWordList);
-    int wordCount[g];
-
-    // Print the word count results
-    unsortedWordList = LinkedListGetFirst(unsortedWordList);
-    if (UnsortedWordCount(unsortedWordList, wordCount)) {
-        printf("[%d, %d, %d, %d, %d, %d, %d, %d, %d, %d]\n",
-                wordCount[0], wordCount[1], wordCount[2],
-                wordCount[3], wordCount[4], wordCount[5],
-                wordCount[6], wordCount[7], wordCount[8],
-                wordCount[9]);
-    } else {
-        printf("ERROR\n");
-    }
-    printf("\n");
+       // Initialize an unsorted word list.
+       ListItem *unsortedWordList = NULL;
+       if (!InitializeUnsortedWordList(&unsortedWordList) || !unsortedWordList) {
+           printf("ERROR: Failed to initialize word list\n");
+           while (1);
+       }
+    
+       // Print the list
+       LinkedListPrint(unsortedWordList);
+    
+       // Get the word counts for every string in the list
+       int g = LinkedListSize(unsortedWordList);
+       int wordCount[g];
+    
+       // Print the word count results
+       unsortedWordList = LinkedListGetFirst(unsortedWordList);
+       if (UnsortedWordCount(unsortedWordList, wordCount)) {
+           printf("[%d, %d, %d, %d, %d, %d, %d, %d, %d, %d]\n",
+                  wordCount[0], wordCount[1], wordCount[2],
+                  wordCount[3], wordCount[4], wordCount[5],
+                  wordCount[6], wordCount[7], wordCount[8],
+                  wordCount[9]);
+       } else {
+           printf("ERROR\n");
+       }
+       printf("\n");
 
     /******************************** Your custom code goes below here ********************************/
-    printf("Welcome to CMPE13 Lab5 by Julian To!\n");
-    
-    //print the sorted word list
-    printf("SORTED LIST:");
+    printf("Welcome to CMPE13 Lab5 Blank. Please remove before starting.\r\n");
+    LinkedListPrint(unsortedWordList);
     LinkedListSort(unsortedWordList);
     LinkedListPrint(unsortedWordList);
-    
 
     /******************************** Your custom code goes above here ********************************/
 
@@ -91,6 +84,7 @@ int main()
     // This will result in the processor restarting, which is almost certainly not what you want!
     while (1);
 }
+
 
 /**
  * This functions takes in the head of an unsorted list of words, and an array to store the number
@@ -112,7 +106,6 @@ int main()
  *                  at least as big as the linked list pointed to be `list` is.
  * @return Either SUCCESS or STANDARD_ERROR if the head of the doubly-linked list isn't passed.
  */
-
 int UnsortedWordCount(ListItem *list, int *wordCount)
 {
     // Make sure the head of the list was given.
@@ -185,7 +178,6 @@ int UnsortedWordCount(ListItem *list, int *wordCount)
  * @param unsortedWordList[out] Where to store the pointer to the head of the list.
  * @return SUCCESS if it succeeds, STANDARD_ERROR if it fails to allocate necessary memory.
  */
-
 int InitializeUnsortedWordList(ListItem **unsortedWordList)
 {
     ListItem *tmp = LinkedListNew(crab);
@@ -243,8 +235,6 @@ int InitializeUnsortedWordList(ListItem **unsortedWordList)
  *                  at least as big as the linked list pointed to be `list` is.
  * @return Either SUCCESS or STANDARD_ERROR if the head of the doubly-linked list isn't passed.
  */
-//defining SortedWordCountFunction
-
 int SortedWordCount(ListItem *list, int *wordCount)
 {
     //if the item is not the head of the list
@@ -305,5 +295,4 @@ int SortedWordCount(ListItem *list, int *wordCount)
     free(sort);
     return SUCCESS;
 }
-
 
