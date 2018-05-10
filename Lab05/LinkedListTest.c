@@ -47,6 +47,7 @@ int main()
     //haha the swiss don't have a navy XD TOPKEK
     ListItem *swissNavy = LinkedListCreateAfter(six, NULL);
     
+    
     //BEGIN TESTING FRAMEWORK
     printf("\nSTART OF TESTING\n");
     //test print function
