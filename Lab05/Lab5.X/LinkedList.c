@@ -28,7 +28,7 @@ int CompareStrings(ListItem *first, ListItem *second)
 {
     //if either list elemnt is null, return 42069, since ERROR is -1, and we are using that
     if (first == NULL || second == NULL) {
-        return 42069;
+        return -42069;
     }
 
     //check for null strings
@@ -43,13 +43,6 @@ int CompareStrings(ListItem *first, ListItem *second)
     }
 
     //first, compare the length of the strings
-
-    //length of first string
-    // int a = strlen(first->data);
-    //length of second string
-    // int b = strlen(second->data);
-
-    //compare lengths
     if (strlen(first->data) < strlen(second->data)) {
         return -1;
     } else if (strlen(first->data) > strlen(second->data)) {
@@ -190,13 +183,18 @@ int LinkedListSize(ListItem * list)
 
 int LinkedListSwapData(ListItem *firstItem, ListItem *secondItem)
 {
+
     //error flag if one of the items passed in is NULL
     if (firstItem == NULL || secondItem == NULL) {
         return STANDARD_ERROR;
     }
+    //if they're both the same no need to swap them
+    if (firstItem ->data == secondItem->data) {
+        return SUCCESS;
+    }
     //otherwise, proceed as normal
-    //create a temporary holder to store the data as its switched around
-    ListItem *inventory = malloc(sizeof (ListItem));
+    //create a temporary holder + memory to store the data as its switched around
+    ListItem *inventory = (ListItem *) malloc(sizeof (ListItem));
 
     //store the data in inventory temporarily
     inventory->data = firstItem->data;
@@ -208,6 +206,7 @@ int LinkedListSwapData(ListItem *firstItem, ListItem *secondItem)
     //exit routine
     free(inventory);
     return SUCCESS;
+
 
 }
 
