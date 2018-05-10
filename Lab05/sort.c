@@ -262,7 +262,7 @@ int SortedWordCount(ListItem *list, int *wordCount)
     sort = list->nextItem;
 
     //similar framework to the sort function, with inner and outer loops
-    while (list->nextItem != NULL) {
+    while (list != NULL) {
         repeat = 0;
 
         while (sort->nextItem != NULL) {
@@ -280,7 +280,7 @@ int SortedWordCount(ListItem *list, int *wordCount)
         }
 
         //checks the last element, like usual
-        if ((sort->nextItem) == NULL) {
+        if ((sort->nextItem) == NULL || (list->nextItem == NULL)) {
             printf("check check %s %s\n", sort->data, list->data);
             if (sort->data == list->data) {
                 repeat++;
@@ -296,9 +296,11 @@ int SortedWordCount(ListItem *list, int *wordCount)
 
         //get ready for the next loop
         list = list->nextItem;
-        sort = list->nextItem;
+        //send sort back to the beginning
+        sort = LinkedListGetFirst(sort);
         //set the value in the array to the amount of times a repeat showed up
         wordCount[arrayCount] = repeat;
+        printf("We're on this number: %d\n", arrayCount);
         arrayCount++;
         //set sort back to the first item in the list
         sort = LinkedListGetFirst(list);
