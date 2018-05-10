@@ -45,46 +45,56 @@ int main()
      * and displays the number of occurrences of each word in the list as
      * described by UnsortedWordCount() below.
      */
-       // Initialize an unsorted word list.
-       ListItem *unsortedWordList = NULL;
-       if (!InitializeUnsortedWordList(&unsortedWordList) || !unsortedWordList) {
-           printf("ERROR: Failed to initialize word list\n");
-           while (1);
-       }
-    
-       // Print the list
-       LinkedListPrint(unsortedWordList);
-    
-       // Get the word counts for every string in the list
-       int g = LinkedListSize(unsortedWordList);
-       int wordCount[g];
-    
-       // Print the word count results
-       unsortedWordList = LinkedListGetFirst(unsortedWordList);
-       if (UnsortedWordCount(unsortedWordList, wordCount)) {
-           printf("[%d, %d, %d, %d, %d, %d, %d, %d, %d, %d]\n",
-                  wordCount[0], wordCount[1], wordCount[2],
-                  wordCount[3], wordCount[4], wordCount[5],
-                  wordCount[6], wordCount[7], wordCount[8],
-                  wordCount[9]);
-       } else {
-           printf("ERROR\n");
-       }
-       printf("\n");
+    // Initialize an unsorted word list.
+    ListItem *unsortedWordList = NULL;
+    if (!InitializeUnsortedWordList(&unsortedWordList) || !unsortedWordList) {
+        printf("ERROR: Failed to initialize word list\n");
+        while (1);
+    }
+
+    // Print the list
+    LinkedListPrint(unsortedWordList);
+
+    // Get the word counts for every string in the list
+    int g = LinkedListSize(unsortedWordList);
+    int wordCount[g];
+
+    // Print the word count results
+    unsortedWordList = LinkedListGetFirst(unsortedWordList);
+    if (UnsortedWordCount(unsortedWordList, wordCount)) {
+        printf("[%d, %d, %d, %d, %d, %d, %d, %d, %d, %d]\n",
+                wordCount[0], wordCount[1], wordCount[2],
+                wordCount[3], wordCount[4], wordCount[5],
+                wordCount[6], wordCount[7], wordCount[8],
+                wordCount[9]);
+    } else {
+        printf("ERROR\n");
+    }
+    printf("\n");
 
     /******************************** Your custom code goes below here ********************************/
-    printf("Welcome to CMPE13 Lab5 Blank. Please remove before starting.\r\n");
-    LinkedListPrint(unsortedWordList);
+    printf("Welcome to CMPE13 Lab 5 Sort.c By Julian To");
+
     LinkedListSort(unsortedWordList);
     LinkedListPrint(unsortedWordList);
 
+    //go back to the beginning of word list, else sorted word list will break
+    unsortedWordList = LinkedListGetFirst(unsortedWordList);
+    if (SortedWordCount(unsortedWordList, wordCount)) {
+        printf("[%d, %d, %d, %d, %d, %d, %d, %d, %d, %d]\n",
+                wordCount[0], wordCount[1], wordCount[2],
+                wordCount[3], wordCount[4], wordCount[5],
+                wordCount[6], wordCount[7], wordCount[8],
+                wordCount[9]);
+    } else {
+        printf("error with SortedWordCount :(");
+    }
     /******************************** Your custom code goes above here ********************************/
 
     // You can never return from main() in an embedded system (one that lacks an operating system).
     // This will result in the processor restarting, which is almost certainly not what you want!
     while (1);
 }
-
 
 /**
  * This functions takes in the head of an unsorted list of words, and an array to store the number
@@ -254,13 +264,15 @@ int SortedWordCount(ListItem *list, int *wordCount)
     //similar framework to the sort function, with inner and outer loops
     while (list->nextItem != NULL) {
         repeat = 0;
-        //if NULL set to zero
-        if (list->data == NULL) {
-            wordCount[arrayCount] = 0;
-        }
+
         while (sort->nextItem != NULL) {
+            //if NULL set to zero
+            if (list->data == NULL) {
+                repeat = 0;
+                break;
+            }
             //check if list and sort are the same, as sort moves up the list 
-            if (sort->data == list->data) {
+            if (sort->data == list->data && list->nextItem != NULL) {
                 repeat++;
             }
             //moves sort to look at the next item in the list
@@ -268,29 +280,29 @@ int SortedWordCount(ListItem *list, int *wordCount)
         }
 
         //checks the last element, like usual
-        if (sort->nextItem == NULL) {
+        if ((sort->nextItem) == NULL) {
+            printf("check check %s %s\n", sort->data, list->data);
             if (sort->data == list->data) {
                 repeat++;
             }
         }
 
-        //assuming a presorted list, if the previous item is equal to the current item, set repeat to -repeat
+        //assuming a pre-sorted list, if the previous item is equal to the current item, 
+        //  set repeat to -repeat
         if (sort->data == sort->previousItem->data) {
             repeat = repeat * -1;
         }
-
-        //check if the 
         //set the value in the array to the amount of times a repeat showed up
-        wordCount[arrayCount] = repeat;
-        arrayCount++;
 
         //get ready for the next loop
         list = list->nextItem;
+        sort = list->nextItem;
+        //set the value in the array to the amount of times a repeat showed up
+        wordCount[arrayCount] = repeat;
+        arrayCount++;
         //set sort back to the first item in the list
         sort = LinkedListGetFirst(list);
     }
-
-
     //exit routine
     free(sort);
     return SUCCESS;
