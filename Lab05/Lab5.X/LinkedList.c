@@ -67,6 +67,7 @@ int CompareStrings(ListItem *first, ListItem *second)
 
 //Linked List Remove function
 
+/*
 char *LinkedListRemove(ListItem *item)
 {
     if (item == NULL) {
@@ -94,7 +95,33 @@ char *LinkedListRemove(ListItem *item)
     free(item);
     return temp->data;
 }
+ */
+char *LinkedListRemove(ListItem *item)
+{
+    if (item == NULL) {
+        return NULL;
+    }
+    //can't free after a return, so make a temp storage
+    char *temp = item->data; 
 
+    //case1: first list item
+    if (item->nextItem != NULL && item->previousItem == NULL) {
+        item->nextItem->previousItem = NULL;
+        
+        //case2: last list item
+    } else if (item->previousItem != NULL && item->nextItem == NULL) {
+        item->previousItem->nextItem = NULL;
+        
+        //case3: middle item
+    } else if (item->nextItem != NULL && item->previousItem != NULL) { \
+        item->previousItem->nextItem = item->nextItem;
+        item->nextItem->previousItem = item->previousItem;
+    }
+    
+    //exit routine
+    free(temp);
+    return temp;
+}
 //creates an item after a certain place in a linkedlist
 
 ListItem * LinkedListCreateAfter(ListItem *item, char *data)
@@ -105,6 +132,7 @@ ListItem * LinkedListCreateAfter(ListItem *item, char *data)
         newItem->previousItem = item;
         //no nextItem since its at the head
         newItem->nextItem = NULL;
+        item->nextItem = newItem;
         newItem->data = data;
 
         //makes the item passed in point to the newItem you just made
