@@ -111,13 +111,11 @@ ListItem * LinkedListCreateAfter(ListItem *item, char *data)
         item->nextItem = newItem;
     }//if passed an item not at the head, insert the item into the list
     else {
-        newItem->previousItem = item;
-
-        //the new item points to the item you passed as an argument originally pointed to
         newItem->nextItem = item->nextItem;
-        newItem->data = data;
-        //makes the item passed in as an argument point to this new item we created
+        item->nextItem->previousItem = newItem;
         item->nextItem = newItem;
+        newItem->previousItem = item;
+        newItem->data = data;
     }
     return newItem;
 }
