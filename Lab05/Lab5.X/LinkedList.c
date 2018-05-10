@@ -45,26 +45,25 @@ int CompareStrings(ListItem *first, ListItem *second)
     //first, compare the length of the strings
 
     //length of first string
-    int a = strlen(first->data);
+    // int a = strlen(first->data);
     //length of second string
-    int b = strlen(second->data);
+    // int b = strlen(second->data);
 
     //compare lengths
-    if (a < b) {
+    if (strlen(first->data) < strlen(second->data)) {
         return -1;
-    } else if (b > a) {
+    } else if (strlen(first->data) > strlen(second->data)) {
         return 1;
     }
 
     //else, compare alphabetically
     int x = strcmp(first->data, second->data);
-    int y = 0;
     //compare the lengths 
     //case 1, first str is alphabetically before second str
-    if (x < y) {
+    if (x < 0) {
         return -1;
     }//case 2, second str is alphabetically before first str
-    else if (x > y) {
+    else if (x > 0) {
         return 1;
     }//case 3, they are equal
     else {
@@ -88,7 +87,7 @@ char *LinkedListRemove(ListItem *item)
     //set the previous item to point to the argument's next item and vice versa
     if ((item->previousItem) != NULL) {
         item->previousItem->nextItem = item->nextItem;
-    }        //if there is no previous item, set the next item's previous item to NULL
+    }//if there is no previous item, set the next item's previous item to NULL
     else {
         item->nextItem->previousItem = NULL;
     }
@@ -189,7 +188,7 @@ int LinkedListSize(ListItem * list)
 
 }
 
-int LinkedListSwapData(ListItem *firstItem, ListItem * secondItem)
+int LinkedListSwapData(ListItem *firstItem, ListItem *secondItem)
 {
     //error flag if one of the items passed in is NULL
     if (firstItem == NULL || secondItem == NULL) {
@@ -200,15 +199,16 @@ int LinkedListSwapData(ListItem *firstItem, ListItem * secondItem)
     ListItem *inventory = malloc(sizeof (ListItem));
 
     //store the data in inventory temporarily
-    inventory->data = firstItem -> data;
-    //swap the data around, second going to first, first
+    inventory->data = firstItem->data;
+    //swap the data around, second going to first
     firstItem->data = secondItem->data;
-
+    //set second.data to stored data
     secondItem->data = inventory->data;
 
     //exit routine
     free(inventory);
     return SUCCESS;
+
 }
 
 //sorts a list from LOWEST to HIGHEST
@@ -229,16 +229,11 @@ int LinkedListSort(ListItem * list)
     //outer loop iteration
     while ((list->nextItem) != NULL) {
         //inner loop
-        while ((next->nextItem) != NULL) {
+        for (next = list->nextItem; next->nextItem != NULL; next = next->nextItem) {
             //swaps the values if list < next
             if (CompareStrings(list, next) >= 0) {
                 LinkedListSwapData(list, next);
             }
-            //check the head item (aka if next == NULL)
-
-            //move next onto the next piece of data
-            next = next->nextItem;
-
         }
         //check the last element of the list, since that wasn't checked in the loop
         if ((next->nextItem) == NULL) {
@@ -246,12 +241,11 @@ int LinkedListSort(ListItem * list)
                 LinkedListSwapData(list, next);
             }
         }
+
         //end of inner loop
 
         //move list one up
         list = list->nextItem;
-        //move the next pointer back to list + 1
-        next = list->nextItem;
     }
     //end of outer loop
 
@@ -259,3 +253,6 @@ int LinkedListSort(ListItem * list)
     free(next);
     return SUCCESS;
 }
+
+
+
