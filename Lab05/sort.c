@@ -281,7 +281,7 @@ int SortedWordCount(ListItem *list, int *wordCount)
 
         //checks the last element, like usual
         if ((sort->nextItem) == NULL || (list->nextItem == NULL)) {
-            printf("check check %s %s\n", sort->data, list->data);
+
             if (sort->data == list->data) {
                 repeat++;
             }
@@ -289,24 +289,27 @@ int SortedWordCount(ListItem *list, int *wordCount)
 
         //assuming a pre-sorted list, if the previous item is equal to the current item, 
         //  set repeat to -repeat
-        if (sort->data == sort->previousItem->data) {
-            repeat = repeat * -1;
+        if (list->previousItem != NULL) {
+            if (list->data == list->previousItem->data) {
+                repeat = repeat * -1;
+            }
         }
-        //set the value in the array to the amount of times a repeat showed up
 
-        //get ready for the next loop
-        list = list->nextItem;
-        //send sort back to the beginning
-        sort = LinkedListGetFirst(sort);
-        //set the value in the array to the amount of times a repeat showed up
-        wordCount[arrayCount] = repeat;
-        printf("We're on this number: %d\n", arrayCount);
-        arrayCount++;
-        //set sort back to the first item in the list
-        sort = LinkedListGetFirst(list);
+            //set the value in the array to the amount of times a repeat showed up
+
+            //get ready for the next loop
+            list = list->nextItem;
+            //send sort back to the beginning
+            sort = LinkedListGetFirst(sort);
+            //set the value in the array to the amount of times a repeat showed up
+            wordCount[arrayCount] = repeat;
+
+            arrayCount++;
+            //set sort back to the first item in the list
+            sort = LinkedListGetFirst(list);
+        }
+        //exit routine
+        free(sort);
+        return SUCCESS;
     }
-    //exit routine
-    free(sort);
-    return SUCCESS;
-}
 
