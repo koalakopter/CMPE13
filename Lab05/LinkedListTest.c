@@ -65,18 +65,26 @@ int main()
     LinkedListPrint(two);
     
     //test Remove function
-    LinkedListRemove(six);
-    printf("\nREMOVED Littorio from list");
+    LinkedListRemove(one);
+    printf("\nREMOVED Yamato from list");
     LinkedListPrint(five);
     
     //test sort function
-    LinkedListSort(one);
-    printf("SORTED list: Expected: NULL, Dog, Iowa, Yamato, Bismarck, KGV\n");
-    LinkedListPrint(one);
+    LinkedListSort(two);
+    printf("SORTED list: Expected: NULL, Dog, Iowa, Bismarck, Littorio, KGV\n");
+    LinkedListPrint(two);
+    
+    LinkedListRemove(four);
+    printf("\n(2nd test) REMOVED Bismarck from list");
+    LinkedListPrint(five);
     
     //test GetFirst Function
-    six = LinkedListGetFirst(swissNavy);
-    printf("Testing the GetFirst() function, expect 'NULL' after sort: %s\n", six->data);
+    one = LinkedListGetFirst(swissNavy);
+    printf("Testing the GetFirst() function, expect 'NULL' after sort: %s\n", one->data);
+    
+    x = LinkedListSize(three);
+    printf("SIZE OF LIST IS: %d, after two removals, we expect '5'\n", x);
+    
 
     // You can never return from main() in an embedded system (one that lacks an operating system).
     // This will result in the processor restarting, which is almost certainly not what you want!
