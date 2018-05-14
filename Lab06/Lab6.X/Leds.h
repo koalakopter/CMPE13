@@ -6,13 +6,12 @@
 #include "BOARD.h"
 #include <xc.h>
 
-#define LEDS_INIT() do {
-TRISE = 0xF6; \//1111 0110 
-LATE = 0x09; \//0000 1001
-} while (0)
-    
-#define LEDS_GATE() 
+#define LEDS_INIT() do{ \
+TRISE = 0xF6;\//1111 0110 
+LATE = 0x09;\//0000 1001
+}while (0)
 
-#define LEDS_SET(x)
+#define LEDS_GATE() (LATE)
+#define LEDS_SET(x) (LATE = x)
 
 #endif //end definition
