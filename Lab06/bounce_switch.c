@@ -19,12 +19,11 @@
 #define LEFT 0
 #define RIGHT 1
 
-
 struct TimerResult {
     int event;
-    uint8_t value; 
+    uint8_t value;
 };
-struct TimeResult timerData;
+struct TimerResult timerData;
 
 // **** Declare function prototypes ****
 
@@ -45,22 +44,11 @@ int main(void)
     /***************************************************************************************************
      * Your code goes in between this comment and the following one with asterisks.
      **************************************************************************************************/
-    printf("Welcome to the Lab 6 Part 1 bounce_switch. I didn't feel like removing this");
+    // printf("Welcome to the Lab 6 Part 1 bounce_switch. I didn't feel like removing this");
     //test coderino
-    LEDS_INIT()
-    LEDS_SET(0xCC);
-    int i;
-    for (i = 0; i < 10000000; i++);
-    LEDS_SET(0xDD);
-    for (i = 0; i < 10000000; i++);
-    LEDS_SET(0);
-    for (i = 0; i < 10000000; i++);
-    LEDS_SET(0xFF);
-
     /***************************************************************************************************
      * Your code goes in between this comment and the preceding one with asterisks
      **************************************************************************************************/
-
     while (1);
 }
 
@@ -73,14 +61,11 @@ int main(void)
  */
 void __ISR(_TIMER_1_VECTOR, IPL4AUTO) Timer1Handler(void)
 {
-    // Clear the interrupt flag.
+    // Clear the interrupt flag
     timerData.value++;
-    if(timerData.value > SWITCH_STATES())
-    {
+    if (timerData.value > SWITCH_STATES()) {
         timerData.event = 1;
         timerData.value = 0;
     }
     INTClearFlag(INT_T1);
-
-
 }
