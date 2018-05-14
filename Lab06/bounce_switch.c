@@ -44,8 +44,8 @@ int main(void)
     /***************************************************************************************************
      * Your code goes in between this comment and the following one with asterisks.
      **************************************************************************************************/
-    printf("Welcome to the Lab 6 Part 1 bounce_switch. I didn't feel like removing this");
-
+    printf("Welcome to the Lab 6 Part 1 bounce_switch. I didn't feel like removing this\n");
+    /* this works better leave it alone
     LEDS_INIT()
     LEDS_SET(0xCC);
     int i;
@@ -55,28 +55,34 @@ int main(void)
     LEDS_SET(0);
     for (i = 0; i < 10000000; i++);
     LEDS_SET(0xFF);
-
-    //test coderino
+     */ 
     //set everything to initial states
-    /*int direction = LEFT;
+    //starts going left
+    int direction = LEFT;
+    LEDS_SET(0x00);
     timerData.value = 0;
     timerData.event = 0;
     while (1) {
+        //left most light is 0x01, right most is 0x80
         if (timerData.event == 1) {
-            if ((LATE == 0x1) && (direction == RIGHT)) {
-                direction = LEFT;
-            } else if ((LATE == 0x80) && (direction == LEFT)) {
+            //if going left and hits the right most LED, go back right
+            if ((LATE == 0x80) && (direction == LEFT)) {
                 direction = RIGHT;
+            //if going right and hits the left most LED, go back left
+            } else if ((LATE == 0x01) && (direction == RIGHT)) {
+                direction = LEFT;
+            //moving left, bit shift to the left by 1
             } else if (direction == LEFT) {
                 LEDS_SET(LATE << 1);
                 timerData.event = 0;
+            //moving right, bit shift to the right by 1
             } else if (direction == RIGHT) {
                 LEDS_SET(LATE >> 1);
                 timerData.event = 0;
             }
         }
     }
-     */
+     
     /***************************************************************************************************
      * Your code goes in between this comment and the preceding one with asterisks
      **************************************************************************************************/
@@ -94,6 +100,7 @@ void __ISR(_TIMER_1_VECTOR, IPL4AUTO) Timer1Handler(void)
 {
     // Clear the interrupt flag
     timerData.value++;
+    //triggered a TIMER1 event?
     if (timerData.value > SWITCH_STATES()) {
         timerData.event = 1;
         timerData.value = 0;
