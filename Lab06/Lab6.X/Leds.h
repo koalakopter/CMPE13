@@ -7,10 +7,9 @@
 #include <xc.h>
 
 #define LEDS_INIT() do{ \
-TRISE = 0x0;    \//zero
-LATE = 0x0;      \//also zero
+    TRISE = 0x0;    \
+    LATE = 0x0;      \
 }while (0)
-
 #define LEDS_GET() (LATE)
 #define LEDS_SET(x) (LATE = x)
 
