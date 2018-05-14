@@ -7,11 +7,11 @@
 #include <xc.h>
 
 #define LEDS_INIT() do{ \
-TRISE = 0xF6;\//1111 0110 
-LATE = 0x09;\//0000 1001
+TRISE = 0;    \//zero
+LATE = 0x0;      \//?
 }while (0)
 
-#define LEDS_GATE() (LATE)
+#define LEDS_GET() (LATE)
 #define LEDS_SET(x) (LATE = x)
 
 #endif //end definition
