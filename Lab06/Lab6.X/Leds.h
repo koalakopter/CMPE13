@@ -9,8 +9,11 @@
 #define LEDS_INIT() do{ \
     TRISE = 0x0;    \
     LATE = 0x0;      \
-}while (0)
+}while (0);
+
+//get the value of LATE
 #define LEDS_GET() (LATE)
-#define LEDS_SET(x) (LATE = x)
+//sets LATE to whatever x is
+#define LEDS_SET(x) LATE = x
 
 #endif //end definition
