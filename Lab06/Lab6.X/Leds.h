@@ -7,8 +7,8 @@
 #include <xc.h>
 
 #define LEDS_INIT() do{ \
-TRISE = 0;    \//zero
-LATE = 0x0;      \//?
+TRISE = 0x0;    \//zero
+LATE = 0x0;      \//also zero
 }while (0)
 
 #define LEDS_GET() (LATE)
