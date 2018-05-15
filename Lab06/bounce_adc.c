@@ -21,6 +21,7 @@
 // **** Declare any datatypes here ****
 
 // **** Define global, module-level, or external variables here ****
+
 struct AdcResult {
     uint8_t event;
     uint16_t value;
@@ -29,7 +30,6 @@ struct AdcResult {
 //struct that stores data (IDK what good variable name I can give this....)
 struct AdcResult data;
 // **** Declare function prototypes ****
-
 
 int main(void)
 {
@@ -58,7 +58,7 @@ int main(void)
      * Your code goes in between this comment and the following one with asterisks.
      **************************************************************************************************/
     printf("Welcome to the Lab 6 Part 2 by Julian To. ME NO REMOVE\n");
-    
+
     double percentage;
     //magic number for string length
     int magicNum = 88;
@@ -66,20 +66,19 @@ int main(void)
     char string1[magicNum];
     //starts the LED display
     OledInit();
-    
+
     //constantly reads the potentiometer values
-    while(1)
-    {
+    while (1) {
         //set percentage to data.value so I can print it
         percentage = (data.value / 1023.0)*100.0;
         //copies a formatted string into variable string, so it can be printed out
         //MAX LINE LENGTH ON SCREEN IS 20 CHARS
-        sprintf(string1, "VAL OF POTENTIOMETER:\n%d\nPERCENTAGE OF TOTAL:\n%.2f",data.value, percentage); 
-        
+        sprintf(string1, "VAL OF POTENTIOMETER:\n%d\nPERCENTAGE OF TOTAL:\n%.0f%%", data.value, percentage);
+
         //print the strings
         //OledDrawString(string2);
         //OledUpdate; //updates the display screen
-        
+
         OledDrawString(string1);
         OledUpdate();
     }
@@ -102,9 +101,8 @@ int main(void)
 void __ISR(_ADC_VECTOR, IPL2AUTO) AdcHandler(void)
 {
     //get the average of the registers, then store it in an unsigned 16 bit integer
-    uint16_t average = ((ADC1BUF0 + ADC1BUF1 + ADC1BUF2 + ADC1BUF3 + ADC1BUF4 + ADC1BUF5 + ADC1BUF6 + ADC1BUF7)/8.0);
-    if (average != data.value)
-    {
+    uint16_t average = ((ADC1BUF0 + ADC1BUF1 + ADC1BUF2 + ADC1BUF3 + ADC1BUF4 + ADC1BUF5 + ADC1BUF6 + ADC1BUF7) / 8.0);
+    if (average != data.value) {
         data.value = average;
         data.event = TRUE;
     }
