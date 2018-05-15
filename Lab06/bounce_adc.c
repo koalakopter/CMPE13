@@ -10,7 +10,7 @@
 
 #include "Oled.h"
 #include "OledDriver.h"
-
+#include "Ascii.h"
 // User libraries
 
 
@@ -26,9 +26,10 @@ struct AdcResult {
     uint16_t value;
 };
 
+//struct that stores data (IDK what good variable name I can give this....)
 struct AdcResult data;
-
 // **** Declare function prototypes ****
+
 
 int main(void)
 {
@@ -56,7 +57,25 @@ int main(void)
     /***************************************************************************************************
      * Your code goes in between this comment and the following one with asterisks.
      **************************************************************************************************/
-    printf("Welcome to the Lab 6 Part 2 blank. Please remove before starting.");
+    printf("Welcome to the Lab 6 Part 2 by Julian To. ME NO REMOVE\n");
+    
+    double percentage;
+    //create an array of characters to pass into drawString
+    char string[40];
+    //starts the LED display
+    OledInit();
+    
+    //constantly reads the potentiometer values
+    while(1)
+    {
+        //set percentage to data.value so I can print it
+        percentage = (data.value / 1023)*100;
+        //copies a formatted string into variable string, so it can be printed out
+        sprintf(string,"PERCENTAGE OF TOTAL: %f", percentage);
+        
+        OledDrawString(string);
+        OledUpdate();
+    }
 
 
     /***************************************************************************************************
