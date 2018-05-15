@@ -60,8 +60,10 @@ int main(void)
     printf("Welcome to the Lab 6 Part 2 by Julian To. ME NO REMOVE\n");
     
     double percentage;
+    //magic number for string length
+    int magicNum = 88;
     //create an array of characters to pass into drawString
-    char string[40];
+    char string1[magicNum];
     //starts the LED display
     OledInit();
     
@@ -69,11 +71,16 @@ int main(void)
     while(1)
     {
         //set percentage to data.value so I can print it
-        percentage = (data.value / 1023)*100;
+        percentage = (data.value / 1023.0)*100.0;
         //copies a formatted string into variable string, so it can be printed out
-        sprintf(string,"PERCENTAGE OF TOTAL: %f", percentage);
+        //MAX LINE LENGTH ON SCREEN IS 20 CHARS
+        sprintf(string1, "VAL OF POTENTIOMETER:\n %d \n PERCENTAGE OF TOTAL: %.2f",data.value, percentage); 
         
-        OledDrawString(string);
+        //print the strings
+        //OledDrawString(string2);
+        //OledUpdate; //updates the display screen
+        
+        OledDrawString(string1);
         OledUpdate();
     }
 
@@ -101,6 +108,7 @@ void __ISR(_ADC_VECTOR, IPL2AUTO) AdcHandler(void)
         data.value = average;
         data.event = TRUE;
     }
+    data.value = average;
     // Clear the interrupt flag.
     INTClearFlag(INT_AD1);
 
