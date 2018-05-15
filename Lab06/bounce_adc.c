@@ -74,7 +74,7 @@ int main(void)
         percentage = (data.value / 1023.0)*100.0;
         //copies a formatted string into variable string, so it can be printed out
         //MAX LINE LENGTH ON SCREEN IS 20 CHARS
-        sprintf(string1, "VAL OF POTENTIOMETER:\n %d \n PERCENTAGE OF TOTAL: %.2f",data.value, percentage); 
+        sprintf(string1, "VAL OF POTENTIOMETER:\n%d\nPERCENTAGE OF TOTAL:\n%.2f",data.value, percentage); 
         
         //print the strings
         //OledDrawString(string2);
