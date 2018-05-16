@@ -28,8 +28,9 @@
 struct TimerResult {
     int event;
     uint8_t value;
+    uint8_t switchCheck;
 };
-struct TimerResult buttonData;
+struct TimerResult boardData;
 
 // **** Declare function prototypes ****
 
@@ -61,38 +62,52 @@ int main(void)
     BOOLEAN up3;
     BOOLEAN up4;
 
+    //the output of the LED's
+    uint8_t output;
+
     //loop foreverrr
     while (TRUE) {
         //check if switches are up or down (UP = TRUE, DOWN = FALSE)
-        if (SWITCH_STATE_SW1) {
+        if (SWITCH_STATE_SW1 & boardData.switchCheck) {
             up1 = TRUE;
         } else {
             up1 = FALSE;
         }
-        if (SWITCH_STATE_SW1) {
+        if (SWITCH_STATE_SW2 & boardData.switchCheck) {
             up2 = TRUE;
         } else {
             up2 = FALSE;
         }
-        if (SWITCH_STATE_SW1) {
+        if (SWITCH_STATE_SW3 & boardData.switchCheck) {
             up3 = TRUE;
         } else {
             up3 = FALSE;
         }
-        if (SWITCH_STATE_SW1) {
+        if (SWITCH_STATE_SW4 & boardData.switchCheck) {
             up4 = TRUE;
         } else {
             up4 = FALSE;
         }
 
+        //get the current status of the LED's
+        output = LEDS_GET();
+
         //compare button down press to the current value of buttonData
-        if (BUTTON_EVENT_1DOWN & buttonData.value) {
+        if (BUTTON_EVENT_1DOWN & boardData.value) {
             //check if switch is down or up
             if (up1 == FALSE) {
                 //light up LED with bitwise XOR
+                output = output ^ 0x03;
+                LEDS_SET(output);
+                puts("meme\n");
             }
-        } else if (BUTTON_EVENT_1UP & buttonData.value) {
-
+        } else if (BUTTON_EVENT_1UP & boardData.value) {
+            if (up1 == TRUE) {
+                //light up LED with bitwise XOR
+                output = output ^ 0x03;
+                LEDS_SET(output);
+                puts("not memee\n");
+            }
         }
 
     }
@@ -112,7 +127,8 @@ int main(void)
  */
 void __ISR(_TIMER_1_VECTOR, IPL4AUTO) Timer1Handler(void)
 {
-    buttonData.value = ButtonsCheckEvents();
+    boardData.value = ButtonsCheckEvents();
+    boardData.switchCheck = SWITCH_STATES();
     // Clear the interrupt flag.
     INTClearFlag(INT_T1);
 
