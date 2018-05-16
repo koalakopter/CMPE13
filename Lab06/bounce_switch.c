@@ -52,25 +52,29 @@ int main(void)
     LEDS_SET(0x08); //start in the middle just cause
     timerData.value = 0;
     timerData.event = 0;
+    //infinite loop of bouncy lights
     while (1) {
         //left most light is 0x01, right most is 0x80
         if (timerData.event == 1) {
-            //if going left and hits the right most LED, go back right
-            if ((LATE == 0x80) && (direction == LEFT)) {
-                direction = RIGHT;
-                //if going right and hits the left most LED, go back left
-            } else if ((LATE == 0x01) && (direction == RIGHT)) {
-                direction = LEFT;
-                //moving left, bit shift to the left by 1
-            } else if (direction == LEFT) {
-                LEDS_SET(LATE << 1);
-                timerData.event = 0;
 
-                //moving right, bit shift to the right by 1
-            } else if (direction == RIGHT) {
-                LEDS_SET(LATE >> 1);
-                timerData.event = 0;
-
+            if (direction == LEFT) {
+                //if going left and hits the right most LED, go back right
+                if (LATE == 0x80) {
+                    direction = RIGHT;
+                } else {
+                    //bit shift to the left by 1 --> or 0100 becomes 1000
+                    LEDS_SET(LATE << 1);
+                    timerData.event = 0;
+                }
+            }//else, if going right, and hits left most LED, go back left
+            else {
+                if (LATE == 0x01) {
+                    direction = LEFT;
+                } else {
+                    //bit shift to the right by 1 --> or 0100 becomes 0010
+                    LEDS_SET(LATE >> 1);
+                    timerData.event = 0;
+                }
             }
         }
     }
