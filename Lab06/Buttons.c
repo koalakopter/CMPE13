@@ -22,7 +22,8 @@ void ButtonsInit(void)
  */
 //ButtonsCheckEvents function
 
-uint8_t current;
+//keeps track of the current bits that are toggled
+static uint8_t current; //static so it can't be accessed outside of file
 
 uint8_t ButtonsCheckEvents(void)
 {
