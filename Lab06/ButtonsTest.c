@@ -18,6 +18,7 @@ int main()
         uint8_t koala = BUTTON_STATES();
         //put that 8 bit int into LED form
         LEDS_SET(koala);
+        //REPORT: pressing buttons made LEDS light up WOWZERS
         
     }
     
