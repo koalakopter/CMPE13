@@ -69,12 +69,17 @@ int main(void)
 
     //loop foreverrr
     while (TRUE) {
-        if (boardData.event == TRUE) {
+        while (boardData.event == TRUE) {
+
+            //check the switch state
+            boardData.switchCheck = SWITCH_STATES();
             //check if switches are up or down (UP = TRUE, DOWN = FALSE)
             if (SWITCH_STATE_SW1 & boardData.switchCheck) {
                 up1 = TRUE;
-            } else {
+                //puts("FUCK");
+            } else if (!(SWITCH_STATE_SW1 & boardData.switchCheck)) {
                 up1 = FALSE;
+                //puts("SHIT");
             }
             if (SWITCH_STATE_SW2 & boardData.switchCheck) {
                 up2 = TRUE;
@@ -93,30 +98,36 @@ int main(void)
             }
 
             //get the current status of the LED's
-            current = LEDS_GET();
+
 
 
             //compare button down press to the current value of buttonData
 
-            if (BUTTON_EVENT_1UP & boardData.value) {
-                //check if switch is down or up
-                if (up1 == TRUE) {
-                    //light up LED with bitwise XOR
-                    output = current ^ 0x03;
-                    LEDS_SET(output);
-                    puts("meme\n");
-                }
-            } else if (BUTTON_EVENT_1DOWN & boardData.value) {
-                if (up1 == FALSE) {
-                    //light up LED with bitwise XOR
-                    output = current ^ 0x03;
-                    LEDS_SET(output);
-                    puts("not memee\n");
-                }
+        if (BUTTON_EVENT_1UP & boardData.value) {
+            //if switch is up (DOESNT WORK RIGHT NOW)
+            if (up1 == TRUE) {
+                //light up LED with bitwise XOR
+                output = LEDS_GET();
+                output = output ^ 0x03;
+                LEDS_SET(output);
+                puts("meme\n");
+           
             }
+        } else if (BUTTON_EVENT_1DOWN & boardData.value) {
+            //if switch is down
+            if (up1 == FALSE) {
+                //light up LED with bitwise XOR
+                output = LEDS_GET();
+                output = output ^ 0x03;
+                LEDS_SET(output);
+                puts("not memee\n");
+            }
+        }
+             
             //clears all values so it doesn't run the loop unnecessarily
-            boardData.event == 0;
             boardData.value == 0;
+            boardData.event == 0;
+            
         }
     }
 
@@ -135,7 +146,7 @@ void __ISR(_TIMER_1_VECTOR, IPL4AUTO) Timer1Handler(void)
 {
     //updates the switch and button values
     boardData.value = ButtonsCheckEvents();
-    boardData.switchCheck = SWITCH_STATES();
+
 
     //checks if something was actually changed
     boardData.event = TRUE;
