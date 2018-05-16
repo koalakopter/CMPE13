@@ -17,6 +17,7 @@ int main(void)
     printf("ButtonsTest.c Test Code, by Julian To \n");
     //testing puts
     puts("ButtonsTest.c Test Code, by Julian To \n");
+    uint8_t buttonEvents;
     while (TRUE) {
         /*
         //store ButtonStates as a unsigned 8 bit int
@@ -25,7 +26,7 @@ int main(void)
         LEDS_SET(koala);
         //REPORT: pressing buttons made LEDS light up WOWZERS
          */
-        uint8_t buttonEvents = ButtonsCheckEvents();
+        buttonEvents = ButtonsCheckEvents();
         //copied from the lab manual
         if (buttonEvents) {
             if (buttonEvents & BUTTON_EVENT_1UP) {
@@ -56,6 +57,6 @@ int main(void)
 
         }
 
-        while (1);
     }
+    while (1);
 }
