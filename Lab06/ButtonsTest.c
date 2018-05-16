@@ -8,12 +8,15 @@
 
 int main(void)
 {
+    BOARD_Init();
     //start LEDS
     LEDS_INIT()
 
     //test Buttons_Init()
     ButtonsInit();
     printf("ButtonsTest.c Test Code, by Julian To \n");
+    //testing puts
+    puts("ButtonsTest.c Test Code, by Julian To \n");
     while (TRUE) {
         /*
         //store ButtonStates as a unsigned 8 bit int
