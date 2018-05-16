@@ -8,8 +8,10 @@
 #include <xc.h>
 #include <plib.h>
 
-// User libraries
 
+// User libraries
+#include "Leds.h"
+#include "Buttons.h"
 
 // **** Set macros and preprocessor directives ****
 
@@ -21,13 +23,13 @@
 // **** Define global, module-level, or external variables here ****
 
 
-//shameless copy from part1 for use with Timer1Handler
+//shameless copy from part1, for use with Timer1Handler
 
 struct TimerResult {
     int event;
     uint8_t value;
 };
-struct TimerResult timerData;
+struct TimerResult buttonData;
 
 // **** Declare function prototypes ****
 
@@ -49,6 +51,8 @@ int main(void)
      * Your code goes in between this comment and the following one with asterisks.
      **************************************************************************************************/
     //turn on LED and Buttons
+
+    printf("Julian's button extravaganza! Lab 6 Part 3\n");
     LEDS_INIT();
     ButtonsInit();
     //used to keep track if switch is up or down
@@ -59,18 +63,36 @@ int main(void)
 
     //loop foreverrr
     while (TRUE) {
-        //check if switches are up or down
+        //check if switches are up or down (UP = TRUE, DOWN = FALSE)
         if (SWITCH_STATE_SW1) {
             up1 = TRUE;
+        } else {
+            up1 = FALSE;
         }
         if (SWITCH_STATE_SW1) {
             up2 = TRUE;
+        } else {
+            up2 = FALSE;
         }
         if (SWITCH_STATE_SW1) {
             up3 = TRUE;
+        } else {
+            up3 = FALSE;
         }
         if (SWITCH_STATE_SW1) {
             up4 = TRUE;
+        } else {
+            up4 = FALSE;
+        }
+
+        //compare button down press to the current value of buttonData
+        if (BUTTON_EVENT_1DOWN & buttonData.value) {
+            //check if switch is down or up
+            if (up1 == FALSE) {
+                //light up LED with bitwise XOR
+            }
+        } else if (BUTTON_EVENT_1UP & buttonData.value) {
+
         }
 
     }
@@ -90,8 +112,7 @@ int main(void)
  */
 void __ISR(_TIMER_1_VECTOR, IPL4AUTO) Timer1Handler(void)
 {
-    timerData.value = ButtonsCheckEvents();
-    timerData.event = 1;
+    buttonData.value = ButtonsCheckEvents();
     // Clear the interrupt flag.
     INTClearFlag(INT_T1);
 
