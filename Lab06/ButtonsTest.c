@@ -16,7 +16,7 @@ int main(void)
     ButtonsInit();
     printf("ButtonsTest.c Test Code, by Julian To \n");
     //testing puts
-    puts("ButtonsTest.c Test Code, by Julian To \n");
+    puts("Pressing a button should yield a message saying that button was pressed(down) then released(up)");
     uint8_t buttonEvents;
     while (TRUE) {
         /*
