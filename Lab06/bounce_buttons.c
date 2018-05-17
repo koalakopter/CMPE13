@@ -65,14 +65,15 @@ int main(void)
     //the output of the LED's
     uint8_t output;
     //current state of LED's
-    uint8_t current;
 
     //loop foreverrr
     while (TRUE) {
-        while (boardData.event == TRUE) {
+        
+         boardData.value = ButtonsCheckEvents();
+        //essentially if ButtonCheckEvents was triggered
+        if(boardData.value) {
 
-            //check the switch state
-            boardData.switchCheck = SWITCH_STATES();
+            
             //check if switches are up or down (UP = TRUE, DOWN = FALSE)
             if (SWITCH_STATE_SW1 & boardData.switchCheck) {
                 up1 = TRUE;
@@ -101,8 +102,8 @@ int main(void)
 
 
 
-            //compare button down press to the current value of buttonData
-
+        //compare button down press to the current value of buttonData
+        //check for button 1 and switch 1
         if (BUTTON_EVENT_1UP & boardData.value) {
             //if switch is up (DOESNT WORK RIGHT NOW)
             if (up1 == TRUE) {
@@ -125,8 +126,8 @@ int main(void)
         }
              
             //clears all values so it doesn't run the loop unnecessarily
-            boardData.value == 0;
-            boardData.event == 0;
+            boardData.value == BUTTON_EVENT_NONE;
+            boardData.event == FALSE;
             
         }
     }
@@ -145,8 +146,10 @@ int main(void)
 void __ISR(_TIMER_1_VECTOR, IPL4AUTO) Timer1Handler(void)
 {
     //updates the switch and button values
-    boardData.value = ButtonsCheckEvents();
-
+    //boardData.value = ButtonsCheckEvents();
+    
+    //check the switch state
+    boardData.switchCheck = SWITCH_STATES();
 
     //checks if something was actually changed
     boardData.event = TRUE;
