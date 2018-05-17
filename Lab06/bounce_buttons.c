@@ -149,9 +149,9 @@ int main(void)
                     LEDS_SET(output);
 
                 }
-            } else if (BUTTON_EVENT_1DOWN & boardData.value) {
+            } else if (BUTTON_EVENT_3DOWN & boardData.value) {
                 //if switch is down
-                if (up1 == FALSE) {
+                if (up3 == FALSE) {
                     //light up LED with bitwise XOR
                     output = LEDS_GET();
                     output = output ^ 0x30; //0011 0000
