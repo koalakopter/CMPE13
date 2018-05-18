@@ -179,8 +179,8 @@ int main(void)
             }
 
             //clears all values so it doesn't run the loop unnecessarily
-            boardData.value == BUTTON_EVENT_NONE;
-            boardData.event == FALSE;
+            boardData.value = BUTTON_EVENT_NONE;
+            boardData.event = FALSE;
 
         }
     }
