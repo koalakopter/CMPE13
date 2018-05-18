@@ -11,9 +11,10 @@
     LATE = 0x0;      \
 }while (0);
 
-//get the value of LATE
+//sets LATE to whatever input is (usually a series of 8 bits)
+#define LEDS_SET(input) (LATE = input)
+//get the value of the LATE register
 #define LEDS_GET() (LATE)
-//sets LATE to whatever x is
-#define LEDS_SET(x) LATE = x
+
 
 #endif //end definition
