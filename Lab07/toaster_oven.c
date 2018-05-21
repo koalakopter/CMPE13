@@ -171,14 +171,16 @@ void print(void)
         strcat(displayOutput, lineTwo);
         strcat(displayOutput, lineThree);
         strcat(displayOutput, lineFour);
-
+        
+        //reset the display
+        OledSetDisplayNormal();
         OledDrawString(displayOutput);
         OledUpdate();
         break;
 
         //broil mode    
     case('b'):
-        sprintf(lineOne, "|%c%c%c%c%c|  MODE: Bake\n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
+        sprintf(lineOne, "|%c%c%c%c%c|  MODE: Broil\n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
                 TOP_OVEN_OFF, TOP_OVEN_OFF);
         sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
         sprintf(lineThree, "|-----|  TEMP: 500°F\n");
@@ -191,14 +193,16 @@ void print(void)
         strcat(displayOutput, lineTwo);
         strcat(displayOutput, lineThree);
         strcat(displayOutput, lineFour);
-
+        
+        //reset the display
+        OledSetDisplayNormal();
         OledDrawString(displayOutput);
         OledUpdate();
         break;
 
         //toast mode
     case('c'):
-        sprintf(lineOne, "|%c%c%c%c%c|  MODE: Bake\n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
+        sprintf(lineOne, "|%c%c%c%c%c|  MODE: Toast\n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
                 TOP_OVEN_OFF, TOP_OVEN_OFF);
         sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
         sprintf(lineThree, "|-----|\n");
@@ -211,7 +215,9 @@ void print(void)
         strcat(displayOutput, lineTwo);
         strcat(displayOutput, lineThree);
         strcat(displayOutput, lineFour);
-
+        
+        //reset the display
+        OledSetDisplayNormal();
         OledDrawString(displayOutput);
         OledUpdate();
         break;
