@@ -110,50 +110,69 @@ int main()
     AdcInit();
 
     //default mode is bake
-    data.ovenState = 'a';
+    data.cookingMode = 'a';
+    data.ovenState = RESET;
+    
+    //default temp is 300F
+    data.temp = 300;
     uint8_t buttonEvents;
 
 
     while (1) {
         //everything will happen in here
+        switch (data.ovenState) {
 
-        //get the current temperature with potentiometer if the potentiometer was moved
-        if (AdcChanged() != FALSE) {
-            if (selector == TRUE) {
-                data.temp = AdcRead();
-                data.temp = data.temp >> 2; //shift to the right by two bits so we get the top 8
-                data.temp += 300;
-            }
-        }
-        print();
+        case RESET:
+            //get the current temperature with potentiometer if the potentiometer was moved
 
-        //cycles between states of the oven by checking buttons
-        buttonEvents = ButtonsCheckEvents();
-        if (buttonEvents) {
-            //checks if Button3 was pressed for less than 1 second
-            if ((data.buttonPress < LONG_PRESS) && (buttonEvents & BUTTON_EVENT_3UP)) {
-                if (data.ovenState == 'a') {
-                    data.ovenState = 'b';
-                } else if (data.ovenState == 'b') {
-                    data.ovenState = 'c';
-                } else {
-                    data.ovenState = 'a';
-                }
-            }                //if pressed longer than 1 second, swap between what you change with potentiometer
-            else {
+            data.ovenState = START;
+            print();
+            break;
+
+        case START:
+            //edits the potentiometer
+            if (AdcChanged() != FALSE) {
                 if (selector == TRUE) {
-                    selector = FALSE;
-                } else {
-                    selector = TRUE;
+                    data.temp = AdcRead();
+                    data.temp = data.temp >> 2; //shift to the right by two bits so we get the top 8
+                    data.temp += 300;
+                }
+                print();
+            }
+            //cycles between states of the oven by checking buttons
+            buttonEvents = ButtonsCheckEvents();
+            if (buttonEvents) {
+                //checks if Button3 was pressed less than one second, swap cooking mode
+                if ((data.buttonPress < LONG_PRESS) && (buttonEvents & BUTTON_EVENT_3UP)) {
+                    if (data.cookingMode == 'a') {
+                        data.cookingMode = 'b';
+                    } else if (data.cookingMode == 'b') {
+                        data.cookingMode = 'c';
+                    } else {
+                        data.cookingMode = 'a';
+                    }
+                }                    
+                //if pressed greater than 1 sec
+                else if ((data.buttonPress >= LONG_PRESS) && (buttonEvents & BUTTON_EVENT_3UP)) {
+                    if (selector == TRUE) {
+                        selector = FALSE;
+                    } else {
+                        selector = TRUE;
+                    }
+                    print();
+
                 }
 
+                //reset the timer back to zero
+                data.buttonPress = 0;
+                data.ovenState = START;
+                print();
+ 
             }
+            break;
 
-            //reset the timer back to zero
-            data.buttonPress = 0;
+
         }
-
-
     }
     /***************************************************************************************************
      * Your code goes in between this comment and the preceding one with asterisks
@@ -175,7 +194,7 @@ static int sec;
 
 void print(void)
 {
-    switch (data.ovenState) {
+    switch (data.cookingMode) {
 
         //bake mode
     case('a'):
@@ -184,10 +203,10 @@ void print(void)
         //if selector is true, switch temperature
         if (selector == TRUE) {
             sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
-            sprintf(lineThree, "|-----|  >TEMP: %d°F \n", data.temp);
+            sprintf(lineThree, "|-----| >TEMP: %d°F \n", data.temp);
             //if selector is false, switch time
         } else {
-            sprintf(lineTwo, "|     |  >TIME: %d:%02d \n", min, sec);
+            sprintf(lineTwo, "|     | >TIME: %d:%02d \n", min, sec);
             sprintf(lineThree, "|-----|  TEMP: %d°F \n", data.temp);
         }
         sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
