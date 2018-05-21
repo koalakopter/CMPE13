@@ -136,8 +136,13 @@ int main()
                     data.temp = AdcRead();
                     data.temp = data.temp >> 2; //shift to the right by two bits so we get the top 8
                     data.temp += 300;
-                }
                 print();
+                }
+                else if (selector == FALSE)
+                {
+                    data.initTime = AdcRead();
+                    data.initTime = data.initTime >> 2;
+                }
             }
             //cycles between states of the oven by checking buttons
             buttonEvents = ButtonsCheckEvents();
@@ -202,12 +207,13 @@ void print(void)
                 TOP_OVEN_OFF, TOP_OVEN_OFF);
         //if selector is true, switch temperature
         if (selector == TRUE) {
+            //176 is the ASCII code for the degree symbol
             sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
-            sprintf(lineThree, "|-----| >TEMP: %d°F \n", data.temp);
+            sprintf(lineThree, "|-----| >TEMP: %d%cF \n", data.temp, 248);
             //if selector is false, switch time
         } else {
             sprintf(lineTwo, "|     | >TIME: %d:%02d \n", min, sec);
-            sprintf(lineThree, "|-----|  TEMP: %d°F \n", data.temp);
+            sprintf(lineThree, "|-----|  TEMP: %d%cF \n", data.temp, 248);
         }
         sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
                 BOT_OVEN_OFF);
