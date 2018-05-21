@@ -7,6 +7,7 @@
 #include "Buttons.h"
 #include "Leds.h"
 #include "Oled.h"
+#include "OledDriver.h"
 
 // Microchip libraries
 #include <xc.h>
@@ -22,6 +23,22 @@
 // **** Declare any datatypes here ****
 
 // **** Define any module-level, global, or external variables here ****
+//drawing the oven
+#define TOP_OVEN_ON 0x01
+#define TOP_OVEN_OFF 0x02
+#define BOT_OVEN_ON 0x03
+#define BOT_OVEN_OFF 0x04
+
+void print(void);
+
+//arbitrary value for strings to print onto OLED
+#define ARBITRARY_VALUE 30
+
+//seconds and minutes!
+static int sec;
+static int min;
+//keeps track of temperature
+static int temp;
 
 // Configuration Bit settings
 
@@ -67,13 +84,48 @@ int main()
     ButtonsInit();
     AdcInit();
     
+    while(1)
+    {
+        //everything will happen in here
+        print();
+    
+    
     
 
-
+    }
     /***************************************************************************************************
      * Your code goes in between this comment and the preceding one with asterisks
      **************************************************************************************************/
     while (1);
+}
+
+//print function in charge of printing the stuff to display
+static char lineOne[ARBITRARY_VALUE];
+static char lineTwo[ARBITRARY_VALUE];
+static char lineThree[ARBITRARY_VALUE];
+static char lineFour[ARBITRARY_VALUE];
+
+
+
+void print(void)
+{
+    //bake mode, oven off
+    sprintf(lineOne, "|%c%c%c%c%c|  MODE: Bake\n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF, 
+            TOP_OVEN_OFF, TOP_OVEN_OFF);
+    sprintf(lineTwo, "|     |  TIME: %d:%d\n", min, sec);
+    sprintf(lineThree, "|-----|  TEMP: %d°F\n", temp);
+    sprintf(lineFour, "|%c%c%c%c%c|\n",BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
+            BOT_OVEN_OFF);
+    
+    //print statements
+    OledDrawString(lineOne);
+    OledUpdate();
+    OledDrawString(lineTwo);
+    OledUpdate();
+    OledDrawString(lineThree);
+    OledUpdate();
+    OledDrawString(lineFour);
+    OledUpdate();
 }
 
 void __ISR(_TIMER_1_VECTOR, ipl4auto) TimerInterrupt2Hz(void)
