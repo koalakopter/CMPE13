@@ -35,11 +35,28 @@ void print(void);
 //arbitrary value for strings to print onto OLED
 #define ARBITRARY_VALUE 30
 
-//seconds and minutes!
-static int sec;
-static int min;
-//keeps track of temperature
-static int temp;
+#define TRUE 1
+#define FALSE 0 
+
+
+//struct that keeps track of everything about the oven
+
+struct Oven {
+    //keeps track of oven states: (a = bake, b = broil, c = toast)
+    char ovenState;
+    char cookingMode;
+
+    int buttonPress;
+    int input;
+
+    //for time stuff
+    float remTime;
+    float initTime;
+    //keeps track of temperature
+    int temp;
+};
+
+struct Oven data;
 
 // Configuration Bit settings
 
@@ -80,18 +97,42 @@ int main()
     /***************************************************************************************************
      * Your code goes in between this comment and the following one with asterisks.
      **************************************************************************************************/
+    printf("Starting the toasty funtimes\n");
     LEDS_INIT();
     OledInit();
     ButtonsInit();
     AdcInit();
-    
-    while(1)
-    {
+
+    //default mode is bake
+    data.ovenState = 'a';
+    uint8_t buttonEvents;
+
+    while (1) {
         //everything will happen in here
+
+        //get the current temperature with potentiometer
+        if (AdcChanged() != FALSE) {
+
+            data.temp = AdcRead();
+            data.temp += 300;
+        }
         print();
-    
-    
-    
+
+        //cycles between states of the oven by checking buttons
+        buttonEvents = ButtonsCheckEvents();
+        if (buttonEvents) {
+            //checks if Button3 was pressed for less than 1 second
+            if (buttonEvents & BUTTON_EVENT_3DOWN) {
+                if (data.ovenState == 'a') {
+                    data.ovenState = 'b';
+                } else if (data.ovenState == 'b') {
+                    data.ovenState = 'c';
+                } else {
+                    data.ovenState = 'a';
+                }
+            }
+        }
+
 
     }
     /***************************************************************************************************
@@ -108,28 +149,74 @@ static char lineFour[ARBITRARY_VALUE];
 
 static char displayOutput[150];
 
-
+static int min;
+static int sec;
 
 void print(void)
 {
-    //bake mode, oven off
-    sprintf(lineOne, "|%c%c%c%c%c|  MODE: Bake\n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF, 
-            TOP_OVEN_OFF, TOP_OVEN_OFF);
-    sprintf(lineTwo, "|     |  TIME: %d:%d\n", min, sec);
-    sprintf(lineThree, "|-----|  TEMP: %d°F\n", temp);
-    sprintf(lineFour, "|%c%c%c%c%c|\n",BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
-            BOT_OVEN_OFF);
-    
-    //print statements
-    //but first, copy the strings into one big string!
-    strcpy(displayOutput, lineOne);
-    strcat(displayOutput, lineTwo);
-    strcat(displayOutput, lineThree);
-    strcat(displayOutput, lineFour);
-    
-    OledDrawString(displayOutput);
-    OledUpdate();
-    
+    switch (data.ovenState) {
+
+        //bake mode
+    case('a'):
+        sprintf(lineOne, "|%c%c%c%c%c|  MODE: Bake\n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
+                TOP_OVEN_OFF, TOP_OVEN_OFF);
+        sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
+        sprintf(lineThree, "|-----|  TEMP: %d°F\n", data.temp);
+        sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
+                BOT_OVEN_OFF);
+
+        //print statements
+        //but first, copy the strings into one big string!
+        strcpy(displayOutput, lineOne);
+        strcat(displayOutput, lineTwo);
+        strcat(displayOutput, lineThree);
+        strcat(displayOutput, lineFour);
+
+        OledDrawString(displayOutput);
+        OledUpdate();
+        break;
+
+        //broil mode    
+    case('b'):
+        sprintf(lineOne, "|%c%c%c%c%c|  MODE: Bake\n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
+                TOP_OVEN_OFF, TOP_OVEN_OFF);
+        sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
+        sprintf(lineThree, "|-----|  TEMP: 500°F\n");
+        sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
+                BOT_OVEN_OFF);
+
+        //print statements
+        //but first, copy the strings into one big string!
+        strcpy(displayOutput, lineOne);
+        strcat(displayOutput, lineTwo);
+        strcat(displayOutput, lineThree);
+        strcat(displayOutput, lineFour);
+
+        OledDrawString(displayOutput);
+        OledUpdate();
+        break;
+
+        //toast mode
+    case('c'):
+        sprintf(lineOne, "|%c%c%c%c%c|  MODE: Bake\n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
+                TOP_OVEN_OFF, TOP_OVEN_OFF);
+        sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
+        sprintf(lineThree, "|-----|\n");
+        sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
+                BOT_OVEN_OFF);
+
+        //print statements
+        //but first, copy the strings into one big string!
+        strcpy(displayOutput, lineOne);
+        strcat(displayOutput, lineTwo);
+        strcat(displayOutput, lineThree);
+        strcat(displayOutput, lineFour);
+
+        OledDrawString(displayOutput);
+        OledUpdate();
+        break;
+
+    }
 }
 
 void __ISR(_TIMER_1_VECTOR, ipl4auto) TimerInterrupt2Hz(void)
