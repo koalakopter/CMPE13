@@ -13,6 +13,7 @@
 #include <xc.h>
 #include <plib.h>
 #include <stdio.h>
+#include <string.h>
 
 
 
@@ -105,6 +106,8 @@ static char lineTwo[ARBITRARY_VALUE];
 static char lineThree[ARBITRARY_VALUE];
 static char lineFour[ARBITRARY_VALUE];
 
+static char displayOutput[150];
+
 
 
 void print(void)
@@ -118,14 +121,15 @@ void print(void)
             BOT_OVEN_OFF);
     
     //print statements
-    OledDrawString(lineOne);
+    //but first, copy the strings into one big string!
+    strcpy(displayOutput, lineOne);
+    strcat(displayOutput, lineTwo);
+    strcat(displayOutput, lineThree);
+    strcat(displayOutput, lineFour);
+    
+    OledDrawString(displayOutput);
     OledUpdate();
-    OledDrawString(lineTwo);
-    OledUpdate();
-    OledDrawString(lineThree);
-    OledUpdate();
-    OledDrawString(lineFour);
-    OledUpdate();
+    
 }
 
 void __ISR(_TIMER_1_VECTOR, ipl4auto) TimerInterrupt2Hz(void)
