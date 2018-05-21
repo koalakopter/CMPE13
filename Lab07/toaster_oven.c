@@ -37,12 +37,13 @@ void print(void);
 
 #define TRUE 1
 #define FALSE 0 
-
+#define BOOLEAN int
+#define LONG_PRESS 5
 
 //struct that keeps track of everything about the oven
 
-struct Oven {
-    //keeps track of oven states: (a = bake, b = broil, c = toast)
+typedef struct {
+    //keeps track f oven states: (a = bake, b = broil, c = toast)
     char ovenState;
     char cookingMode;
 
@@ -50,13 +51,18 @@ struct Oven {
     int input;
 
     //for time stuff
-    float remTime;
-    float initTime;
+    int remTime;
+    int initTime;
     //keeps track of temperature
     int temp;
-};
+} Oven;
 
-struct Oven data;
+Oven data;
+
+enum {
+    RESET, START, COUNTDOWN, PENDING_SELECTOR_CHANGE, PENDING_RESET
+};
+static BOOLEAN selector = TRUE;
 
 // Configuration Bit settings
 
@@ -107,14 +113,17 @@ int main()
     data.ovenState = 'a';
     uint8_t buttonEvents;
 
+
     while (1) {
         //everything will happen in here
 
-        //get the current temperature with potentiometer
+        //get the current temperature with potentiometer if the potentiometer was moved
         if (AdcChanged() != FALSE) {
-
-            data.temp = AdcRead();
-            data.temp += 300;
+            if (selector == TRUE) {
+                data.temp = AdcRead();
+                data.temp = data.temp >> 2; //shift to the right by two bits so we get the top 8
+                data.temp += 300;
+            }
         }
         print();
 
@@ -122,7 +131,7 @@ int main()
         buttonEvents = ButtonsCheckEvents();
         if (buttonEvents) {
             //checks if Button3 was pressed for less than 1 second
-            if (buttonEvents & BUTTON_EVENT_3DOWN) {
+            if ((data.buttonPress < LONG_PRESS) && (buttonEvents & BUTTON_EVENT_3UP)) {
                 if (data.ovenState == 'a') {
                     data.ovenState = 'b';
                 } else if (data.ovenState == 'b') {
@@ -130,7 +139,18 @@ int main()
                 } else {
                     data.ovenState = 'a';
                 }
+            }                //if pressed longer than 1 second, swap between what you change with potentiometer
+            else {
+                if (selector == TRUE) {
+                    selector = FALSE;
+                } else {
+                    selector = TRUE;
+                }
+
             }
+
+            //reset the timer back to zero
+            data.buttonPress = 0;
         }
 
 
@@ -151,6 +171,7 @@ static char displayOutput[150];
 
 static int min;
 static int sec;
+//boolean for switching between temperature and time on "bake" mode
 
 void print(void)
 {
@@ -160,8 +181,15 @@ void print(void)
     case('a'):
         sprintf(lineOne, "|%c%c%c%c%c|  MODE: Bake \n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
                 TOP_OVEN_OFF, TOP_OVEN_OFF);
-        sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
-        sprintf(lineThree, "|-----|  TEMP: %d°F \n", data.temp);
+        //if selector is true, switch temperature
+        if (selector == TRUE) {
+            sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
+            sprintf(lineThree, "|-----|  >TEMP: %d°F \n", data.temp);
+            //if selector is false, switch time
+        } else {
+            sprintf(lineTwo, "|     |  >TIME: %d:%02d \n", min, sec);
+            sprintf(lineThree, "|-----|  TEMP: %d°F \n", data.temp);
+        }
         sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
                 BOT_OVEN_OFF);
 
@@ -171,7 +199,7 @@ void print(void)
         strcat(displayOutput, lineTwo);
         strcat(displayOutput, lineThree);
         strcat(displayOutput, lineFour);
-        
+
         //reset the display
         OledSetDisplayNormal();
         OledDrawString(displayOutput);
@@ -193,7 +221,7 @@ void print(void)
         strcat(displayOutput, lineTwo);
         strcat(displayOutput, lineThree);
         strcat(displayOutput, lineFour);
-        
+
         //reset the display
         OledSetDisplayNormal();
         OledDrawString(displayOutput);
@@ -215,7 +243,7 @@ void print(void)
         strcat(displayOutput, lineTwo);
         strcat(displayOutput, lineThree);
         strcat(displayOutput, lineFour);
-        
+
         //reset the display
         OledSetDisplayNormal();
         OledDrawString(displayOutput);
@@ -225,6 +253,8 @@ void print(void)
     }
 }
 
+//2hz timer
+
 void __ISR(_TIMER_1_VECTOR, ipl4auto) TimerInterrupt2Hz(void)
 {
     // Clear the interrupt flag.
@@ -232,12 +262,18 @@ void __ISR(_TIMER_1_VECTOR, ipl4auto) TimerInterrupt2Hz(void)
 
 }
 
+//5hz timer
+
 void __ISR(_TIMER_3_VECTOR, ipl4auto) TimerInterrupt5Hz(void)
 {
+    //increment the timer
+    data.buttonPress += 1;
     // Clear the interrupt flag.
     IFS0CLR = 1 << 12;
 
 }
+
+//100hz timer
 
 void __ISR(_TIMER_2_VECTOR, ipl4auto) TimerInterrupt100Hz(void)
 {
