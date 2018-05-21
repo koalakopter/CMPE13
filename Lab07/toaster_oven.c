@@ -158,10 +158,10 @@ void print(void)
 
         //bake mode
     case('a'):
-        sprintf(lineOne, "|%c%c%c%c%c|  MODE: Bake\n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
+        sprintf(lineOne, "|%c%c%c%c%c|  MODE: Bake \n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
                 TOP_OVEN_OFF, TOP_OVEN_OFF);
         sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
-        sprintf(lineThree, "|-----|  TEMP: %d°F\n", data.temp);
+        sprintf(lineThree, "|-----|  TEMP: %d°F \n", data.temp);
         sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
                 BOT_OVEN_OFF);
 
@@ -180,10 +180,10 @@ void print(void)
 
         //broil mode    
     case('b'):
-        sprintf(lineOne, "|%c%c%c%c%c|  MODE: Broil\n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
+        sprintf(lineOne, "|%c%c%c%c%c|  MODE: Broil \n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
                 TOP_OVEN_OFF, TOP_OVEN_OFF);
         sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
-        sprintf(lineThree, "|-----|  TEMP: 500°F\n");
+        sprintf(lineThree, "|-----|  TEMP: 500°F \n");
         sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
                 BOT_OVEN_OFF);
 
@@ -202,10 +202,10 @@ void print(void)
 
         //toast mode
     case('c'):
-        sprintf(lineOne, "|%c%c%c%c%c|  MODE: Toast\n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
+        sprintf(lineOne, "|%c%c%c%c%c|  MODE: Toast \n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
                 TOP_OVEN_OFF, TOP_OVEN_OFF);
         sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
-        sprintf(lineThree, "|-----|\n");
+        sprintf(lineThree, "|-----|              \n");
         sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
                 BOT_OVEN_OFF);
 
