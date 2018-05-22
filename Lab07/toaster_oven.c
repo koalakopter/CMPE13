@@ -149,6 +149,10 @@ int main()
                 } else if (selector == FALSE) {
                     data.initTime = AdcRead();
                     data.initTime = data.initTime >> 2;
+                    
+                    //set the seconds and minutes
+                    sec = data.initTime % 60;
+                    min = data.initTime / 60;    
                     print();
                 }
             }
