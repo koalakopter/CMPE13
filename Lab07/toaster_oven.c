@@ -47,7 +47,9 @@ typedef struct {
     char ovenState;
     char cookingMode;
 
+    //free running buttonPress counter in 5Hz timer
     int buttonPress;
+    //keeps track of current time when button is depressed
     int input;
 
     //for time stuff
@@ -62,8 +64,12 @@ Oven data;
 enum {
     RESET, START, COUNTDOWN, PENDING_SELECTOR_CHANGE, PENDING_RESET
 };
-static BOOLEAN selector = TRUE;
+static BOOLEAN selector = FALSE;
+static uint8_t buttonEvents;
 
+//keeps track of minutes and seconds
+static int min;
+static int sec;
 // Configuration Bit settings
 
 int main()
@@ -112,10 +118,12 @@ int main()
     //default mode is bake
     data.cookingMode = 'a';
     data.ovenState = RESET;
-    
+
     //default temp is 300F
     data.temp = 300;
-    uint8_t buttonEvents;
+    //data.buttonPress = 0;
+
+
 
 
     while (1) {
@@ -136,19 +144,34 @@ int main()
                     data.temp = AdcRead();
                     data.temp = data.temp >> 2; //shift to the right by two bits so we get the top 8
                     data.temp += 300;
-                print();
-                }
-                else if (selector == FALSE)
-                {
+                    print();
+
+                } else if (selector == FALSE) {
                     data.initTime = AdcRead();
                     data.initTime = data.initTime >> 2;
+                    print();
                 }
             }
             //cycles between states of the oven by checking buttons
-            buttonEvents = ButtonsCheckEvents();
-            if (buttonEvents) {
+            if (buttonEvents != 0) {
+                //record the current state/number in the timer
+                if (buttonEvents & BUTTON_EVENT_3DOWN) {
+
+                    printf("%c\n", data.input);
+                    data.input = data.buttonPress;
+                    //change state to change whether to change time/temp or oven cooking mode
+                    data.ovenState = PENDING_SELECTOR_CHANGE;
+                    //set button state to none
+                    buttonEvents = BUTTON_EVENT_NONE;
+                }
+            }
+            break;
+
+        case PENDING_SELECTOR_CHANGE:
+            //can't leave this until a thing happens
+            while (TRUE) {
                 //checks if Button3 was pressed less than one second, swap cooking mode
-                if ((data.buttonPress < LONG_PRESS) && (buttonEvents & BUTTON_EVENT_3UP)) {
+                if (((data.buttonPress - data.input) < LONG_PRESS) && (buttonEvents & BUTTON_EVENT_3UP)) {
                     if (data.cookingMode == 'a') {
                         data.cookingMode = 'b';
                     } else if (data.cookingMode == 'b') {
@@ -156,29 +179,28 @@ int main()
                     } else {
                         data.cookingMode = 'a';
                     }
-                }                    
-                //if pressed greater than 1 sec
-                else if ((data.buttonPress >= LONG_PRESS) && (buttonEvents & BUTTON_EVENT_3UP)) {
+                    //leave the while loop
+                    break;
+                }//if pressed greater than 1 sec
+                else if (((data.buttonPress - data.input) >= LONG_PRESS)) {
                     if (selector == TRUE) {
                         selector = FALSE;
                     } else {
                         selector = TRUE;
                     }
-                    print();
-
+                    //leave the while loop
+                    break;
                 }
-
-                //reset the timer back to zero
-                data.buttonPress = 0;
-                data.ovenState = START;
-                print();
- 
             }
+            data.ovenState = START;
+            print();
             break;
-
-
         }
+
+
+
     }
+
     /***************************************************************************************************
      * Your code goes in between this comment and the preceding one with asterisks
      **************************************************************************************************/
@@ -193,8 +215,7 @@ static char lineFour[ARBITRARY_VALUE];
 
 static char displayOutput[150];
 
-static int min;
-static int sec;
+
 //boolean for switching between temperature and time on "bake" mode
 
 void print(void)
@@ -302,6 +323,7 @@ void __ISR(_TIMER_3_VECTOR, ipl4auto) TimerInterrupt5Hz(void)
 
 void __ISR(_TIMER_2_VECTOR, ipl4auto) TimerInterrupt100Hz(void)
 {
+    buttonEvents = ButtonsCheckEvents();
     // Clear the interrupt flag.
     IFS0CLR = 1 << 8;
 
