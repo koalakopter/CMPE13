@@ -43,8 +43,9 @@ void print(void);
 //struct that keeps track of everything about the oven
 
 typedef struct {
-    //keeps track f oven states: (a = bake, b = broil, c = toast)
-    char ovenState;
+    //keeps track of the oven state machine, or the enum of what state the oven is currently in
+    int ovenState;
+    //keeps track of oven states: (a = bake, b = broil, c = toast)
     char cookingMode;
 
     //free running buttonPress counter in 5Hz timer
@@ -149,10 +150,10 @@ int main()
                 } else if (selector == FALSE) {
                     data.initTime = AdcRead();
                     data.initTime = data.initTime >> 2;
-                    
+
                     //set the seconds and minutes
                     sec = data.initTime % 60;
-                    min = data.initTime / 60;    
+                    min = data.initTime / 60;
                     print();
                 }
             }
@@ -176,10 +177,15 @@ int main()
             while (TRUE) {
                 //checks if Button3 was pressed less than one second, swap cooking mode
                 if (((data.buttonPress - data.input) < LONG_PRESS) && (buttonEvents & BUTTON_EVENT_3UP)) {
+                    //change from bake to broil
                     if (data.cookingMode == 'a') {
                         data.cookingMode = 'b';
+                        //broil to toast
                     } else if (data.cookingMode == 'b') {
                         data.cookingMode = 'c';
+                        //force potentiometer to edit time
+                        selector = FALSE;
+                        //toast back to bake
                     } else {
                         data.cookingMode = 'a';
                     }
@@ -190,7 +196,10 @@ int main()
                     if (selector == TRUE) {
                         selector = FALSE;
                     } else {
-                        selector = TRUE;
+                        if (data.cookingMode == 'a') {
+                            //only allows you to change to temp if in bake mode
+                            selector = TRUE;
+                        }
                     }
                     //leave the while loop
                     break;
@@ -198,6 +207,11 @@ int main()
             }
             data.ovenState = START;
             print();
+            break;
+            //countdown state: aka its cookin
+        case COUNTDOWN:
+
+            data.ovenState = COUNTDOWN;
             break;
         }
 
@@ -261,7 +275,7 @@ void print(void)
         sprintf(lineOne, "|%c%c%c%c%c|  MODE: Broil \n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
                 TOP_OVEN_OFF, TOP_OVEN_OFF);
         sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
-        sprintf(lineThree, "|-----|  TEMP: 500°F \n");
+        sprintf(lineThree, "|-----|  TEMP: 500%cF \n", 248);
         sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
                 BOT_OVEN_OFF);
 
