@@ -136,14 +136,14 @@ int main()
         switch (data.ovenState) {
 
         case RESET:
-            //get the current temperature with potentiometer if the potentiometer was moved
+            //resets stuff back to default states
 
             data.ovenState = START;
             print();
             break;
 
         case START:
-            //edits the potentiometer
+            //edits the potentiometer if a change was detected
             if (AdcChanged() != FALSE) {
                 if (selector == TRUE) {
                     data.temp = AdcRead();
@@ -224,7 +224,6 @@ int main()
             //all the lights start on
             ledFraction = data.remTime / 8;
             LEDS_SET(0xFF); //1111 1111
-            printf("%d\n", ledFraction);
 
             while (TRUE) {
                 //gotta divide by two since remTime is double initTime
@@ -236,25 +235,25 @@ int main()
                 //then, multiply that number by 0-7 to get eight equal parts for each LED
                 //if current time is less than that eighth
                 if ((ledFraction * 7) >= data.remTime) {
-                    LEDS_SET(0x7F); //0111 1111
+                    LEDS_SET(0xFE); //1111 1110
                 }
                 if ((ledFraction * 6) >= data.remTime) {
-                    LEDS_SET(0x3F); //0011 1111
+                    LEDS_SET(0xFC); //1111 1100
                 }
                 if ((ledFraction * 5) >= data.remTime) {
-                    LEDS_SET(0x1F); //0001 1111
+                    LEDS_SET(0xF8); //1111 1000
                 }
                 if ((ledFraction * 4) >= data.remTime) {
-                    LEDS_SET(0x0F); //0000 1111
+                    LEDS_SET(0xF0); //1111 0000
                 }
                 if ((ledFraction * 3) >= data.remTime) {
-                    LEDS_SET(0x07); //0000 0111
+                    LEDS_SET(0xE0); //1110 0000
                 }
                 if ((ledFraction * 2) >= data.remTime) {
-                    LEDS_SET(0x03); //0000 0011
+                    LEDS_SET(0xC0); //1100 0000
                 }
                 if ((ledFraction * 1) >= data.remTime) {
-                    LEDS_SET(0x01); //0000 0001
+                    LEDS_SET(0x80); //1000 0000
                 }
                 if ((ledFraction * 0) >= data.remTime) {
                     LEDS_SET(0x00); //0000 0000
