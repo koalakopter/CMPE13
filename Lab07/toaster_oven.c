@@ -170,8 +170,7 @@ int main()
                     buttonEvents = BUTTON_EVENT_NONE;
                 }
                 //start the countdown if button 4 is pressed
-                if (buttonEvents & BUTTON_EVENT_4DOWN)
-                {
+                if (buttonEvents & BUTTON_EVENT_4DOWN) {
                     data.ovenState = COUNTDOWN;
                     buttonEvents = BUTTON_EVENT_NONE;
                     break;
@@ -219,20 +218,19 @@ int main()
         case COUNTDOWN:
             //set the countdown to the initial time from the potentiometer
             data.remTime = data.initTime * 2;
-            
+
 
             while (TRUE) {
                 //gotta divide by two since remTime is double initTime
                 sec = (data.remTime / 2) % 60;
                 min = (data.remTime / 2) / 60;
-                
+
                 //if ran out of time, break the loops
-                if(data.remTime <= 0)
-                {
+                if (data.remTime <= 0) {
                     data.ovenState = RESET;
                     break;
                 }
-                
+
                 //stay in countdown case until time runs out or reset
                 data.ovenState = COUNTDOWN;
                 //update the OLED
@@ -269,23 +267,20 @@ void print(void)
         //bake mode
     case('a'):
         //if counting down, or cooking, turn on heating elements
-        if(data.ovenState == COUNTDOWN)
-        {
+        if (data.ovenState == COUNTDOWN) {
             //heating elements on
             sprintf(lineOne, "|%c%c%c%c%c|  MODE: Bake \n", TOP_OVEN_ON, TOP_OVEN_ON, TOP_OVEN_ON,
-                TOP_OVEN_ON, TOP_OVEN_ON);
+                    TOP_OVEN_ON, TOP_OVEN_ON);
             sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_ON, BOT_OVEN_ON, BOT_OVEN_ON, BOT_OVEN_ON,
-                BOT_OVEN_ON);
-        }
-        
-        else{
+                    BOT_OVEN_ON);
+        } else {
             //heating elements off
             sprintf(lineOne, "|%c%c%c%c%c|  MODE: Bake \n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
-                TOP_OVEN_OFF, TOP_OVEN_OFF);
-            sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
-                BOT_OVEN_OFF);
+                    TOP_OVEN_OFF, TOP_OVEN_OFF);
+            sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
+                    BOT_OVEN_OFF, BOT_OVEN_OFF);
         }
-        
+
         //if selector is true, switch temperature
         if (selector == TRUE) {
             //176 is the ASCII code for the degree symbol
@@ -296,7 +291,7 @@ void print(void)
             sprintf(lineTwo, "|     | >TIME: %d:%02d \n", min, sec);
             sprintf(lineThree, "|-----|  TEMP: %d%cF \n", data.temp, 248);
         }
-        
+
 
         //print statements
         //but first, copy the strings into one big string!
@@ -316,10 +311,16 @@ void print(void)
         sprintf(lineOne, "|%c%c%c%c%c|  MODE: Toast \n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
                 TOP_OVEN_OFF, TOP_OVEN_OFF);
         sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
-        sprintf(lineThree, "|-----|              " );
-        sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
-                BOT_OVEN_OFF);
+        sprintf(lineThree, "|-----|              ");
 
+        //if toasting, turn bottom heating elements on
+        if (data.ovenState == COUNTDOWN) {
+            sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_ON, BOT_OVEN_ON, BOT_OVEN_ON, BOT_OVEN_ON,
+                    BOT_OVEN_ON);
+        } else {
+            sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
+                    BOT_OVEN_OFF, BOT_OVEN_OFF);
+        }
         //print statements
         //but first, copy the strings into one big string!
         strcpy(displayOutput, lineOne);
@@ -335,8 +336,15 @@ void print(void)
 
         //broil mode
     case('c'):
-        sprintf(lineOne, "|%c%c%c%c%c|  MODE: Broil \n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
-                TOP_OVEN_OFF, TOP_OVEN_OFF);
+
+        //if broiling, turn top heating elements on
+        if (data.ovenState == COUNTDOWN) {
+            sprintf(lineOne, "|%c%c%c%c%c|  MODE: Broil \n", TOP_OVEN_ON, TOP_OVEN_ON, TOP_OVEN_ON,
+                    TOP_OVEN_ON, TOP_OVEN_ON);
+        } else {
+            sprintf(lineOne, "|%c%c%c%c%c|  MODE: Broil \n", TOP_OVEN_OFF, TOP_OVEN_OFF, TOP_OVEN_OFF,
+                    TOP_OVEN_OFF, TOP_OVEN_OFF);
+        }
         sprintf(lineTwo, "|     |  TIME: %d:%02d \n", min, sec);
         sprintf(lineThree, "|-----|  TEMP: 500%cF \n", 248);
         sprintf(lineFour, "|%c%c%c%c%c|\n", BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF, BOT_OVEN_OFF,
@@ -360,6 +368,7 @@ void print(void)
 
 //2hz timer
 //manages the countdown 2 hz =  1 sec
+
 void __ISR(_TIMER_1_VECTOR, ipl4auto) TimerInterrupt2Hz(void)
 {
     //count down the timer by 1
@@ -371,6 +380,7 @@ void __ISR(_TIMER_1_VECTOR, ipl4auto) TimerInterrupt2Hz(void)
 
 //5hz timer
 //counts duration in which button is pressed
+
 void __ISR(_TIMER_3_VECTOR, ipl4auto) TimerInterrupt5Hz(void)
 {
     //increment the timer
@@ -382,6 +392,7 @@ void __ISR(_TIMER_3_VECTOR, ipl4auto) TimerInterrupt5Hz(void)
 
 //100hz timer
 //constantly checks if a button is pressed, 100 times a second
+
 void __ISR(_TIMER_2_VECTOR, ipl4auto) TimerInterrupt100Hz(void)
 {
     buttonEvents = ButtonsCheckEvents();
