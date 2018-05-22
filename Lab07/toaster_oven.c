@@ -71,6 +71,9 @@ static uint8_t buttonEvents;
 //keeps track of minutes and seconds
 static int min;
 static int sec;
+
+//for lighting up the LED's
+static int ledFraction;
 // Configuration Bit settings
 
 int main()
@@ -218,16 +221,50 @@ int main()
         case COUNTDOWN:
             //set the countdown to the initial time from the potentiometer
             data.remTime = data.initTime * 2;
-
+            //all the lights start on
+            ledFraction = data.remTime / 8;
+            LEDS_SET(0xFF); //1111 1111
+            printf("%d\n", ledFraction);
 
             while (TRUE) {
                 //gotta divide by two since remTime is double initTime
                 sec = (data.remTime / 2) % 60;
                 min = (data.remTime / 2) / 60;
 
+                //LED SECTION
+                //logic: divide the remaining time by eight(8)
+                //then, multiply that number by 0-7 to get eight equal parts for each LED
+                //if current time is less than that eighth
+                if ((ledFraction * 7) >= data.remTime) {
+                    LEDS_SET(0x7F); //0111 1111
+                }
+                if ((ledFraction * 6) >= data.remTime) {
+                    LEDS_SET(0x3F); //0011 1111
+                }
+                if ((ledFraction * 5) >= data.remTime) {
+                    LEDS_SET(0x1F); //0001 1111
+                }
+                if ((ledFraction * 4) >= data.remTime) {
+                    LEDS_SET(0x0F); //0000 1111
+                }
+                if ((ledFraction * 3) >= data.remTime) {
+                    LEDS_SET(0x07); //0000 0111
+                }
+                if ((ledFraction * 2) >= data.remTime) {
+                    LEDS_SET(0x03); //0000 0011
+                }
+                if ((ledFraction * 1) >= data.remTime) {
+                    LEDS_SET(0x01); //0000 0001
+                }
+                if ((ledFraction * 0) >= data.remTime) {
+                    LEDS_SET(0x00); //0000 0000
+                }
+                 
                 //if ran out of time, break the loops
                 if (data.remTime <= 0) {
                     data.ovenState = RESET;
+                    //just in case the LED's don't switch off
+                    LEDS_SET(0x00);
                     break;
                 }
 
