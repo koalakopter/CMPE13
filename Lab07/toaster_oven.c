@@ -54,7 +54,7 @@ typedef struct {
     int input;
 
     //for time stuff
-    int remTime;
+    int remTime; //Emilia > Rem btw
     int initTime;
     //keeps track of temperature
     int temp;
@@ -162,12 +162,18 @@ int main()
                 //record the current state/number in the timer
                 if (buttonEvents & BUTTON_EVENT_3DOWN) {
 
-                    printf("%c\n", data.input);
                     data.input = data.buttonPress;
                     //change state to change whether to change time/temp or oven cooking mode
                     data.ovenState = PENDING_SELECTOR_CHANGE;
                     //set button state to none
                     buttonEvents = BUTTON_EVENT_NONE;
+                }
+                //start the countdown if button 4 is pressed
+                if (buttonEvents & BUTTON_EVENT_4DOWN)
+                {
+                    data.ovenState = COUNTDOWN;
+                    buttonEvents = BUTTON_EVENT_NONE;
+                    break;
                 }
             }
             break;
@@ -210,8 +216,27 @@ int main()
             break;
             //countdown state: aka its cookin
         case COUNTDOWN:
+            //set the countdown to the initial time from the potentiometer
+            data.remTime = data.initTime * 2;
+            
 
-            data.ovenState = COUNTDOWN;
+            while (TRUE) {
+                //gotta divide by two since remTime is double initTime
+                sec = (data.remTime / 2) % 60;
+                min = (data.remTime / 2) / 60;
+                
+                //if ran out of time, break the loops
+                if(data.remTime <= 0)
+                {
+                    data.ovenState = RESET;
+                    break;
+                }
+                
+                //stay in countdown case until time runs out or reset
+                data.ovenState = COUNTDOWN;
+                //update the OLED
+                print();
+            }
             break;
         }
 
@@ -321,6 +346,8 @@ void print(void)
 
 void __ISR(_TIMER_1_VECTOR, ipl4auto) TimerInterrupt2Hz(void)
 {
+    //count down the timer by 1
+    data.remTime = data.remTime - 1;
     // Clear the interrupt flag.
     IFS0CLR = 1 << 4;
 
