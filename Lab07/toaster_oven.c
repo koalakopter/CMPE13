@@ -140,8 +140,20 @@ int main() {
 
             case RESET:
                 //resets stuff back to default states
-                data.
-                data.ovenState = START;
+                data.input = data.buttonPress;
+                
+                //reset to initial time, if necessary
+                sec = data.initTime % 60;
+                min = data.initTime / 60;
+                
+                data.remTime = 0;
+                LEDS_SET(0x00);
+                selector = FALSE;
+                //dont start until something is touched
+                if ((AdcChanged() != FALSE) || (buttonEvents & BUTTON_EVENT_3DOWN) 
+                        || (buttonEvents & BUTTON_EVENT_4UP)) {
+                    data.ovenState = START;
+                }
                 print();
                 break;
 
@@ -176,6 +188,7 @@ int main() {
                         data.ovenState = PENDING_SELECTOR_CHANGE;
                         //set button state to none
                         buttonEvents = BUTTON_EVENT_NONE;
+                        break;
                     }
                     //start the countdown if button 4 is pressed
                     if (buttonEvents & BUTTON_EVENT_4DOWN) {
@@ -298,18 +311,25 @@ int main() {
                 break;
             case PENDING_RESET:
 
+
+                //if button4 is released before the time period, continue on
+                if (((data.buttonPress - data.input) < LONG_PRESS) && 
+                        (buttonEvents & BUTTON_EVENT_4UP)) {
+                    data.ovenState = COUNTDOWN;
+                    buttonEvents = BUTTON_EVENT_NONE;
+                    reset = FALSE;
+                    printf("ME!");
+                    print();
+                    break;
+
+                }
                 //if button4 is held down too long, stop the countdown early
-                if ((data.buttonPress - data.input) >= LONG_PRESS) {
+                else if ((data.buttonPress - data.input) >= LONG_PRESS) {
                     //go back to the reset state, and break
                     data.ovenState = RESET;
                     reset = FALSE;
+                    printf("YOU!");
                     break;
-                }
-                //if button4 is released before the time period, continue on
-                if (BUTTON_EVENT_4UP & buttonEvents) {
-                    data.ovenState = COUNTDOWN;
-                    reset = FALSE;
-
                 }
                 //go back to the countdown step
                 data.ovenState = COUNTDOWN;
