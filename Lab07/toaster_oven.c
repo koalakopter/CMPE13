@@ -31,6 +31,7 @@
 #define BOT_OVEN_OFF 0x04
 
 void print(void);
+void setLed(void);
 
 //arbitrary value for strings to print onto OLED
 #define ARBITRARY_VALUE 30
@@ -250,34 +251,8 @@ int main() {
                     sec = (data.remTime / 2) % 60;
                     min = (data.remTime / 2) / 60;
 
-                    //LED SECTION
-                    //logic: divide the remaining time by eight(8)
-                    //then, multiply that number by 0-7 to get eight equal parts for each LED
-                    //if current time is less than that eighth
-                    if ((ledFraction * 7) >= data.remTime) {
-                        LEDS_SET(0xFE); //1111 1110
-                    }
-                    if ((ledFraction * 6) >= data.remTime) {
-                        LEDS_SET(0xFC); //1111 1100
-                    }
-                    if ((ledFraction * 5) >= data.remTime) {
-                        LEDS_SET(0xF8); //1111 1000
-                    }
-                    if ((ledFraction * 4) >= data.remTime) {
-                        LEDS_SET(0xF0); //1111 0000
-                    }
-                    if ((ledFraction * 3) >= data.remTime) {
-                        LEDS_SET(0xE0); //1110 0000
-                    }
-                    if ((ledFraction * 2) >= data.remTime) {
-                        LEDS_SET(0xC0); //1100 0000
-                    }
-                    if ((ledFraction * 1) >= data.remTime) {
-                        LEDS_SET(0x80); //1000 0000
-                    }
-                    if ((ledFraction * 0) >= data.remTime) {
-                        LEDS_SET(0x00); //0000 0000
-                    }
+                    //set LED's
+                    setLed();
 
                     //if ran out of time, break the loops
                     if (data.remTime <= 0) {
@@ -316,31 +291,37 @@ int main() {
                 }
                 break;
             case PENDING_RESET:
-
-                data.ovenState = COUNTDOWN;
-                print();
-                //if button4 is released before the time period, continue on
-                if (((data.buttonPress - data.input) < LONG_PRESS) &&
-                        (buttonEvents & BUTTON_EVENT_4UP)) {
-                    data.ovenState = COUNTDOWN;
-                    buttonEvents = BUTTON_EVENT_NONE;
-                    reset = FALSE;
-
+                //don't leave reset mode until button4 is released or button4 is held too long
+                while (TRUE) {
+                    //update the time
+                    sec = (data.remTime / 2) % 60;
+                    min = (data.remTime / 2) / 60;
+                    //set lights
+                    setLed();
                     print();
-                    break;
-                }                    //if button4 is held down too long, stop the countdown early
-                else if ((data.buttonPress - data.input) >= LONG_PRESS) {
-                    //go back to the reset state, and break
-                    data.ovenState = RESET;
-                    buttonEvents = BUTTON_EVENT_NONE;
-                    //remaining time is now zero
-                    data.remTime = 0;
-                    reset = FALSE;
+                    //if button4 is released before the time period, continue on
+                    if (((data.buttonPress - data.input) < LONG_PRESS) &&
+                            (buttonEvents & BUTTON_EVENT_4UP)) {
+                        data.ovenState = COUNTDOWN;
+                        buttonEvents = BUTTON_EVENT_NONE;
+                        reset = FALSE;
+                        printf("meme\n");
+                        print();
+                        break;
+                    }//if button4 is held down too long, stop the countdown early
+                    else if ((data.buttonPress - data.input) >= LONG_PRESS) {
+                        //go back to the reset state, and break
+                        data.ovenState = RESET;
+                        buttonEvents = BUTTON_EVENT_NONE;
+                        //remaining time is now zero
+                        data.remTime = 0;
+                        reset = FALSE;
+                        printf("yeah\n");
+                        break;
+                    }
 
-                    break;
                 }
                 break;
-
         }
 
     }
@@ -464,6 +445,37 @@ void print(void) {
             OledUpdate();
             break;
 
+    }
+}
+
+void setLed(void) {
+    //LED SECTION
+    //logic: divide the remaining time by eight(8)
+    //then, multiply that number by 0-7 to get eight equal parts for each LED
+    //if current time is less than that eighth
+    if ((ledFraction * 7) >= data.remTime) {
+        LEDS_SET(0xFE); //1111 1110
+    }
+    if ((ledFraction * 6) >= data.remTime) {
+        LEDS_SET(0xFC); //1111 1100
+    }
+    if ((ledFraction * 5) >= data.remTime) {
+        LEDS_SET(0xF8); //1111 1000
+    }
+    if ((ledFraction * 4) >= data.remTime) {
+        LEDS_SET(0xF0); //1111 0000
+    }
+    if ((ledFraction * 3) >= data.remTime) {
+        LEDS_SET(0xE0); //1110 0000
+    }
+    if ((ledFraction * 2) >= data.remTime) {
+        LEDS_SET(0xC0); //1100 0000
+    }
+    if ((ledFraction * 1) >= data.remTime) {
+        LEDS_SET(0x80); //1000 0000
+    }
+    if ((ledFraction * 0) >= data.remTime) {
+        LEDS_SET(0x00); //0000 0000
     }
 }
 
