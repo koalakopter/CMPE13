@@ -203,7 +203,8 @@ int main() {
                 //can't leave this until a thing happens
                 while (TRUE) {
                     //checks if Button3 was pressed less than one second, swap cooking mode
-                    if (((data.buttonPress - data.input) < LONG_PRESS) && (buttonEvents & BUTTON_EVENT_3UP)) {
+                    if (((data.buttonPress - data.input) < LONG_PRESS)
+                            && (buttonEvents & BUTTON_EVENT_3UP)) {
                         //change from bake to toast
                         if (data.cookingMode == 'a') {
                             data.cookingMode = 'b';
@@ -285,8 +286,7 @@ int main() {
                         LEDS_SET(0x00);
                         break;
                     }
-                    //stay in countdown case until time runs out or reset
-                    data.ovenState = COUNTDOWN;
+
 
                     //if button4 was pressed, prepare for reset
                     if (reset != TRUE) {
@@ -305,10 +305,14 @@ int main() {
                         data.ovenState = PENDING_RESET;
                         print();
                         break;
+                    } else {
+                        //stay in countdown case until time runs out or reset
+                        data.ovenState = COUNTDOWN;
+                        print();
                     }
 
                     //update the OLED for every countdown trigger
-                    print();
+
                 }
                 break;
             case PENDING_RESET:
@@ -324,8 +328,7 @@ int main() {
 
                     print();
                     break;
-                }
-                    //if button4 is held down too long, stop the countdown early
+                }                    //if button4 is held down too long, stop the countdown early
                 else if ((data.buttonPress - data.input) >= LONG_PRESS) {
                     //go back to the reset state, and break
                     data.ovenState = RESET;
@@ -339,9 +342,6 @@ int main() {
                 break;
 
         }
-
-
-
 
     }
 
