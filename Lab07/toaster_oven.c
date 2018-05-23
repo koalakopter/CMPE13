@@ -304,7 +304,6 @@ int main() {
                         data.ovenState = COUNTDOWN;
                         buttonEvents = BUTTON_EVENT_NONE;
                         reset = FALSE;
-                        printf("meme\n");
                         print();
                         break;
                     }//if button4 is held down too long, stop the countdown early
@@ -315,7 +314,6 @@ int main() {
                         //remaining time is now zero
                         data.remTime = 0;
                         reset = FALSE;
-                        printf("yeah\n");
                         break;
                     }
                 }
