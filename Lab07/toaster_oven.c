@@ -130,6 +130,7 @@ int main() {
 
     //keeps track of whether or not you are checking for a reset
     BOOLEAN reset = FALSE;
+    selector = FALSE;
 
 
 
@@ -141,17 +142,16 @@ int main() {
             case RESET:
                 //resets stuff back to default states
                 data.input = data.buttonPress;
-                
+
                 //reset to initial time, if necessary
                 sec = data.initTime % 60;
                 min = data.initTime / 60;
-                
+
                 data.remTime = 0;
                 LEDS_SET(0x00);
-                selector = FALSE;
+                reset = FALSE;
                 //dont start until something is touched
-                if ((AdcChanged() != FALSE) || (buttonEvents & BUTTON_EVENT_3DOWN) 
-                        || (buttonEvents & BUTTON_EVENT_4UP)) {
+                if ((AdcChanged() != FALSE) || (buttonEvents)) {
                     data.ovenState = START;
                 }
                 print();
@@ -289,17 +289,19 @@ int main() {
                     data.ovenState = COUNTDOWN;
 
                     //if button4 was pressed, prepare for reset
-                    if (buttonEvents & BUTTON_EVENT_4DOWN) {
-                        //grab the current value of the free running timer
-                        data.input = data.buttonPress;
-                        //clear the button press input
-                        data.input = BUTTON_EVENT_NONE;
-                        //set a flag to note that a reset might be pending
-                        reset = TRUE;
+                    if (reset != TRUE) {
+                        if (buttonEvents & BUTTON_EVENT_4DOWN) {
+                            //grab the current value of the free running timer
+                            data.input = data.buttonPress;
+                            //clear the button press input
+                            data.input = BUTTON_EVENT_NONE;
+                            //set a flag to note that a reset might be pending
+                            reset = TRUE;
+                        }
                     }
 
                     //if a reset is pending, enter the PENDING_RESET state
-                    if (reset == TRUE) {
+                    if (reset != FALSE) {
                         data.ovenState = PENDING_RESET;
                         print();
                         break;
@@ -311,29 +313,29 @@ int main() {
                 break;
             case PENDING_RESET:
 
-
+                data.ovenState = COUNTDOWN;
+                print();
                 //if button4 is released before the time period, continue on
-                if (((data.buttonPress - data.input) < LONG_PRESS) && 
+                if (((data.buttonPress - data.input) < LONG_PRESS) &&
                         (buttonEvents & BUTTON_EVENT_4UP)) {
                     data.ovenState = COUNTDOWN;
                     buttonEvents = BUTTON_EVENT_NONE;
                     reset = FALSE;
-                    printf("ME!");
+
                     print();
                     break;
-
                 }
-                //if button4 is held down too long, stop the countdown early
+                    //if button4 is held down too long, stop the countdown early
                 else if ((data.buttonPress - data.input) >= LONG_PRESS) {
                     //go back to the reset state, and break
                     data.ovenState = RESET;
+                    buttonEvents = BUTTON_EVENT_NONE;
+                    //remaining time is now zero
+                    data.remTime = 0;
                     reset = FALSE;
-                    printf("YOU!");
+
                     break;
                 }
-                //go back to the countdown step
-                data.ovenState = COUNTDOWN;
-                print();
                 break;
 
         }
