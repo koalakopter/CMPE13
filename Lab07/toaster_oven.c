@@ -66,7 +66,8 @@ typedef struct {
 Oven data;
 
 enum {
-    RESET, START, COUNTDOWN, PENDING_SELECTOR_CHANGE, PENDING_RESET
+    RESET, START, COUNTDOWN, PENDING_SELECTOR_CHANGE, PENDING_RESET,
+    INVERT_BLACK, INVERT_WHITE //extra credit states
 };
 static BOOLEAN selector = FALSE;
 static uint8_t buttonEvents;
@@ -238,7 +239,7 @@ int main() {
                 data.ovenState = START;
                 print();
                 break;
-            //countdown state: aka its cookin
+                //countdown state: aka its cookin
             case COUNTDOWN:
 
                 //set the countdown to the initial time from the potentiometer
@@ -258,7 +259,7 @@ int main() {
 
                     //if ran out of time, break the loops
                     if (data.remTime <= 0) {
-                        data.ovenState = RESET;
+                        data.ovenState = INVERT_BLACK;
                         //just in case the LED's don't switch off
                         LEDS_SET(0x00);
                         break;
@@ -319,6 +320,51 @@ int main() {
                     }
                 }
                 break;
+                //alternates between negative colors and positive    
+            case INVERT_BLACK:
+                //on odd values of 2hz timer
+                if (data.remTime % 2 != 0) {
+                    //sets display back to normal
+                    OledSetDisplayNormal();
+                    OledUpdate();
+                    //LED's blink for extra pizzaz
+                    LEDS_SET(0xFF);
+                }
+                //cancel blinking screen with button 4
+                if (buttonEvents & BUTTON_EVENT_4DOWN) {
+                    //display back to normal
+                    OledSetDisplayNormal();
+                    OledUpdate();
+                    //go back to reset mode
+                    data.ovenState = RESET;
+                    buttonEvents = BUTTON_EVENT_NONE;
+                    break;
+                }
+
+
+                //should "fall through" case to the next one
+                //alternates between negative colors and positive
+            case INVERT_WHITE:
+                //on even values of 2hz timer
+                if (data.remTime % 2 == 0) {
+                    //inverts display
+                    OledSetDisplayInverted();
+                    OledUpdate();
+                    //LED's blink for extra pizzaz
+                    LEDS_SET(0x00);
+                }
+                
+                if (buttonEvents & BUTTON_EVENT_4DOWN) {
+                    //display back to normal
+                    OledSetDisplayNormal();
+                    OledUpdate();
+                    //go back to reset mode
+                    data.ovenState = RESET;
+                    buttonEvents = BUTTON_EVENT_NONE;
+                    break;
+                }
+                data.ovenState = INVERT_BLACK;
+
         }
     }
 
