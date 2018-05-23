@@ -143,6 +143,7 @@ int main() {
             case RESET:
                 //resets stuff back to default states
                 data.input = data.buttonPress;
+                data.buttonPress = 0;
 
                 //reset to initial time, if necessary
                 sec = data.initTime % 60;
@@ -237,7 +238,7 @@ int main() {
                 data.ovenState = START;
                 print();
                 break;
-                //countdown state: aka its cookin
+            //countdown state: aka its cookin
             case COUNTDOWN:
 
                 //set the countdown to the initial time from the potentiometer
@@ -245,6 +246,7 @@ int main() {
                 //all the lights start on
                 ledFraction = data.remTime / 8;
                 LEDS_SET(0xFF); //1111 1111
+                data.buttonPress = 0;
 
                 while (TRUE) {
                     //gotta divide by two since remTime is double initTime
@@ -261,7 +263,6 @@ int main() {
                         LEDS_SET(0x00);
                         break;
                     }
-
 
                     //if button4 was pressed, prepare for reset
                     if (reset != TRUE) {
@@ -285,9 +286,6 @@ int main() {
                         data.ovenState = COUNTDOWN;
                         print();
                     }
-
-                    //update the OLED for every countdown trigger
-
                 }
                 break;
             case PENDING_RESET:
@@ -319,11 +317,9 @@ int main() {
                         printf("yeah\n");
                         break;
                     }
-
                 }
                 break;
         }
-
     }
 
     /***************************************************************************************************
