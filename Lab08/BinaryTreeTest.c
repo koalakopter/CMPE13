@@ -34,7 +34,7 @@ int main()
      
      //creating some fun for the whole family
      //data
-     char fletcher[] = {'a', 'b', 'd', 'd', 'e', 'f', 'c'};
+     char fletcher[] = {'a', 'b', 'd', 'e', 'c', 'f', 'g'};
      int gearing = 3;
      Node *test = TreeCreate(gearing, fletcher); 
      PrintTree(test, 0);
