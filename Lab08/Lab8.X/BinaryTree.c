@@ -35,8 +35,39 @@ Node *TreeCreate(int level, const char *data) {
     return new;
 }
 
-//prints out a tree
+//go down the left side of the tree starting from the root that is passed in
+Node *GetLeftChild(Node *root)
+{
+    //progress down the tree until there is no more left child
+    while(root->leftChild != NULL)
+    {
+        root = root->leftChild;
+    }
+    //check for nulls
+    if(root->data == NULL)
+    {
+        return NULL;
+    }
+    return root;
+}
 
+//go down the right side of the tree starting from the root that is passed in
+Node *GetRightChild(Node *root)
+{
+    //progress down the tree until there is no more right child
+    while(root->rightChild != NULL)
+    {
+        root = root->rightChild;
+    }
+    //check for nulls
+    if(root->data == NULL)
+    {
+        return NULL;
+    }
+    return root;
+}
+
+//prints out a tree
 void PrintTree(Node *node, int space) {
 
 }
