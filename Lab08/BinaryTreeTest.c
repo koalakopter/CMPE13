@@ -30,12 +30,18 @@ int main()
     /******************************************************************************
      * Your code goes in between this comment and the following one with asterisks.
      *****************************************************************************/
-	 printf("\nWelcome to the BinaryTree testing program, please delete this line and replace with your own");
-    
+	 printf("\nTesting for Lab 8 and Julian's BinaryTree.C function");
+     
+     //creating some fun for the whole family
+     //data
+     char fletcher[6] = {'a', 'b', 'c', 'd', 'e', 'f'};
+     int gearing = 3;
+     Node *test = TreeCreate(gearing, fletcher); 
+     PrintTree(test, 0);
     /******************************************************************************
      * Your code goes in between this comment and the preceding one with asterisks
      *****************************************************************************/
 
-    while (1);
+    while (1);                                                                  
 }
 

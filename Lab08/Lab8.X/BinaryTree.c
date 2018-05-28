@@ -7,7 +7,8 @@
 //create a tree
 int x; //keeps track of the array element
 
-Node *TreeCreate(int level, const char *data) {
+Node *TreeCreate(int level, const char *data)
+{
     //first, allocate space
     Node *new = malloc(sizeof (Node));
     //if the malloc fails, return null
@@ -24,7 +25,7 @@ Node *TreeCreate(int level, const char *data) {
         new->leftChild = TreeCreate(level, data);
         new->rightChild = TreeCreate(level, data);
         level++;
-    }        //if at the top level, no left or right child
+    }//if at the top level, no left or right child
     else if (level == 1) {
         new->leftChild = NULL;
         new->rightChild = NULL;
@@ -34,7 +35,8 @@ Node *TreeCreate(int level, const char *data) {
 
 //go down the left side of the tree starting from the root that is passed in
 
-Node *GetLeftChild(Node *root) {
+Node *GetLeftChild(Node *root)
+{
     //progress down the tree until there is no more left child
     while (root->leftChild != NULL) {
         root = root->leftChild;
@@ -48,7 +50,8 @@ Node *GetLeftChild(Node *root) {
 
 //go down the right side of the tree starting from the root that is passed in
 
-Node *GetRightChild(Node *root) {
+Node *GetRightChild(Node *root)
+{
     //progress down the tree until there is no more right child
     while (root->rightChild != NULL) {
         root = root->rightChild;
@@ -64,10 +67,11 @@ Node *GetRightChild(Node *root) {
 //LEVEL_SPACES = 4
 int blank = 0; //extra spaces?
 
-void PrintTree(Node *node, int space) {
+void PrintTree(Node *node, int space)
+{
     //return NULL if root is NULL
-    if (node = NULL) {
-        return NULL;
+    if (node == NULL) {
+        return;
     }
     space += LEVEL_SPACES; //increment space
     //recurse right child
