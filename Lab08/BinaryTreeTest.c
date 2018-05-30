@@ -62,16 +62,35 @@ int main()
 
 
     //test morse tree
-    char morseChars[] = {NULL, 'E',
+    /*char gleaves[] = {NULL, 'E',
         'I', 'S', 'H', '5', '4', 'V', NULL, '3', 'U', 'F', NULL, NULL, NULL, NULL, '2',
         'A', 'R', 'L', NULL, NULL, NULL, NULL, NULL, 'W', 'P', NULL, NULL, 'J', NULL, '1',
         'T',
         'N', 'D', 'B', '6', NULL, 'X', NULL, NULL, 'K', 'C', NULL, NULL, 'Y', NULL, NULL,
-        'M', 'G', 'Z', '7', NULL, 'Q', NULL, NULL, 'O', NULL, NULL, '8', NULL, '9', '0'};
-    char benson[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', NULL, 'B', 'C', 'D', 'E', 'F'};
+        'M', 'G', 'Z', '7', NULL, 'Q', NULL, NULL, 'O', NULL, NULL, '8', NULL, '9', '0'};*/
+    char benson[] = {'1', '2', '3', NULL, '5', NULL, '7', '8', '9', NULL, 'B', 'C', 'D', 'E', 'F'};
     gearing = 4;
-    Node *morseTest = TreeCreate(gearing, benson);
-    PrintTree(morseTest, 0);
+    Node *test2 = TreeCreate(gearing, benson);
+    printf("TEST PRINT 2: EXPECTED OUTCOME: \n");
+    printf("\n            1");
+    printf("\n        2        9");
+    printf("\n     3                  D");
+    printf("\n     5  7  8  B  C  E     F");
+    
+    
+    printf("\n\n\n"); //I've got a blank space, baby, and I'll write your name~
+    PrintTree(test2, 0);
+    
+    //testing for getLeft and getRight
+    left = GetLeftChild(test2);
+    right = GetRightChild(test2);
+    
+    printf("\nTESTING GetLeftChild and GetRightChild functions\n");
+    printf("got left child of first test tree: %c, expected: ''\n", left->data);
+    printf("got right child of first test tree: %c, expected: 'F'\n", right->data);
+
+    
+    
     /******************************************************************************
      * Your code goes in between this comment and the preceding one with asterisks
      *****************************************************************************/
