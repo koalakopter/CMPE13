@@ -4,6 +4,10 @@
 
 //CMPE13 Support Library
 #include "BOARD.h"
+#include "Morse.h"
+#include "BinaryTree.h"
+#include "Buttons.h"
+#include "Oled.h"
 
 // Microchip libraries
 #include <xc.h>
@@ -20,9 +24,13 @@
 // **** Declare any data types here ****
 
 // **** Define any module-level, global, or external variables here ****
-
+static int morseEvent; //keeps track of the current morseEvent via the 100hz timer
 // **** Declare any function prototypes here ****
 
+
+void OledClearTopLine(void); //clears the top line
+void OledPutTopLine(char x); //adds character to the top line
+void OledPutBottomLine(char x); //adds character to the bottom line
 
 int main()
 {
@@ -42,7 +50,9 @@ int main()
 /******************************************************************************
  * Your code goes in between this comment and the following one with asterisks.
  *****************************************************************************/
-    printf("Welcome to the CMPE13 Lab8 blank. Please remove this line.");
+    printf("\nWelcome to Lab8, Julian's Morse Marathon!\n");
+    
+    OledInit(); //start the OLED
 
 
 /******************************************************************************
@@ -54,9 +64,19 @@ int main()
 
 void __ISR(_TIMER_2_VECTOR, IPL4AUTO) TimerInterrupt100Hz(void)
 {
+     //calls to MorseCheckEvents
+    morseEvent = MorseCheckEvents();
     // Clear the interrupt flag.
     IFS0CLR = 1 << 8;
 
     //******** Put your code here *************//
     
+}
+
+
+void OledClearTopLine(void)
+{
+    char blankSpace[16] = "";
+    OledDrawString(blankSpace);
+    OledUpdate();
 }
