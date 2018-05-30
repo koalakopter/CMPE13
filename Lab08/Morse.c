@@ -35,7 +35,7 @@ int MorseInit(void)
     Node *tree = TreeCreate(treeSize, morseChars);
     temp = tree; //will be used for decoding
     //print tree just for good measure
-    PrintTree(tree, treeSize);
+    //PrintTree(tree, treeSize);
     //set Case to waiting
     state = WAITING;
 
@@ -77,10 +77,7 @@ MorseEvent MorseCheckEvents(void)
 {
     currentEvent = MORSE_EVENT_NONE;
     buttonEvent = ButtonsCheckEvents();
-    //if MorseInit hasn't been called, function fails
-    if (MorseInit() != SUCCESS) {
-        return STANDARD_ERROR;
-    }
+
     switch (state) {
     //case 1, waiting for input
     case WAITING:
@@ -91,8 +88,7 @@ MorseEvent MorseCheckEvents(void)
             state = DOT;
             timer = 0;
         }
-        //stay in waiting otherwise
-        state =  WAITING;
+        //if nothing happens, return nothing
         break;
     //checks for DOT Press, or when the press is less than 0.5 sec but greater than 0.25 seconds
     //note at 100hz, 25 triggers for 0.25 seconds
