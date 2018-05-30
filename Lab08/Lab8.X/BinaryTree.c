@@ -50,7 +50,7 @@ Node *GetLeftChild(Node *root)
     }
     //check for nulls
     if (root->data == NULL) {
-        return NULL;
+        return root;
     }
     return root;
 }
@@ -65,7 +65,7 @@ Node *GetRightChild(Node *root)
     }
     //check for nulls
     if (root->data == NULL) {
-        return NULL;
+        return root;
     }
     return root;
 }
