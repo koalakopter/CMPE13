@@ -3,6 +3,7 @@
 #include "BinaryTree.h"
 #include "BOARD.h"
 #include "Buttons.h"
+#include "Oled.h"
 #include <stdio.h>
 
 //array for the morse characters, each line is  a tree with 4 levels, E and T are the 5th level
@@ -17,13 +18,27 @@ int treeSize = 6;
 Node *tree;
 Node *temp;
 
+int state;
+//enum of all possible states
+
+enum {
+    WAITING = 0, DASH, DOT, INTER_LETTER
+};
+
+
 int MorseInit(void)
 {
-    //initialize buttons
+    //initialize buttons and OLED
     ButtonsInit();
+    OledInit();
     //create new Morse tree based upon above array
     Node *tree = TreeCreate(treeSize, morseChars);
     temp = tree; //will be used for decoding
+    //print tree just for good measure
+    PrintTree(tree, treeSize);
+    //set Case to waiting
+    state = WAITING;
+
     if (tree != NULL) {
         return SUCCESS;
     } else {
@@ -54,7 +69,28 @@ char MorseDecode(MorseChar in)
     return in;
 }
 
+
+uint8_t buttonEvent;
+int timer; //100 hz timer
+
 MorseEvent MorseCheckEvents(void)
 {
-    return 1;
+    buttonEvent = ButtonsCheckEvents();
+    //if MorseInit hasn't been called, function fails
+    if (MorseInit() != SUCCESS) {
+        return STANDARD_ERROR;
+    }
+    switch (state) {
+    //case 1, waiting for input
+    case WAITING:
+        //if button4 is pressed, reset and start the 100hz timer
+        if (buttonEvent & BUTTON_EVENT_4DOWN)
+        {
+            //go to next case (DOT))
+            state = DOT;
+            timer = 0;
+        }
+            
+    }
+
 }
