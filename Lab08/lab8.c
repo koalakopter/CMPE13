@@ -75,28 +75,12 @@ int main()
      *****************************************************************************/
     OledInit(); //start the OLED
     ButtonsInit();
+    MorseInit();
 
+    //adds a newline to the beginning of the second line of output
     output2[0] = '\n';
-    arrayPos2 = 1;
-
+    arrayPos2 = 1; //ArRaYS StARt aT ONe
     /*
-    printf("\nWelcome to Lab8, Julian's Morse Marathon!\n");
-    sprintf(finalOutput, koala);
-    uint8_t butt;
-    //some test shit
-    int x = 0;
-    OledSetDisplayNormal();
-    OledDrawString(finalOutput);
-    OledUpdate();
-    printf("why you no work");
-    butt = ButtonsCheckEvents();
-    for (x = 0; x < 10000000; x++) {
-        koala[5] = 'g';
-    }
-    printf("\n NANODESU");
-    sprintf(finalOutput, koala);
-    OledDrawString(finalOutput);
-    OledUpdate(); */
     int x = 0;
     OledPutTopLine('1');
     for (x = 0; x < 10000000; x++) {
@@ -110,7 +94,17 @@ int main()
     OledPutBotLine('4');
     for (x = 0; x < 10000000; x++) {
     }
-    OledPutBotLine('5');
+    OledPutBotLine('5'); */
+    //everything happens here!
+    while (TRUE) {
+        //does stuff according to what MorseCheckEvents returns
+        switch (morseEvent) {
+        case MORSE_EVENT_NONE:
+            //yeah just do nothing 
+            printf("AYYYY");
+            break;
+        }
+    }
 
 
 
