@@ -67,7 +67,11 @@ int main()
     //printf("\nWelcome to Lab8, Julian's Morse Marathon!\n");
 
     OledInit(); //start the OLED
-
+    //some test shit
+    
+    
+    
+    
 
     /******************************************************************************
      * Your code goes in between this comment and the preceding one with asterisks.
@@ -86,14 +90,14 @@ void __ISR(_TIMER_2_VECTOR, IPL4AUTO) TimerInterrupt100Hz(void)
     //******** Put your code here *************//
 
 }
-BOOLEAN firstChar; //checks if the first character has been written or not...
+int arrayPos; //keeps track of where you are in the array
 
 void OledClearTopLine(void)
 {
     char blankSpace[16] = "";
     OledDrawString(blankSpace);
     OledUpdate();
-    firstChar = FALSE;
+    arrayPos = 0;
 }
 
 void OledPutTopLine(char input)
@@ -101,15 +105,17 @@ void OledPutTopLine(char input)
     //if you put in a dot...
     if (input == MORSE_CHAR_DOT) {
         toWrite = MORSE_CHAR_DOT;
-    }       
-    //...a dash
+    }
+        //...a dash
     else if (input == MORSE_CHAR_DASH) {
         toWrite = MORSE_CHAR_DASH;
-    }        
-    //or a space
+    }
+        //or a space
     else {
         toWrite = MORSE_CHAR_END_OF_CHAR;
     }
+    output1[arrayPos] = toWrite; //puts the char returned by PutTop into the output array
+    arrayPos += 1;
 }
 
 
@@ -117,18 +123,13 @@ void OledPutTopLine(char input)
 
 void Print(void)
 {
-    OledClear(0);
-    //checks if this is the first character being printed because strcpy & strcat are funky
-    if (firstChar == FALSE) {
-        strcpy(output1, toWrite);
-    } else {
-        strcat(output1, toWrite);
-    }
+    OledClear(0); //clear the display first
+    OledSetDisplayNormal();
     
-    strcpy(finalOutput, output1);
+    strcpy(finalOutput, output1); //combine lines 1 and 2 into a single string
     strcat(finalOutput, output2);
+    
     OledDrawString(finalOutput);
     OledUpdate();
-
 
 }
