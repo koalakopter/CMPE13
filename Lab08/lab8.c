@@ -3,11 +3,13 @@
 
 
 //CMPE13 Support Library
+#include "Ascii.h"
 #include "BOARD.h"
 #include "Morse.h"
 #include "BinaryTree.h"
 #include "Buttons.h"
 #include "Oled.h"
+#include "OledDriver.h"
 
 // Microchip libraries
 #include <xc.h>
@@ -46,9 +48,12 @@ void OledClearTopLine(void); //clears the top line
 void OledPutTopLine(char input); //adds character to the top line
 void OledPutBottomLine(char input); //adds character to the bottom line
 
+char koala[] = {'a', 'b', 'c', 'd', 'e'};
+
 int main()
 {
     BOARD_Init();
+
 
 
     // Configure Timer 2 using PBCLK as input. We configure it using a 1:16 prescalar, so each timer
@@ -64,14 +69,29 @@ int main()
     /******************************************************************************
      * Your code goes in between this comment and the following one with asterisks.
      *****************************************************************************/
-    //printf("\nWelcome to Lab8, Julian's Morse Marathon!\n");
-
     OledInit(); //start the OLED
+    ButtonsInit();
+    printf("\nWelcome to Lab8, Julian's Morse Marathon!\n");
+    sprintf(finalOutput, koala);
+    uint8_t butt;
     //some test shit
-    
-    
-    
-    
+    int x = 0;
+        OledSetDisplayNormal();
+        OledDrawString(finalOutput);
+        OledUpdate();
+        printf("why you no work");
+        butt = ButtonsCheckEvents();
+        for(x = 0; x < 10000000; x++)
+        {
+            koala[5] = 'g';
+        }
+        printf("\n NANODESU");
+        sprintf(finalOutput, koala);
+        OledDrawString(finalOutput);
+        OledUpdate();
+ 
+
+
 
     /******************************************************************************
      * Your code goes in between this comment and the preceding one with asterisks.
@@ -82,13 +102,12 @@ int main()
 
 void __ISR(_TIMER_2_VECTOR, IPL4AUTO) TimerInterrupt100Hz(void)
 {
-    //calls to MorseCheckEvents
-    morseEvent = MorseCheckEvents();
     // Clear the interrupt flag.
     IFS0CLR = 1 << 8;
 
     //******** Put your code here *************//
-
+    //calls to MorseCheckEvents
+    //morseEvent = MorseCheckEvents();
 }
 int arrayPos; //keeps track of where you are in the array
 
@@ -105,12 +124,10 @@ void OledPutTopLine(char input)
     //if you put in a dot...
     if (input == MORSE_CHAR_DOT) {
         toWrite = MORSE_CHAR_DOT;
-    }
-        //...a dash
+    }        //...a dash
     else if (input == MORSE_CHAR_DASH) {
         toWrite = MORSE_CHAR_DASH;
-    }
-        //or a space
+    }        //or a space
     else {
         toWrite = MORSE_CHAR_END_OF_CHAR;
     }
@@ -125,10 +142,10 @@ void Print(void)
 {
     OledClear(0); //clear the display first
     OledSetDisplayNormal();
-    
+
     strcpy(finalOutput, output1); //combine lines 1 and 2 into a single string
     strcat(finalOutput, output2);
-    
+
     OledDrawString(finalOutput);
     OledUpdate();
 
