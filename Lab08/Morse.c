@@ -90,7 +90,50 @@ MorseEvent MorseCheckEvents(void)
             state = DOT;
             timer = 0;
         }
-            
+        //stay in waiting otherwise
+        state =  WAITING;
+        break;
+    //checks for DOT Press, or when the press is less than 0.5 sec but greater than 0.25 seconds
+    //note at 100hz, 25 triggers for 0.25 seconds
+    case DOT:
+        //register a button being released
+        if (buttonEvent & BUTTON_EVENT_4UP)
+        {
+            //check the time 
+            if (timer >= MORSE_EVENT_LENGTH_DOWN_DOT && 
+                     timer < MORSE_EVENT_LENGTH_DOWN_DASH)
+            {
+                //returns a dot
+                state = INTER_LETTER;
+                timer = 0; //reset the timer
+                return MORSE_EVENT_DOT;
+            }
+            else if(timer >= MORSE_EVENT_LENGTH_DOWN_DASH)
+            {
+                state = DASH;
+                break;
+            }
+        }
+    case DASH:
+        
+        timer = 0;
+        state = INTER_LETTER;
+        return MORSE_EVENT_DASH; //returns a dash
+        break;
+        
+    case INTER_LETTER:
+        
+        //if the value of timer is greater than the wait period for a new letter, go back to waiting to await a dot or dash
+        if (timer >= MORSE_EVENT_LENGTH_UP_INTER_LETTER)
+        {
+            state = WAITING;
+            return MORSE_EVENT_INTER_LETTER;
+            break;
+        }
+        
+        
+        break;
     }
-
+    timer++; //increment dat timer
+    return 0; //return nothing so I don't get errors...
 }
