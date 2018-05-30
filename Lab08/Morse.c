@@ -141,11 +141,13 @@ MorseEvent MorseCheckEvents(void)
                 currentEvent =  MORSE_EVENT_INTER_LETTER;
                 break;
             }
+            //if the interval was too short, its the same letter
+            else if(timer < MORSE_EVENT_LENGTH_UP_INTER_LETTER)
+            {
+                state = DOT;
+                timer = 0; //reset the timer and go back to dot
+            }
         }
-        
-        
-        
-        
         break;
     }
     timer++; //increment dat timer
