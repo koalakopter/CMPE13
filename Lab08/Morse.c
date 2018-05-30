@@ -72,9 +72,10 @@ char MorseDecode(MorseChar in)
 
 uint8_t buttonEvent;
 int timer; //100 hz timer
-
+int currentEvent;
 MorseEvent MorseCheckEvents(void)
 {
+    currentEvent = MORSE_EVENT_NONE;
     buttonEvent = ButtonsCheckEvents();
     //if MorseInit hasn't been called, function fails
     if (MorseInit() != SUCCESS) {
@@ -106,7 +107,7 @@ MorseEvent MorseCheckEvents(void)
                 //returns a dot
                 state = INTER_LETTER;
                 timer = 0; //reset the timer
-                return MORSE_EVENT_DOT;
+                currentEvent = MORSE_EVENT_DOT;
             }
             else if(timer >= MORSE_EVENT_LENGTH_DOWN_DASH)
             {
@@ -118,22 +119,35 @@ MorseEvent MorseCheckEvents(void)
         
         timer = 0;
         state = INTER_LETTER;
-        return MORSE_EVENT_DASH; //returns a dash
+        currentEvent = MORSE_EVENT_DASH; //returns a dash
         break;
         
     case INTER_LETTER:
         
-        //if the value of timer is greater than the wait period for a new letter, go back to waiting to await a dot or dash
-        if (timer >= MORSE_EVENT_LENGTH_UP_INTER_LETTER)
+        //if the value of timer is too big (>200), designate a new word
+        if (timer >= MORSE_EVENT_LENGTH_UP_INTER_LETTER_TIMEOUT)
         {
             state = WAITING;
-            return MORSE_EVENT_INTER_LETTER;
+            currentEvent = MORSE_EVENT_INTER_WORD;
             break;
         }
+        //check if button4 was pressed
+        if (buttonEvent & BUTTON_EVENT_4DOWN)
+        {
+            //if timer times out past 100 ticks, designate a new letter
+            if(timer >= MORSE_EVENT_LENGTH_UP_INTER_LETTER)
+            {
+                state = WAITING;
+                currentEvent =  MORSE_EVENT_INTER_LETTER;
+                break;
+            }
+        }
+        
+        
         
         
         break;
     }
     timer++; //increment dat timer
-    return 0; //return nothing so I don't get errors...
+    return currentEvent; //returns the current Morse Event...
 }
