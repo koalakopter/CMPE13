@@ -34,11 +34,12 @@
 static int morseEvent; //keeps track of the current morseEvent via the 100hz timer
 
 char output1[20]; //output for line1
-char output2[20]; //output for line2
+char output2[21]; //output for line2 (+1 for newline)
 char finalOutput[40];
 //its 20 since thats the max amount of chars on the OLED per line
 
 char toWrite; //character pending to be written to OLED
+int arrayPos1, arrayPos2; //keeps track of where you are in the string array
 
 
 // **** Declare any function prototypes here ****
@@ -46,9 +47,12 @@ char toWrite; //character pending to be written to OLED
 
 void OledClearTopLine(void); //clears the top line
 void OledPutTopLine(char input); //adds character to the top line
-void OledPutBottomLine(char input); //adds character to the bottom line
+void OledPutBotLine(char input); //adds character to the bottom line
+void Print(void);
 
 char koala[] = {'a', 'b', 'c', 'd', 'e'};
+
+//first character is a new line to make a new line... kinda jank
 
 int main()
 {
@@ -71,25 +75,42 @@ int main()
      *****************************************************************************/
     OledInit(); //start the OLED
     ButtonsInit();
+
+    output2[0] = '\n';
+    arrayPos2 = 1;
+
+    /*
     printf("\nWelcome to Lab8, Julian's Morse Marathon!\n");
     sprintf(finalOutput, koala);
     uint8_t butt;
     //some test shit
     int x = 0;
-        OledSetDisplayNormal();
-        OledDrawString(finalOutput);
-        OledUpdate();
-        printf("why you no work");
-        butt = ButtonsCheckEvents();
-        for(x = 0; x < 10000000; x++)
-        {
-            koala[5] = 'g';
-        }
-        printf("\n NANODESU");
-        sprintf(finalOutput, koala);
-        OledDrawString(finalOutput);
-        OledUpdate();
- 
+    OledSetDisplayNormal();
+    OledDrawString(finalOutput);
+    OledUpdate();
+    printf("why you no work");
+    butt = ButtonsCheckEvents();
+    for (x = 0; x < 10000000; x++) {
+        koala[5] = 'g';
+    }
+    printf("\n NANODESU");
+    sprintf(finalOutput, koala);
+    OledDrawString(finalOutput);
+    OledUpdate(); */
+    int x = 0;
+    OledPutTopLine('1');
+    for (x = 0; x < 10000000; x++) {
+    }
+    OledPutTopLine('2');
+    for (x = 0; x < 10000000; x++) {
+    }
+    OledPutTopLine('3');
+    for (x = 0; x < 10000000; x++) {
+    }
+    OledPutBotLine('4');
+    for (x = 0; x < 10000000; x++) {
+    }
+    OledPutBotLine('5');
 
 
 
@@ -107,46 +128,72 @@ void __ISR(_TIMER_2_VECTOR, IPL4AUTO) TimerInterrupt100Hz(void)
 
     //******** Put your code here *************//
     //calls to MorseCheckEvents
-    //morseEvent = MorseCheckEvents();
+    morseEvent = MorseCheckEvents();
 }
-int arrayPos; //keeps track of where you are in the array
 
 void OledClearTopLine(void)
 {
-    char blankSpace[16] = "";
+    char blankSpace[20] = "";
     OledDrawString(blankSpace);
     OledUpdate();
-    arrayPos = 0;
+    arrayPos1 = 0;
 }
+
+//adds a character to top line
 
 void OledPutTopLine(char input)
 {
     //if you put in a dot...
     if (input == MORSE_CHAR_DOT) {
         toWrite = MORSE_CHAR_DOT;
-    }        //...a dash
+    }//...a dash
     else if (input == MORSE_CHAR_DASH) {
         toWrite = MORSE_CHAR_DASH;
-    }        //or a space
+    }//or a space
     else {
         toWrite = MORSE_CHAR_END_OF_CHAR;
     }
-    output1[arrayPos] = toWrite; //puts the char returned by PutTop into the output array
-    arrayPos += 1;
+    //for test
+    toWrite = input;
+    output1[arrayPos1] = toWrite; //puts the char returned by PutTop into the output array
+    arrayPos1 += 1;
+    Print();
+}
+
+//does the same thing as the above function, but puts it in the bottom line instead
+
+void OledPutBotLine(char input)
+{
+
+    //if you put in a dot...
+    if (input == MORSE_CHAR_DOT) {
+        toWrite = MORSE_CHAR_DOT;
+    }//...a dash
+    else if (input == MORSE_CHAR_DASH) {
+        toWrite = MORSE_CHAR_DASH;
+    }//or a space
+    else {
+        toWrite = MORSE_CHAR_END_OF_CHAR;
+    }
+    //for test
+    toWrite = input;
+    output2[arrayPos2] = toWrite; //puts the char returned by PutTop into the output array
+    arrayPos2 += 1;
+    Print();
 }
 
 
-//print function!
+//helper print function
 
 void Print(void)
 {
     OledClear(0); //clear the display first
     OledSetDisplayNormal();
 
+
     strcpy(finalOutput, output1); //combine lines 1 and 2 into a single string
     strcat(finalOutput, output2);
 
     OledDrawString(finalOutput);
     OledUpdate();
-
 }
