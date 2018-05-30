@@ -2,35 +2,42 @@
 #include "BinaryTree.h"
 #include "Board.h"
 #include <stdio.h>
+#include <math.h>
 
 
 //create a tree
-int x; //keeps track of the array element
-
 Node *TreeCreate(int level, const char *data)
 {
-    //first, allocate space
-    Node *new = malloc(sizeof (Node));
-    //if the malloc fails, return null
-    if (new == NULL) {
+    Node *new; //create a temporary node to put stuff into
+    double power; //variable to perform the POW function
+    //allocate space for this temp thing
+    new = malloc(sizeof (Node));
+    if (new == NULL)
+    {
         return NULL;
-    }//else, store the variable
-    else {
-        new->data = data[x];
     }
-    x++; //move up the array;
-    //if not level 1, create a left and right child
-    if (level > 1) {
-        level--;
-        new->leftChild = TreeCreate(level, data);
-        new->rightChild = TreeCreate(level, data);
-        level++;
-    }//if at the top level, no left or right child
-    else if (level == 1) {
-        new->leftChild = NULL;
+    //if at the bottom level, no left or right child
+    if (level == 1) {       
+        //set right and left child to NULL, since at bottom
         new->rightChild = NULL;
+        new->leftChild = NULL;
+        //put in data pointer
+        new->data = *data;
+        return new;
     }
-    return new;
+    //if not level 1 (the bottom), create a left and right child
+    else if (new != NULL) {
+        //put the data from temp into a pointer
+        new->data = *data;
+        
+        new->leftChild = TreeCreate(level - 1, data + 1); 
+        
+        //performs the operation 2^n, to find the data point to print into temp
+        power = pow(2, level-1);
+        new->rightChild = TreeCreate( level - 1, data + (int)power); 
+        return new;
+    }
+    return NULL;
 }
 
 //go down the left side of the tree starting from the root that is passed in
@@ -86,6 +93,4 @@ void PrintTree(Node *node, int space)
         PrintTree(node->leftChild, space);
     }
     return;
-
-
 }
