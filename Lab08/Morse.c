@@ -6,6 +6,10 @@
 #include "Oled.h"
 #include <stdio.h>
 
+#define BOOLEAN int
+#define TRUE 1
+#define FALSE 0
+
 //array for the morse characters, each line is  a tree with 4 levels, E and T are the 5th level
 char morseChars[] = {NULL, 'E',
     'I', 'S', 'H', '5', '4', 'V', NULL, '3', 'U', 'F', NULL, NULL, NULL, NULL, '2',
@@ -25,7 +29,7 @@ enum {
     WAITING = 0, DASH, DOT, INTER_LETTER
 };
 
-
+BOOLEAN isCreate;
 int MorseInit(void)
 {
     //initialize buttons and OLED
@@ -39,6 +43,7 @@ int MorseInit(void)
     //set Case to waiting
     state = WAITING;
 
+    isCreate = TRUE; //boolean to determine if Morse has been initialized
     if (tree != NULL) {
         return SUCCESS;
     } else {
@@ -49,7 +54,7 @@ int MorseInit(void)
 char MorseDecode(MorseChar in)
 {
     //if not initialized, return NULL
-    if (tree == NULL) {
+    if (isCreate == NULL) {
         return STANDARD_ERROR;
     }
     if (in == MORSE_CHAR_DASH) {
@@ -77,6 +82,12 @@ MorseEvent MorseCheckEvents(void)
 {
     currentEvent = MORSE_EVENT_NONE;
     buttonEvent = ButtonsCheckEvents();
+    
+    //if morse init hasnt been called, return an error
+    if(isCreate == FALSE)
+    {
+        return STANDARD_ERROR;
+    }
 
     switch (state) {
     //case 1, waiting for input
