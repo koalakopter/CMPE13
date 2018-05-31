@@ -32,11 +32,14 @@ static int morseEvent; //keeps track of the current morseEvent via the 100hz tim
 
 char output1[20]; //output for line1
 char output2[21]; //output for line2 (+1 for newline)
+char output3[21];
+char output4[21]; //lines 3 and 4
 char finalOutput[40];
 //its 20 since thats the max amount of chars on the OLED per line
 
 char toWrite, letter; //character pending to be written to OLED
 int arrayPos1, arrayPos2; //keeps track of where you are in the string array
+int lineNum; //keeps track of what line you're on for extra credit
 
 
 // **** Declare any function prototypes here ****
@@ -70,26 +73,18 @@ int main()
     /******************************************************************************
      * Your code goes in between this comment and the following one with asterisks.
      *****************************************************************************/
-    OledInit(); //start the OLED
+    //initialization stuff
+    OledInit();
     ButtonsInit();
     MorseInit();
 
     //adds a newline to the beginning of the second line of output
     output2[0] = '\n';
     arrayPos2 = 1; //ArRaYS StARt aT ONe
-
-    /*
-    char morseChars[] = {NULL, 'E',
-    'I', 'S', 'H', '5', '4', 'V', NULL, '3', 'U', 'F', NULL, NULL, NULL, NULL, '2',
-    'A', 'R', 'L', NULL, NULL, NULL, NULL, NULL, 'W', 'P', NULL, NULL, 'J', NULL, '1',
-    'T',
-    'N', 'D', 'B', '6', NULL, 'X', NULL, NULL, 'K', 'C', NULL, NULL, 'Y', NULL, NULL,
-    'M', 'G', 'Z', '7', NULL, 'Q', NULL, NULL, 'O', NULL, NULL, '8', NULL, '9', '0'};
-    
-    int gearing = 6;
-    Node *test = TreeCreate(gearing, morseChars); 
-    PrintTree(test, 0); */
-
+    sprintf(output3,"\n%s", output3);
+    sprintf(output3,"\n%s", output4);
+    output3[2] = 'h';
+    lineNum = 2;
 
 
     //everything happens here!
@@ -137,8 +132,7 @@ int main()
             OledClearTopLine();
             letter = MorseDecode(MORSE_CHAR_END_OF_CHAR); //letter is easier to type
             //if the character is invalid, do nothing and go back to start
-            if (letter == STANDARD_ERROR)
-            {
+            if (letter == STANDARD_ERROR) {
                 OledPutBotLine(NULL);
                 break;
             }
@@ -154,8 +148,6 @@ int main()
             //clear the top line
             OledClearTopLine();
 
-
-            //printf("burr %c", MorseDecode(MORSE_CHAR_END_OF_CHAR));
             OledPutBotLine(MorseDecode(MORSE_CHAR_END_OF_CHAR));
 
             break;
@@ -182,18 +174,14 @@ void __ISR(_TIMER_2_VECTOR, IPL4AUTO) TimerInterrupt100Hz(void)
 }
 
 int x;
+
 void OledClearTopLine(void)
 {
-    for(x = 0; x < 20; x++)
-    {
+    for (x = 0; x < 19; x++) {
         output1[x] = ' '; //replace output1 entirely with spaces....
     }
-    strcpy(finalOutput, output1); //combine lines 1 and 2 into a single string
-    strcat(finalOutput, output2);
-
-    OledDrawString(finalOutput);
-    OledUpdate();
     arrayPos1 = 0;
+    Print();
 }
 
 //adds a character to top line
@@ -216,16 +204,33 @@ void OledPutTopLine(char input)
     Print();
 }
 
-//does the same thing as the above function, but puts it in the bottom line instead
-
+//prints characters onto the bottom 3 lines
 void OledPutBotLine(char input)
 {
-    if (input == NULL)
-    {
+    if (input == NULL) {
         input = MORSE_CHAR_END_OF_CHAR;
     }
-    output2[arrayPos2] = input; //puts the char returned by PutTop into the output array
+
+    if (lineNum == 2) //prints onto line 2
+    {
+        output2[arrayPos2] = input;
+    } 
+    else if (lineNum == 3) //puts the char returned by PutTop into the output array 3
+    {
+        output3[arrayPos2] = input; //puts the char returned by PutTop into the output array 3
+    } 
+    else if (lineNum == 4)
+    {
+        output4[arrayPos2] = input; //puts the char returned by PutTop into the output array 4
+    }
     arrayPos2 += 1;
+    if (arrayPos2 >= 21) //if you reach the end of the line, go to next line
+    {
+ 
+        lineNum++;
+        arrayPos2 = 1; //go back to front of array
+    }
+    printf("%d fasd", arrayPos2);
     Print();
 }
 
@@ -240,6 +245,9 @@ void Print(void)
 
     strcpy(finalOutput, output1); //combine lines 1 and 2 into a single string
     strcat(finalOutput, output2);
+    //extra credit word wrap
+    strcat(finalOutput, output3);
+    strcat(finalOutput, output4);
 
     OledDrawString(finalOutput);
     OledUpdate();
