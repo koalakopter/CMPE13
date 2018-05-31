@@ -55,27 +55,28 @@ int MorseInit(void)
 char MorseDecode(MorseChar in)
 {
     //if not initialized, return NULL
-    if (isCreate == NULL) {
+    if (isCreate == FALSE) {
         tree = temp; //reset the tree pointer back to the top of the tree
         return STANDARD_ERROR;
     }
     if (in == MORSE_CHAR_DASH) {
         //move to the right of the tree if dash
-        if (tree->rightChild != NULL) {
+        //if (tree->rightChild != NULL) {
             tree = tree->rightChild;
             return SUCCESS;
-        }
+        //}
     } else if (in == MORSE_CHAR_DOT) {
         //move left if dot
-        if (tree->leftChild != NULL) {
+        //if (tree->leftChild != NULL) {
             tree = tree->leftChild;
             return SUCCESS;
-        }
+        //}
     } else if (in == MORSE_CHAR_DECODE_RESET) {
         tree = temp; // set tree back to head of tree to read next char
         return SUCCESS;
     } else if (in == MORSE_CHAR_END_OF_CHAR) {
         char tempTree = tree->data; //we need to make a temp variable so we can reset tree back to top
+        printf("HELPPPPP %c", tempTree);
         tree = temp;
         return tempTree; // return data if end of input
     }
@@ -103,7 +104,6 @@ MorseEvent MorseCheckEvents(void)
         //if button4 is pressed, reset and start the 100hz timer
         if (buttonEvent & BUTTON_EVENT_4DOWN) {
             //go to next case (DOT))
-            printf("fugg");
             state = DOT;
             timer = 0;
         }
@@ -115,7 +115,6 @@ MorseEvent MorseCheckEvents(void)
         //if button 4 is released, and time is less than 0.5 sec, print a dot
         if ((buttonEvent & BUTTON_EVENT_4UP) &&
                 (timer < MORSE_EVENT_LENGTH_DOWN_DASH)) {
-            printf("maybe?");
             //returns a dot
             state = INTER_LETTER;
             timer = 0; //reset the timer

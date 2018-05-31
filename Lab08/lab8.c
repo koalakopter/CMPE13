@@ -78,6 +78,20 @@ int main()
     output2[0] = '\n';
     arrayPos2 = 1; //ArRaYS StARt aT ONe
     
+    /*
+    char morseChars[] = {NULL, 'E',
+    'I', 'S', 'H', '5', '4', 'V', NULL, '3', 'U', 'F', NULL, NULL, NULL, NULL, '2',
+    'A', 'R', 'L', NULL, NULL, NULL, NULL, NULL, 'W', 'P', NULL, NULL, 'J', NULL, '1',
+    'T',
+    'N', 'D', 'B', '6', NULL, 'X', NULL, NULL, 'K', 'C', NULL, NULL, 'Y', NULL, NULL,
+    'M', 'G', 'Z', '7', NULL, 'Q', NULL, NULL, 'O', NULL, NULL, '8', NULL, '9', '0'};
+    
+    int gearing = 6;
+    Node *test = TreeCreate(gearing, morseChars); 
+    PrintTree(test, 0); */
+    
+    
+    
     //everything happens here!
     printf("\nHEAVEN OR HELL\n");
     while (TRUE) {
@@ -93,7 +107,6 @@ int main()
             //if a dot is received, print that dot
         case MORSE_EVENT_DOT:
             //adds a dot!
-            printf("meme");
             OledPutTopLine(MORSE_CHAR_DOT);
             morseEvent = MORSE_EVENT_NONE; //go back to default state
             invalid = MorseDecode(MORSE_CHAR_DOT);
@@ -106,8 +119,7 @@ int main()
             break;
 
         case MORSE_EVENT_DASH:
-            //adds a dot!
-            printf("yeah");
+            //adds a dash!
             OledPutTopLine(MORSE_CHAR_DASH);
             morseEvent = MORSE_EVENT_NONE; //go back to default state
 
@@ -124,8 +136,9 @@ int main()
             //clear the top line
             OledClearTopLine();
             
-            OledPutBotLine(MORSE_CHAR_END_OF_CHAR);
-            MorseDecode(MORSE_CHAR_END_OF_CHAR);
+            printf("durr %c", MorseDecode(MORSE_CHAR_END_OF_CHAR));
+            OledPutBotLine(MorseDecode(MORSE_CHAR_END_OF_CHAR));
+
             break;
 
             //same character, not a new letter    
@@ -135,8 +148,10 @@ int main()
             //clear the top line
             OledClearTopLine();
             
-            OledPutBotLine(MORSE_CHAR_END_OF_CHAR);
-            MorseDecode(MORSE_CHAR_END_OF_CHAR);
+            
+            printf("burr %c", MorseDecode(MORSE_CHAR_END_OF_CHAR));
+            OledPutBotLine(MorseDecode(MORSE_CHAR_END_OF_CHAR));
+
             break;
         }
     }
@@ -164,7 +179,9 @@ void OledClearTopLine(void)
 {
     //char blankSpace[20]; //20 spaces...
     sprintf(output1, "                    ");
-    OledDrawString(output1);
+    strcpy(finalOutput, output1);
+    strcpy(finalOutput, output2);
+    OledDrawString(finalOutput);
     OledUpdate();
     arrayPos1 = 0;
 }
