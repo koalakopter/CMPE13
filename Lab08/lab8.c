@@ -35,7 +35,7 @@ char output2[21]; //output for line2 (+1 for newline)
 char finalOutput[40];
 //its 20 since thats the max amount of chars on the OLED per line
 
-char toWrite; //character pending to be written to OLED
+char toWrite, letter; //character pending to be written to OLED
 int arrayPos1, arrayPos2; //keeps track of where you are in the string array
 
 
@@ -135,10 +135,11 @@ int main()
             morseEvent = MORSE_EVENT_NONE; //go back to default state
             
             //clear the top line
-            OledClearTopLine();
+            //OledClearTopLine();
             
             printf("durr %c", MorseDecode(MORSE_CHAR_END_OF_CHAR));
-            OledPutBotLine(MorseDecode(MORSE_CHAR_END_OF_CHAR));
+            letter = MorseDecode(MORSE_CHAR_END_OF_CHAR);
+            OledPutBotLine(letter);
 
             break;
 
@@ -147,7 +148,7 @@ int main()
             morseEvent = MORSE_EVENT_NONE; //go back to default state
             
             //clear the top line
-            OledClearTopLine();
+            //OledClearTopLine();
             
             
             printf("burr %c", MorseDecode(MORSE_CHAR_END_OF_CHAR));
@@ -178,12 +179,17 @@ void __ISR(_TIMER_2_VECTOR, IPL4AUTO) TimerInterrupt100Hz(void)
 
 void OledClearTopLine(void)
 {
-    //char blankSpace[20]; //20 spaces...
+    char blankSpace[20]; //20 spaces...
     OledClear(0);
-    sprintf(output1, "                    "); //20 spaces!
+    OledUpdate();
+    sprintf(blankSpace, "                    "); //20 spaces!
+    strcpy(finalOutput, blankSpace); //combine lines 1 and 2 into a single string
+    strcat(finalOutput, output2);
+
+    OledDrawString(finalOutput);
+    OledUpdate();
     printf("I WANT TO DIE");
     arrayPos1 = 0;
-    Print();
 }
 
 //adds a character to top line
@@ -211,18 +217,7 @@ void OledPutTopLine(char input)
 void OledPutBotLine(char input)
 {
 
-    //if you put in a dot...
-    if (input == MORSE_CHAR_DOT) {
-        toWrite = MORSE_CHAR_DOT;
-    }//...a dash
-    else if (input == MORSE_CHAR_DASH) {
-        toWrite = MORSE_CHAR_DASH;
-    }//or a space
-    else {
-        toWrite = MORSE_CHAR_END_OF_CHAR;
-    }
-
-    output2[arrayPos2] = toWrite; //puts the char returned by PutTop into the output array
+    output2[arrayPos2] = input; //puts the char returned by PutTop into the output array
     arrayPos2 += 1;
     Print();
 }
