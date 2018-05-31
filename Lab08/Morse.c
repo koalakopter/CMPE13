@@ -105,20 +105,15 @@ MorseEvent MorseCheckEvents(void)
         //checks for DOT Press, or when the press is less than 0.5 sec but greater than 0.25 seconds
         //note at 100hz, 25 triggers for 0.25 seconds
     case DOT:
-
-        //register a button being released
-        if (buttonEvent & BUTTON_EVENT_4UP) {
-            //check the time 
-            printf("probably");
-            if (timer >= MORSE_EVENT_LENGTH_DOWN_DOT &&
-                    timer < MORSE_EVENT_LENGTH_DOWN_DASH) {
-                printf("maybe?");
-                //returns a dot
-                state = INTER_LETTER;
-                timer = 0; //reset the timer
-                currentEvent = MORSE_EVENT_DOT;
-                break;
-            }
+        //if button 4 is released, and time is less than 0.5 sec, print a dot
+        if ((buttonEvent & BUTTON_EVENT_4UP) &&
+                (timer < MORSE_EVENT_LENGTH_DOWN_DASH)) {
+            printf("maybe?");
+            //returns a dot
+            state = INTER_LETTER;
+            timer = 0; //reset the timer
+            currentEvent = MORSE_EVENT_DOT;
+            break;
         }
         //if time runs out, its a dash
         if (timer >= MORSE_EVENT_LENGTH_DOWN_DASH) {
@@ -129,10 +124,11 @@ MorseEvent MorseCheckEvents(void)
         //stay in DOT until a thing happens
         state = DOT;
     case DASH:
-
-        timer = 0;
-        state = INTER_LETTER;
-        currentEvent = MORSE_EVENT_DASH; //returns a dash
+        if (buttonEvent & BUTTON_EVENT_4UP) {
+            timer = 0;
+            state = INTER_LETTER;
+            currentEvent = MORSE_EVENT_DASH; //returns a dash
+        }
         break;
 
     case INTER_LETTER:
