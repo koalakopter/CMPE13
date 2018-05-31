@@ -62,18 +62,18 @@ char MorseDecode(MorseChar in)
 
     if (in == MORSE_CHAR_DASH) {
         //move to the right of the tree if dash
-        //if (tree->rightChild != NULL) {
+        if (tree->rightChild != NULL) {
 
         tree = tree->rightChild;
         return SUCCESS;
-        //}
+        }
     } else if (in == MORSE_CHAR_DOT) {
         //move left if dot
-        //if (tree->leftChild != NULL) {
+        if (tree->leftChild != NULL) {
 
         tree = tree->leftChild;
         return SUCCESS;
-        //}
+        }
     } else if (in == MORSE_CHAR_DECODE_RESET) {
         tree = temp; // set tree back to head of tree to read next char
         return SUCCESS;
@@ -149,7 +149,7 @@ MorseEvent MorseCheckEvents(void)
             break;
         }
         //if timer times out past 100 ticks, designate a new letter, reset timer
-        if (timer > MORSE_EVENT_LENGTH_UP_INTER_LETTER
+        if (timer >= MORSE_EVENT_LENGTH_UP_INTER_LETTER
                 && (buttonEvent & BUTTON_EVENT_4DOWN)) {
             state = DOT;
             currentEvent = MORSE_EVENT_INTER_LETTER;

@@ -77,7 +77,7 @@ int main()
     //adds a newline to the beginning of the second line of output
     output2[0] = '\n';
     arrayPos2 = 1; //ArRaYS StARt aT ONe
-    
+
     /*
     char morseChars[] = {NULL, 'E',
     'I', 'S', 'H', '5', '4', 'V', NULL, '3', 'U', 'F', NULL, NULL, NULL, NULL, '2',
@@ -89,11 +89,10 @@ int main()
     int gearing = 6;
     Node *test = TreeCreate(gearing, morseChars); 
     PrintTree(test, 0); */
-    
-    
-    
+
+
+
     //everything happens here!
-    printf("\nHEAVEN OR HELL\n");
     while (TRUE) {
         //does stuff according to what MorseCheckEvents returns
         switch (morseEvent) {
@@ -133,12 +132,17 @@ int main()
             //designate a new word
         case MORSE_EVENT_INTER_WORD:
             morseEvent = MORSE_EVENT_NONE; //go back to default state
-            
+
             //clear the top line
-            //OledClearTopLine();
-            
-            printf("durr %c", MorseDecode(MORSE_CHAR_END_OF_CHAR));
-            letter = MorseDecode(MORSE_CHAR_END_OF_CHAR);
+            OledClearTopLine();
+            letter = MorseDecode(MORSE_CHAR_END_OF_CHAR); //letter is easier to type
+            //if the character is invalid, do nothing and go back to start
+            if (letter == STANDARD_ERROR)
+            {
+                OledPutBotLine(NULL);
+                break;
+            }
+
             OledPutBotLine(letter);
 
             break;
@@ -146,12 +150,12 @@ int main()
             //same character, not a new letter    
         case MORSE_EVENT_INTER_LETTER:
             morseEvent = MORSE_EVENT_NONE; //go back to default state
-            
+
             //clear the top line
-            //OledClearTopLine();
-            
-            
-            printf("burr %c", MorseDecode(MORSE_CHAR_END_OF_CHAR));
+            OledClearTopLine();
+
+
+            //printf("burr %c", MorseDecode(MORSE_CHAR_END_OF_CHAR));
             OledPutBotLine(MorseDecode(MORSE_CHAR_END_OF_CHAR));
 
             break;
@@ -177,18 +181,18 @@ void __ISR(_TIMER_2_VECTOR, IPL4AUTO) TimerInterrupt100Hz(void)
     morseEvent = MorseCheckEvents();
 }
 
+int x;
 void OledClearTopLine(void)
 {
-    char blankSpace[20]; //20 spaces...
-    OledClear(0);
-    OledUpdate();
-    sprintf(blankSpace, "                    "); //20 spaces!
-    strcpy(finalOutput, blankSpace); //combine lines 1 and 2 into a single string
+    for(x = 0; x < 20; x++)
+    {
+        output1[x] = ' '; //replace output1 entirely with spaces....
+    }
+    strcpy(finalOutput, output1); //combine lines 1 and 2 into a single string
     strcat(finalOutput, output2);
 
     OledDrawString(finalOutput);
     OledUpdate();
-    printf("I WANT TO DIE");
     arrayPos1 = 0;
 }
 
@@ -216,7 +220,10 @@ void OledPutTopLine(char input)
 
 void OledPutBotLine(char input)
 {
-
+    if (input == NULL)
+    {
+        input = MORSE_CHAR_END_OF_CHAR;
+    }
     output2[arrayPos2] = input; //puts the char returned by PutTop into the output array
     arrayPos2 += 1;
     Print();
