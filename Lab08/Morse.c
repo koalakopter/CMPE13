@@ -56,23 +56,31 @@ char MorseDecode(MorseChar in)
 {
     //if not initialized, return NULL
     if (isCreate == NULL) {
+        tree = temp; //reset the tree pointer back to the top of the tree
         return STANDARD_ERROR;
     }
     if (in == MORSE_CHAR_DASH) {
         //move to the right of the tree if dash
-        tree = tree->rightChild;
-        return SUCCESS;
+        if (tree->rightChild != NULL) {
+            tree = tree->rightChild;
+            return SUCCESS;
+        }
     } else if (in == MORSE_CHAR_DOT) {
         //move left if dot
-        tree = tree->leftChild;
-        return SUCCESS;
+        if (tree->leftChild != NULL) {
+            tree = tree->leftChild;
+            return SUCCESS;
+        }
     } else if (in == MORSE_CHAR_END_OF_CHAR) {
-        return tree->data; // return data if end of input
+        char tempTree = tree->data; //we need to make a temp variable so we can reset tree back to top
+        tree = temp;
+        return tempTree; // return data if end of input
+
     } else if (in == MORSE_CHAR_DECODE_RESET) {
         tree = temp; // set tree back to head of tree to read next char
         return SUCCESS;
     }
-    return in;
+    return STANDARD_ERROR;
 }
 
 
@@ -123,10 +131,12 @@ MorseEvent MorseCheckEvents(void)
 
         //stay in DOT until a thing happens
         state = DOT;
+
     case DASH:
+        //prints a dash on release of button
         if (buttonEvent & BUTTON_EVENT_4UP) {
-            timer = 0;
             state = INTER_LETTER;
+            timer = 0;
             currentEvent = MORSE_EVENT_DASH; //returns a dash
         }
         break;
