@@ -71,14 +71,13 @@ char MorseDecode(MorseChar in)
             tree = tree->leftChild;
             return SUCCESS;
         }
+    } else if (in == MORSE_CHAR_DECODE_RESET) {
+        tree = temp; // set tree back to head of tree to read next char
+        return SUCCESS;
     } else if (in == MORSE_CHAR_END_OF_CHAR) {
         char tempTree = tree->data; //we need to make a temp variable so we can reset tree back to top
         tree = temp;
         return tempTree; // return data if end of input
-
-    } else if (in == MORSE_CHAR_DECODE_RESET) {
-        tree = temp; // set tree back to head of tree to read next char
-        return SUCCESS;
     }
     return STANDARD_ERROR;
 }

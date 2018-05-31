@@ -77,21 +77,7 @@ int main()
     //adds a newline to the beginning of the second line of output
     output2[0] = '\n';
     arrayPos2 = 1; //ArRaYS StARt aT ONe
-    /*
-    int x = 0;
-    OledPutTopLine('1');
-    for (x = 0; x < 10000000; x++) {
-    }
-    OledPutTopLine('2');
-    for (x = 0; x < 10000000; x++) {
-    }
-    OledPutTopLine('3');
-    for (x = 0; x < 10000000; x++) {
-    }
-    OledPutBotLine('4');
-    for (x = 0; x < 10000000; x++) {
-    }
-    OledPutBotLine('5'); */
+    
     //everything happens here!
     printf("\nHEAVEN OR HELL\n");
     while (TRUE) {
@@ -134,6 +120,10 @@ int main()
             //designate a new word
         case MORSE_EVENT_INTER_WORD:
             morseEvent = MORSE_EVENT_NONE; //go back to default state
+            
+            //clear the top line
+            OledClearTopLine();
+            
             OledPutBotLine(MORSE_CHAR_END_OF_CHAR);
             MorseDecode(MORSE_CHAR_END_OF_CHAR);
             break;
@@ -141,6 +131,10 @@ int main()
             //same character, not a new letter    
         case MORSE_EVENT_INTER_LETTER:
             morseEvent = MORSE_EVENT_NONE; //go back to default state
+            
+            //clear the top line
+            OledClearTopLine();
+            
             OledPutBotLine(MORSE_CHAR_END_OF_CHAR);
             MorseDecode(MORSE_CHAR_END_OF_CHAR);
             break;
@@ -168,8 +162,9 @@ void __ISR(_TIMER_2_VECTOR, IPL4AUTO) TimerInterrupt100Hz(void)
 
 void OledClearTopLine(void)
 {
-    char blankSpace[20] = "";
-    OledDrawString(blankSpace);
+    //char blankSpace[20]; //20 spaces...
+    sprintf(output1, "                    ");
+    OledDrawString(output1);
     OledUpdate();
     arrayPos1 = 0;
 }
