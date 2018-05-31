@@ -76,7 +76,6 @@ char MorseDecode(MorseChar in)
         return SUCCESS;
     } else if (in == MORSE_CHAR_END_OF_CHAR) {
         char tempTree = tree->data; //we need to make a temp variable so we can reset tree back to top
-        printf("HELPPPPP %c", tempTree);
         tree = temp;
         return tempTree; // return data if end of input
     }

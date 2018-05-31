@@ -122,6 +122,7 @@ int main()
             //adds a dash!
             OledPutTopLine(MORSE_CHAR_DASH);
             morseEvent = MORSE_EVENT_NONE; //go back to default state
+            invalid = MorseDecode(MORSE_CHAR_DASH);
 
             //makes a hash(tag) if the character is not a real valid point in the binary tree
             if (invalid == STANDARD_ERROR) {
@@ -178,12 +179,11 @@ void __ISR(_TIMER_2_VECTOR, IPL4AUTO) TimerInterrupt100Hz(void)
 void OledClearTopLine(void)
 {
     //char blankSpace[20]; //20 spaces...
-    sprintf(output1, "                    ");
-    strcpy(finalOutput, output1);
-    strcpy(finalOutput, output2);
-    OledDrawString(finalOutput);
-    OledUpdate();
+    OledClear(0);
+    sprintf(output1, "                    "); //20 spaces!
+    printf("I WANT TO DIE");
     arrayPos1 = 0;
+    Print();
 }
 
 //adds a character to top line
