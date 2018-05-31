@@ -23,10 +23,7 @@
 // Specify a bit mask for setting/clearing the pin corresponding to BTN4. Should only be used when
 // unit testing the Morse event checker.
 #define BUTTON4_STATE_FLAG (1 << 7)
-#define BOOLEAN int
 
-#define TRUE 1
-#define FALSE 0
 
 // **** Declare any data types here ****
 
@@ -96,12 +93,30 @@ int main()
     }
     OledPutBotLine('5'); */
     //everything happens here!
+    printf("\nHEAVEN OR HELL\n");
     while (TRUE) {
         //does stuff according to what MorseCheckEvents returns
         switch (morseEvent) {
+
+            //the "do nothing case"
         case MORSE_EVENT_NONE:
             //yeah just do nothing 
-            printf("AYYYY");
+            //printf("hi domo");
+            break;
+
+            //if a dot is received, print that dot
+        case MORSE_EVENT_DOT:
+            //adds a dot!
+            printf("meme");
+            OledPutTopLine(MORSE_CHAR_DOT);
+            morseEvent = MORSE_EVENT_NONE; //go back to default state
+            break;
+
+        case MORSE_EVENT_DASH:
+            //adds a dot!
+            printf("yeah");
+            OledPutTopLine(MORSE_CHAR_DASH);
+            morseEvent = MORSE_EVENT_NONE; //go back to default state
             break;
         }
     }
@@ -147,8 +162,7 @@ void OledPutTopLine(char input)
     else {
         toWrite = MORSE_CHAR_END_OF_CHAR;
     }
-    //for test
-    toWrite = input;
+
     output1[arrayPos1] = toWrite; //puts the char returned by PutTop into the output array
     arrayPos1 += 1;
     Print();
@@ -169,8 +183,7 @@ void OledPutBotLine(char input)
     else {
         toWrite = MORSE_CHAR_END_OF_CHAR;
     }
-    //for test
-    toWrite = input;
+
     output2[arrayPos2] = toWrite; //puts the char returned by PutTop into the output array
     arrayPos2 += 1;
     Print();

@@ -87,7 +87,7 @@ MorseEvent MorseCheckEvents(void)
 
     //if morse init hasnt been called, return an error
     if (isCreate == FALSE) {
-        return STANDARD_ERROR;
+        //return STANDARD_ERROR;
     }
 
     switch (state) {
@@ -96,6 +96,7 @@ MorseEvent MorseCheckEvents(void)
         //if button4 is pressed, reset and start the 100hz timer
         if (buttonEvent & BUTTON_EVENT_4DOWN) {
             //go to next case (DOT))
+            printf("fugg");
             state = DOT;
             timer = 0;
         }
@@ -104,20 +105,29 @@ MorseEvent MorseCheckEvents(void)
         //checks for DOT Press, or when the press is less than 0.5 sec but greater than 0.25 seconds
         //note at 100hz, 25 triggers for 0.25 seconds
     case DOT:
+
         //register a button being released
         if (buttonEvent & BUTTON_EVENT_4UP) {
             //check the time 
+            printf("probably");
             if (timer >= MORSE_EVENT_LENGTH_DOWN_DOT &&
                     timer < MORSE_EVENT_LENGTH_DOWN_DASH) {
+                printf("maybe?");
                 //returns a dot
                 state = INTER_LETTER;
                 timer = 0; //reset the timer
                 currentEvent = MORSE_EVENT_DOT;
-            } else if (timer >= MORSE_EVENT_LENGTH_DOWN_DASH) {
-                state = DASH;
                 break;
             }
         }
+        //if time runs out, its a dash
+        if (timer >= MORSE_EVENT_LENGTH_DOWN_DASH) {
+            state = DASH;
+            break;
+        }
+
+        //stay in DOT until a thing happens
+        state = DOT;
     case DASH:
 
         timer = 0;
@@ -133,15 +143,14 @@ MorseEvent MorseCheckEvents(void)
             break;
         }
         //if timer times out past 100 ticks, designate a new letter, reset timer
-        if (timer > MORSE_EVENT_LENGTH_UP_INTER_LETTER 
+        if (timer > MORSE_EVENT_LENGTH_UP_INTER_LETTER
                 && (buttonEvent & BUTTON_EVENT_4DOWN)) {
             state = DOT;
             currentEvent = MORSE_EVENT_INTER_LETTER;
             timer = 0;
             break;
-        }
-        //if the interval was too short and a button was pressed, its the same letter
-        else if ((timer < MORSE_EVENT_LENGTH_UP_INTER_LETTER) 
+        }//if the interval was too short and a button was pressed, its the same letter
+        else if ((timer < MORSE_EVENT_LENGTH_UP_INTER_LETTER)
                 && (buttonEvent & BUTTON_EVENT_4DOWN)) {
             state = DOT;
             timer = 0; //reset the timer and go back to dot
