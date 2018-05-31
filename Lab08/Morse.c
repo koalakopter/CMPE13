@@ -37,7 +37,7 @@ int MorseInit(void)
     ButtonsInit();
     OledInit();
     //create new Morse tree based upon above array
-    Node *tree = TreeCreate(treeSize, morseChars);
+    tree = TreeCreate(treeSize, morseChars);
     temp = tree; //will be used for decoding
     //print tree just for good measure
     //PrintTree(tree, treeSize);
@@ -59,17 +59,20 @@ char MorseDecode(MorseChar in)
         tree = temp; //reset the tree pointer back to the top of the tree
         return STANDARD_ERROR;
     }
+
     if (in == MORSE_CHAR_DASH) {
         //move to the right of the tree if dash
         //if (tree->rightChild != NULL) {
-            tree = tree->rightChild;
-            return SUCCESS;
+
+        tree = tree->rightChild;
+        return SUCCESS;
         //}
     } else if (in == MORSE_CHAR_DOT) {
         //move left if dot
         //if (tree->leftChild != NULL) {
-            tree = tree->leftChild;
-            return SUCCESS;
+
+        tree = tree->leftChild;
+        return SUCCESS;
         //}
     } else if (in == MORSE_CHAR_DECODE_RESET) {
         tree = temp; // set tree back to head of tree to read next char
