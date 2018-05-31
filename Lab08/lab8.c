@@ -47,7 +47,7 @@ void OledPutTopLine(char input); //adds character to the top line
 void OledPutBotLine(char input); //adds character to the bottom line
 void Print(void);
 
-char koala[] = {'a', 'b', 'c', 'd', 'e'};
+int invalid; //checks for invalid dash/dot combos
 
 //first character is a new line to make a new line... kinda jank
 
@@ -110,6 +110,13 @@ int main()
             printf("meme");
             OledPutTopLine(MORSE_CHAR_DOT);
             morseEvent = MORSE_EVENT_NONE; //go back to default state
+            invalid = MorseDecode(MORSE_CHAR_DOT);
+
+            //makes a hash(tag) if the character is not a real valid point in the binary tree
+            if (invalid == STANDARD_ERROR) {
+                MorseDecode(MORSE_CHAR_DECODE_RESET);
+                OledPutBotLine(MORSE_CHAR_END_OF_CHAR);
+            }
             break;
 
         case MORSE_EVENT_DASH:
@@ -117,6 +124,25 @@ int main()
             printf("yeah");
             OledPutTopLine(MORSE_CHAR_DASH);
             morseEvent = MORSE_EVENT_NONE; //go back to default state
+
+            //makes a hash(tag) if the character is not a real valid point in the binary tree
+            if (invalid == STANDARD_ERROR) {
+                MorseDecode(MORSE_CHAR_DECODE_RESET);
+                OledPutBotLine(MORSE_CHAR_END_OF_CHAR);
+            }
+            break;
+            //designate a new word
+        case MORSE_EVENT_INTER_WORD:
+            morseEvent = MORSE_EVENT_NONE; //go back to default state
+            OledPutBotLine(MORSE_CHAR_END_OF_CHAR);
+            MorseDecode(MORSE_CHAR_END_OF_CHAR);
+            break;
+
+            //same character, not a new letter    
+        case MORSE_EVENT_INTER_LETTER:
+            morseEvent = MORSE_EVENT_NONE; //go back to default state
+            OledPutBotLine(MORSE_CHAR_END_OF_CHAR);
+            MorseDecode(MORSE_CHAR_END_OF_CHAR);
             break;
         }
     }
