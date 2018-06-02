@@ -233,28 +233,76 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
         if (in == '\n') {
             //determine what message has been sent by looking at the first characters
             if (decodeData.dataRecording[0] == 'C' && decodeData.dataRecording[1] == 'O') {
-                
+
                 decodeData.value = PROTOCOL_PARSED_COO_MESSAGE;
-            }
-            else if (decodeData.dataRecording[0] == 'H') {
-                
+            } else if (decodeData.dataRecording[0] == 'H') {
+
                 decodeData.value = PROTOCOL_PARSED_HIT_MESSAGE;
-            }
-            else if (decodeData.dataRecording[0] == 'D') {
-                
+            } else if (decodeData.dataRecording[0] == 'D') {
+
                 decodeData.value = PROTOCOL_PARSED_DET_MESSAGE;
-            }
-            else if (decodeData.dataRecording[0] == 'C' && decodeData.dataRecording[1] == 'H') {
-                
+            } else if (decodeData.dataRecording[0] == 'C' && decodeData.dataRecording[1] == 'H') {
+
                 decodeData.value = PROTOCOL_PARSED_CHA_MESSAGE;
             }
+
+            //tokenize strings appropriately
+            char *tag, *str1, *str2, *str3; //string pointers for tokens and return values
+            if (decodeData.value == PROTOCOL_PARSED_COO_MESSAGE) {
+                //tokenize the string into tag, row, col
+                tag = strtok(decodeData.dataRecording, ",");
+                str1 = strtok(decodeData.dataRecording, ",");
+                str2 = strtok(decodeData.dataRecording, ",");
+
+                //put results into GuessData
+                gData->row = atoi(str1); //convert string to int
+                gData->col = atoi(str2);
+
+            } else if (decodeData.value == PROTOCOL_PARSED_HIT_MESSAGE) {
+
+                //tokenize the string into tag, row, col, hit  
+                tag = strtok(decodeData.dataRecording, ",");
+                str1 = strtok(decodeData.dataRecording, ",");
+                str2 = strtok(decodeData.dataRecording, ",");
+                str3 = strtok(decodeData.dataRecording, ",");
+
+                //put results into GuessData
+                gData->row = atoi(str1);
+                gData->col = atoi(str2);
+                gData->hit = atoi(str3);
+
+            } else if (decodeData.value == PROTOCOL_PARSED_DET_MESSAGE) {
+
+                //tokenize the string into tag, guess, encryptionKey
+                tag = strtok(decodeData.dataRecording, ",");
+                str1 = strtok(decodeData.dataRecording, ",");
+                str2 = strtok(decodeData.dataRecording, ",");
+
+                nData->guess = atoi(str1);
+                nData->encryptionKey = atoi(str2);
+            } else if (decodeData.value == PROTOCOL_PARSED_CHA_MESSAGE) {
+
+                //tokenize the string into tag, encryptedGuess, hash
+                tag = strtok(decodeData.dataRecording, ",");
+                str1 = strtok(decodeData.dataRecording, ",");
+                str2 = strtok(decodeData.dataRecording, ",");
+
+                nData->encryptedGuess = atoi(str1);
+                nData->hash = atoi(str2);
+            }
+            tag = tag; //makes unused variable error go away... its stupid but works
+            return decodeData.value;
         }
+
+        break;
+        //if an invalid statement is passed in somehow...
+    default:
+        currentStatus = WAITING;
+        return PROTOCOL_PARSING_FAILURE;
         break;
 
-        //if an invalid state is passed in somehow    
-    default:
-        return PROTOCOL_PARSING_FAILURE;
     }
+
 }
 
 void ProtocolGenerateNegotiationData(NegotiationData * data)
