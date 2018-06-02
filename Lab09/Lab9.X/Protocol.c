@@ -2,6 +2,7 @@
 #include "Board.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define TRUE 1
 #define FALSE 0
@@ -12,9 +13,18 @@ static uint8_t xorHash; //return value for the xor helper function
 
 int loop; //used to iterate through loops to clear arrays
 
-int index; //used in the FSM to determine which char you are on
 
-char dataRecording[PROTOCOL_MAX_MESSAGE_LEN]; //used to record messages in the decoding function
+
+//struct for variables necessary for the decode function
+struct decodeData {
+    char dataRecording[PROTOCOL_MAX_MESSAGE_LEN]; //used to record messages in the decoding function
+    char checkSum[2]; //stores the 2 digits of the checksum
+    int indexPos; //used in the FSM to determine which char you are on
+    uint8_t checkSumResult; //the 8 bit representation of the 2-char CheckSum
+    
+} decodeData;
+
+
 
 //enum for all states of the decoding FSM
 
@@ -124,7 +134,7 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
         if (in == '$') {
             //move to recording as per FSM definition
             currentStatus = RECORDING;
-            index = 0;
+            decodeData.indexPos = 0;
             return PROTOCOL_PARSING_GOOD;
             break;
         }//if no dollar sign, keep waiting
@@ -141,33 +151,81 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
                 in == '8' || in == '9' || in == '0' || in == 'A' || in == 'C' || in == 'D' ||
                 in == 'E' || in == 'H' || in == 'I' || in == 'O' || in == 'T') {
             //read and copy the character to the recording array, and increment loop
-            dataRecording[index] = in;
-            index++;
+            decodeData.dataRecording[indexPos] = in;
+            decodeData.indexPos++;
             return PROTOCOL_PARSING_GOOD;
             break;
         }//if asterisk is reached, break loop and move to FIRST_CHECKSUM_HALF
-        else if (in = '*') {
+        else if (in == '*') {
             currentStatus = FIRST_CHECKSUM_HALF;
             return PROTOCOL_PARSING_GOOD;
+            break;
         }//non valid char reached somehow
         else {
+            currentStatus = WAITING;
             return PROTOCOL_PARSING_FAILURE;
+            break;
         }
+        break;
+        //stores the first checksum hex char
+    case FIRST_CHECKSUM_HALF:
+        //checks for hex char (both upper and lower just in case)
+        if (in == '1' || in == '2' || in == '3' || in == '4' || in == '5' || in == '6' ||
+                in == '7' || in == '8' || in == '9' || in == '0' || in == 'A' || in == 'B' ||
+                in == 'C' || in == 'D' || in == 'E' || in == 'F' || in == 'a' || in == 'b' ||
+                in == 'c' || in == 'd' || in == 'e' || in == 'f') {
+
+            //stores the first character into checkSum array
+            decodeData.checkSum[0] = in;
+            currentStatus = SECOND_CHECKSUM_HALF; //progress to next char
+            return PROTOCOL_PARSING_GOOD;
+            break;
+        }//if invalid character, return a FAIL
+        else {
+            currentStatus = WAITING;
+            return PROTOCOL_PARSING_FAILURE;
+            break;
+        }
+        break;
+        //checks for the second checksum hex char
+    case SECOND_CHECKSUM_HALF:
+        if (in == '1' || in == '2' || in == '3' || in == '4' || in == '5' || in == '6' ||
+                in == '7' || in == '8' || in == '9' || in == '0' || in == 'A' || in == 'B' ||
+                in == 'C' || in == 'D' || in == 'E' || in == 'F' || in == 'a' || in == 'b' ||
+                in == 'c' || in == 'd' || in == 'e' || in == 'f') {
+
+            //store the second char
+            decodeData.checkSum[1] = in;
+            loop = 0;
+            uint8_t resultHash, originalHash = 0x00;
+            //creates an xor of the original message
+            while(decodeData.dataRecording[loop] != NULL)
+            {
+                originalHash ^= decodeData.dataRecording[loop]; //xor the original message string
+                loop++;
+            }
+            resultHash = xtoi(decodeData.checkSum);
+            
+        }
+        break;
+
+    case NEWLINE:
+
         break;
     }
 }
 
-void ProtocolGenerateNegotiationData(NegotiationData *data)
+void ProtocolGenerateNegotiationData(NegotiationData * data)
 {
 
 }
 
-uint8_t ProtocolValidateNegotiationData(const NegotiationData *data)
+uint8_t ProtocolValidateNegotiationData(const NegotiationData * data)
 {
 
 }
 
-TurnOrder ProtocolGetTurnOrder(const NegotiationData *myData, const NegotiationData *oppData)
+TurnOrder ProtocolGetTurnOrder(const NegotiationData *myData, const NegotiationData * oppData)
 {
 
 }
