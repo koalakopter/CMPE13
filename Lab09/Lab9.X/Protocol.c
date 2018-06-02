@@ -307,12 +307,43 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
 
 void ProtocolGenerateNegotiationData(NegotiationData * data)
 {
+    uint8_t temp; //creates a temp placeholder
+    //random keys
+    data->guess = (rand()&0x0FFFF);
+    data->encryptionKey = (rand()&0x0FFFF);
 
+    //xor the guess with the encryption key
+    data->encryptedGuess = ((data->guess) ^ (data->encryptionKey));
+
+    //bit shift right by 8 bits to since the generated number is a 16 bit field
+    temp = ((data->guess) >> 8);
+    //then xor it
+    temp ^= (data->guess);
+
+    //same thing here , shift right by 8 bits so 16bits -> 8
+    temp ^= ((data->encryptionKey) >> 8);
+    temp ^= ((data->encryptionKey));
+
+    //store the result to hash
+    data->hash = temp;
 }
 
 uint8_t ProtocolValidateNegotiationData(const NegotiationData * data)
 {
-
+    uint8_t check;
+    //uses the same formula as before to validate the guess
+    //xor check with guess, after shifting guess up right 8 bits
+    check = ((data->guess) >> 8);
+    check ^= (data->guess);
+    
+    check ^= ((data->encryptionKey) >> 8);
+    check ^= (data-> encryptionKey);
+    
+    if (check == (data->hash)) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
 }
 
 TurnOrder ProtocolGetTurnOrder(const NegotiationData *myData, const NegotiationData * oppData)
