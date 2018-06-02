@@ -151,7 +151,7 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
                 in == '8' || in == '9' || in == '0' || in == 'A' || in == 'C' || in == 'D' ||
                 in == 'E' || in == 'H' || in == 'I' || in == 'O' || in == 'T') {
             //read and copy the character to the recording array, and increment loop
-            decodeData.dataRecording[indexPos] = in;
+            decodeData.dataRecording[decodeData.indexPos] = in;
             decodeData.indexPos++;
             return PROTOCOL_PARSING_GOOD;
             break;
@@ -204,8 +204,21 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
                 originalHash ^= decodeData.dataRecording[loop]; //xor the original message string
                 loop++;
             }
-            resultHash = xtoi(decodeData.checkSum);
+            //according to StackOverflow, this converts an ASCII string to an int
+            resultHash = xtoi(decodeData.checkSum); 
             
+            //compare the two hashes
+            if(originalHash == resultHash)
+            {
+                currentStatus = NEWLINE;
+                return PROTOCOL_PARSING_GOOD;
+                break;
+            }
+            else{
+                currentStatus = WAITING;
+                return PROTOCOL_PARSING_FAILURE;
+                break;
+            }  
         }
         break;
 
