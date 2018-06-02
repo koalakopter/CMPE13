@@ -16,12 +16,15 @@ int loop; //used to iterate through loops to clear arrays
 
 
 //struct for variables necessary for the decode function
+
 struct decodeData {
     char dataRecording[PROTOCOL_MAX_MESSAGE_LEN]; //used to record messages in the decoding function
     char checkSum[2]; //stores the 2 digits of the checksum
     int indexPos; //used in the FSM to determine which char you are on
     uint8_t checkSumResult; //the 8 bit representation of the 2-char CheckSum
-    
+    //determines what type of message is being transmitted according to the enum;
+    ProtocolParserStatus value;
+
 } decodeData;
 
 
@@ -147,9 +150,9 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
     case RECORDING:
         //determines what the message is, breaking if an invalid char is given
         //an invalid char is one that cannot show up in the preconstructed messages
-        if (in == '1' || in == '2' || in == '3' || in == '4' || in == '5' || in == '6' || in == '7' ||
-                in == '8' || in == '9' || in == '0' || in == 'A' || in == 'C' || in == 'D' ||
-                in == 'E' || in == 'H' || in == 'I' || in == 'O' || in == 'T') {
+        if (in == '1' || in == '2' || in == '3' || in == '4' || in == '5' || in == '6' ||
+                in == '7' || in == '8' || in == '9' || in == '0' || in == 'A' || in == 'C' ||
+                in == 'D' || in == 'E' || in == 'H' || in == 'I' || in == 'O' || in == 'T') {
             //read and copy the character to the recording array, and increment loop
             decodeData.dataRecording[decodeData.indexPos] = in;
             decodeData.indexPos++;
@@ -199,32 +202,58 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
             loop = 0;
             uint8_t resultHash, originalHash = 0x00;
             //creates an xor of the original message
-            while(decodeData.dataRecording[loop] != NULL)
-            {
+            while (decodeData.dataRecording[loop] != NULL) {
                 originalHash ^= decodeData.dataRecording[loop]; //xor the original message string
                 loop++;
             }
             //according to StackOverflow, this converts an ASCII string to an int
-            resultHash = xtoi(decodeData.checkSum); 
-            
+            resultHash = xtoi(decodeData.checkSum);
+
             //compare the two hashes
-            if(originalHash == resultHash)
-            {
+            if (originalHash == resultHash) {
                 currentStatus = NEWLINE;
                 return PROTOCOL_PARSING_GOOD;
                 break;
-            }
-            else{
+            } else {
                 currentStatus = WAITING;
                 return PROTOCOL_PARSING_FAILURE;
                 break;
-            }  
+            }
+        }//if an invalid character is reached, failure
+        else {
+            currentStatus = WAITING;
+            return PROTOCOL_PARSING_FAILURE;
+            break;
         }
         break;
 
+        //checks what kind of data is being received, and return appropriately
     case NEWLINE:
-
+        //checks for the newline char
+        if (in == '\n') {
+            //determine what message has been sent by looking at the first characters
+            if (decodeData.dataRecording[0] == 'C' && decodeData.dataRecording[1] == 'O') {
+                
+                decodeData.value = PROTOCOL_PARSED_COO_MESSAGE;
+            }
+            else if (decodeData.dataRecording[0] == 'H') {
+                
+                decodeData.value = PROTOCOL_PARSED_HIT_MESSAGE;
+            }
+            else if (decodeData.dataRecording[0] == 'D') {
+                
+                decodeData.value = PROTOCOL_PARSED_DET_MESSAGE;
+            }
+            else if (decodeData.dataRecording[0] == 'C' && decodeData.dataRecording[1] == 'H') {
+                
+                decodeData.value = PROTOCOL_PARSED_CHA_MESSAGE;
+            }
+        }
         break;
+
+        //if an invalid state is passed in somehow    
+    default:
+        return PROTOCOL_PARSING_FAILURE;
     }
 }
 
