@@ -302,6 +302,9 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
         break;
 
     }
+    //I have no idea how you got here
+    printf("this should never happen");
+    return PROTOCOL_PARSING_FAILURE;
 
 }
 
@@ -335,10 +338,10 @@ uint8_t ProtocolValidateNegotiationData(const NegotiationData * data)
     //xor check with guess, after shifting guess up right 8 bits
     check = ((data->guess) >> 8);
     check ^= (data->guess);
-    
+
     check ^= ((data->encryptionKey) >> 8);
     check ^= (data-> encryptionKey);
-    
+
     if (check == (data->hash)) {
         return TRUE;
     } else {
@@ -348,5 +351,26 @@ uint8_t ProtocolValidateNegotiationData(const NegotiationData * data)
 
 TurnOrder ProtocolGetTurnOrder(const NegotiationData *myData, const NegotiationData * oppData)
 {
-
+    //determine who goes first by comparing keys
+    uint16_t compare = ((oppData->encryptionKey) ^ (myData->encryptionKey));
+    //if the two fields OR'd is 1, if guess A > guess B, A goes first
+    if ((compare & 0x01) == 1) {
+        if (myData->encryptionKey > oppData->encryptionKey) {
+            return TURN_ORDER_START;
+        } else if (myData->encryptionKey < oppData->encryptionKey) {
+            return TURN_ORDER_DEFER;
+        } else {
+            return TURN_ORDER_TIE;
+        }
+    }
+   //if the two fields OR'd is 0, if guess A > guess B, B goes first
+    else {
+        if (myData->encryptionKey < oppData->encryptionKey) {
+            return TURN_ORDER_START;
+        } else if (myData->encryptionKey > oppData->encryptionKey) {
+            return TURN_ORDER_DEFER;
+        } else {
+            return TURN_ORDER_TIE;
+        }
+    }
 }
