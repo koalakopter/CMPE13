@@ -20,15 +20,15 @@ int AgentRun(char in, char *outBuffer)
     myStatus = ProtocolDecode(in, &nData, &gData);
     //check what ProtocolDecode returns and set a flag
     if (in != NULL) {
-        if (checkState == PROTOCOL_PARSING_GOOD) {
+        if (myStatus == PROTOCOL_PARSING_GOOD) {
             agentEvent = AGENT_EVENT_NONE;
-        } else if (checkState == PROTOCOL_PARSED_CHA_MESSAGE) {
+        } else if (myStatus == PROTOCOL_PARSED_CHA_MESSAGE) {
             agentEvent = AGENT_EVENT_RECEIVED_CHA_MESSAGE;
-        } else if (checkState == PROTOCOL_PARSED_COO_MESSAGE) {
+        } else if (myStatus == PROTOCOL_PARSED_COO_MESSAGE) {
             agentEvent = AGENT_EVENT_RECEIVED_COO_MESSAGE;
-        } else if (checkState == PROTOCOL_PARSED_DET_MESSAGE) {
+        } else if (myStatus == PROTOCOL_PARSED_DET_MESSAGE) {
             agentEvent = AGENT_EVENT_RECEIVED_DET_MESSAGE;
-        } else if (checkState == PROTOCOL_PARSED_HIT_MESSAGE) {
+        } else if (myStatus == PROTOCOL_PARSED_HIT_MESSAGE) {
             agentEvent = AGENT_EVENT_RECEIVED_HIT_MESSAGE;
         } else {
             //if tne input isn't valid, set an error flag
@@ -39,11 +39,21 @@ int AgentRun(char in, char *outBuffer)
     switch (checkState)
     {
     case AGENT_STATE_GENERATE_NEG_DATA:
+        //generate Negotiation data and put it into nData
+        ProtocolGenerateNegotiationData(&nData);
         
+        //encode some challenge data
+        ProtocolEncodeChaMessage(outBuffer, &nData);
+        checkState = AGENT_STATE_SEND_CHALLENGE_DATA;
+        return strlen(outBuffer); //returns length of the outBuffer string
         break;
         
     case AGENT_STATE_SEND_CHALLENGE_DATA:
         
+        //send determine data
+        ProtocolEncodeDetMessage(outBuffer, &nData);
+        checkState = AGENT_STATE_DETERMINE_TURN_ORDER;
+        return strlen(outBuffer);
         break;
         
     case AGENT_STATE_DETERMINE_TURN_ORDER:
