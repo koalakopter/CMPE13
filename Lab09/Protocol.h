@@ -137,7 +137,7 @@ int ProtocolEncodeDetMessage(char *message, const NegotiationData *data);
  */
 ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *gData);
 
-/**
+/** 
  * This function generates all of the data necessary for the negotiation process used to determine
  * the player that goes first. It relies on the pseudo-random functionality built into the standard
  * library. The output is stored in the passed NegotiationData struct. The negotiation data is
