@@ -5,6 +5,9 @@
 #include "Oled.h"
 #include "Field.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 //you and your opponents guess and negotiation data
 NegotiationData nData;
 NegotiationData nData_opp;
@@ -13,6 +16,7 @@ GuessData gData;
 GuessData gData_opp;
 
 ProtocolParserStatus myStatus;
+ProtocolParserStatus theirStatus;
 int agentEvent = AGENT_EVENT_NONE; //flag for current AgentEvent
 static AgentState checkState = AGENT_EVENT_NONE;
 
@@ -123,6 +127,7 @@ int AgentRun(char in, char *outBuffer)
         //randomly generate a guess
 
         //generate a delay?
+        //delay(100);
         if ((BOARD_GetPBClock() / 8) > 1) {
             //artificial delay?
         } else {
@@ -148,8 +153,16 @@ int AgentRun(char in, char *outBuffer)
         checkState = AGENT_STATE_WAIT_FOR_HIT; //move onto checking for hit
         break;
     case AGENT_STATE_WAIT_FOR_HIT:
-        
-
+        //decode enemy data about hit
+        //first check to make sure hit message is recieved
+        if (agentEvent == AGENT_EVENT_RECEIVED_HIT_MESSAGE)
+        {
+            
+        }
+        else {
+            //if something else is received, commit code sudoku
+            checkState = AGENT_STATE_INVALID;
+        }
         break;
     case AGENT_STATE_WAIT_FOR_GUESS:
 
