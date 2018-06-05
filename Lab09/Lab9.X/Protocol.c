@@ -45,7 +45,8 @@ statusStates currentStatus = WAITING;
 
 uint8_t CheckSum(char *data)
 {
-    loop = 0;
+    loop = 0; //clear loop and xorhash
+    xorHash = 0; 
     //increments through a loop until a NULL is found (the end of the array))
     while (data[loop] != NULL) {
         //xor operation on every element in array

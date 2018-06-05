@@ -40,11 +40,33 @@ int main()
  *****************************************************************************/
     printf("\nTest harness for CMPE 13 Lab 9 Protocol.c\n");
     
-    printf("testing encode message\n");
-    gData.row = 1;
-    gData.col = 1;
+    printf("\ntesting encode COO message\n");
+    gData.row = 0;
+    gData.col = 2;
     //address of gData passed into function as argument
-    ProtocolEncodeCooMessage(testMessage, &gData);
+    x = ProtocolEncodeCooMessage(testMessage, &gData);
+    printf("Encoded string should have format: COO,%%u,%%u\n");
+    printf("Encoded string: %sand Length of string: %d\n", testMessage, x);
+    
+    printf("\ntesting encode HIT message\n");
+    gData.hit = 0;
+    x = ProtocolEncodeHitMessage(testMessage, &gData);
+    printf("Encoded string should have format: HIT,%%u,%%u,%%u\n");
+    printf("Encoded string: %sand Length of string: %d\n", testMessage, x);
+    
+    printf("\ntesting encode CHA message\n");
+    nData.hash = 139;
+    nData.encryptedGuess = 54104;
+    x = ProtocolEncodeChaMessage(testMessage, &nData);
+    printf("Encoded string should have format: CHA,%%u,%%u,\n");
+    printf("Encoded string: %sand Length of string: %d\n", testMessage, x);
+    
+    printf("\ntesting encode DET message\n");
+    nData.encryptionKey = 21382;
+    nData.guess = 32990;
+    x = ProtocolEncodeDetMessage(testMessage, &nData);
+    printf("Encoded string should have format: DET,%%u,%%u,\n");
+    printf("Encoded string: %sand Length of string: %d\n", testMessage, x);
 
 /******************************************************************************
  * Your code goes in between this comment and the preceeding one with asterisks
