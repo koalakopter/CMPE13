@@ -19,10 +19,14 @@ static AgentState checkState = AGENT_EVENT_NONE;
 //turn order
 static TurnOrder order = TURN_ORDER_TIE; //starts at TIE to avoid cheating
 
-
 //creating fields for the player and the enemy
 static Field *playerField;
 static Field *enemyField;
+
+//used to randomly generate rows and columns with rand()
+int randRow;
+int randCol;
+int alreadyGuessed[6][10]; //2d array to keep track of what has been guessed, 6 rows, 10 columns
 
 //Im doing Agent Run and AgentGetEnemyStatus
 
@@ -42,7 +46,12 @@ int AgentRun(char in, char *outBuffer)
         } else if (myStatus == PROTOCOL_PARSED_HIT_MESSAGE) {
             agentEvent = AGENT_EVENT_RECEIVED_HIT_MESSAGE;
         } else {
-            //if tne input isn't valid, set an error flag
+            //if the input isn't valid, set an error flag and commit code-sudoku
+            OledClear(0);
+            OledDrawString("ERROR_STRING_PARSING");
+            OledUpdate();
+
+            checkState = AGENT_STATE_INVALID;
             agentEvent = AGENT_EVENT_MESSAGE_PARSING_FAILED;
         }
     }
@@ -72,6 +81,12 @@ int AgentRun(char in, char *outBuffer)
         //validate opponent data, if fail, return error
         ProtocolValidateNegotiationData(&nData_opp);
         if (ProtocolValidateNegotiationData(&nData_opp) == FALSE) {
+
+            //clear the OLED
+            OledClear(0);
+            OledDrawString("ERROR_STRING_NEG_DATA");
+            OledUpdate();
+
             checkState = AGENT_STATE_INVALID;
             return AGENT_EVENT_NONE;
             break;
@@ -90,31 +105,61 @@ int AgentRun(char in, char *outBuffer)
             checkState = AGENT_STATE_WAIT_FOR_GUESS;
             //draw the screen
             FieldOledDrawScreen(playerField, enemyField, FIELD_OLED_TURN_THEIRS);
-        }            //somehow a tie happened
-        else {
+        } else { //somehow a tie happened
+            OledClear(0);
+            OledDrawString("ERROR_STRING_ORDERING");
+            OledUpdate();
+
             checkState = AGENT_STATE_INVALID;
             return AGENT_EVENT_NONE;
             break;
         }
-        
+
         return 0; //returns nothing but indicates a success I think? 
         //outBuffer is not modified here...
         break;
 
     case AGENT_STATE_SEND_GUESS:
-        
+        //randomly generate a guess
+
+        //generate a delay?
+        if ((BOARD_GetPBClock() / 8) > 1) {
+            //artificial delay?
+        } else {
+            //do nothing
+            checkState = AGENT_STATE_SEND_GUESS;
+            break;
+        }
+        //randomly generate a guess until one that hasn't been guessed already is given
+        while (TRUE) {
+            randRow = rand() % 7;
+            randCol = rand() % 10;
+            //pass guess into gData struct
+            gData.col = randCol;
+            gData.row = randRow;
+            if (alreadyGuessed[randRow][randCol] != TRUE) {
+                //set a flag so that we can't guess that square again
+                alreadyGuessed[randRow][randCol] = TRUE;
+                break;
+            }
+        }
+        //encode a message
+        ProtocolEncodeCooMessage(outBuffer, &gData);
+        checkState = AGENT_STATE_WAIT_FOR_HIT; //move onto checking for hit
         break;
     case AGENT_STATE_WAIT_FOR_HIT:
+        
 
         break;
     case AGENT_STATE_WAIT_FOR_GUESS:
 
         break;
-        
-    //somehow an invalid state happened
+
+        //somehow an invalid state happened
     case AGENT_STATE_INVALID:
-        
-        
+
+        printf("wahhh we broke! :P\n");
+        while (1);
         break;
     case AGENT_STATE_LOST:
 
@@ -135,8 +180,6 @@ void AgentInit(void)
     //now for agent placement on its playerField
 
     int done = FALSE;
-    int randRow;
-    int randCol;
     int randDir;
     int checkPlacedBoat;
     int boatType = FIELD_BOAT_SMALL;
