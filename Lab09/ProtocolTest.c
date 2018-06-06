@@ -98,18 +98,19 @@ int main()
     printf("Turn Order (Switched): %d\n", tOrder);
 
 
-    printf("\nTesting decode message function\n");
+    printf("\nTesting decode message function, "
+            "refer to enum in Protocol.h for expected output values\n");
     int s = 0;
     int testSwitch = 0;
     while (TRUE) {
         switch (testSwitch) {
         case 0:
             ProtocolEncodeDetMessage(testMessage, &nData);
-            printf("\n%s", testMessage);
+            printf("\nEncoding the following message: %s", testMessage);
             while (testMessage[s] != NULL) {
                 pStatus = ProtocolDecode(testMessage[s], &nData, &gData);
                 if (testMessage[s + 1] == NULL) {
-                    printf("DECODE STATUS: %d (0 means PROTOCOL_WAITING)\n", pStatus);
+                    printf("DECODE STATUS: %d (expect 5 for PROTOCOL_PARSED_DET_MESSAGE)\n", pStatus);
                 }
                 s++;
             }
@@ -117,12 +118,12 @@ int main()
             break;
         case 1:
             ProtocolEncodeChaMessage(testMessage, &nData);
-            printf("\n%s", testMessage);
+            printf("\nEncoding the following message: %s", testMessage);
             s = 0;
             while (testMessage[s] != NULL) {
                 pStatus = ProtocolDecode(testMessage[s], &nData, &gData);
                 if (testMessage[s + 1] == NULL) {
-                    printf("DECODE STATUS: %d (0 means PROTOCOL_WAITING)\n", pStatus);
+                    printf("DECODE STATUS: %d (expect 4 for PROTOCOL_PARSED_DET_MESSAGE)\n", pStatus);
                 }
                 s++;
             }
@@ -130,12 +131,12 @@ int main()
             break;
         case 2:
             ProtocolEncodeCooMessage(testMessage, &gData);
-            printf("\n%s", testMessage);
+            printf("\nEncoding the following message: %s", testMessage);
             s = 0;
             while (testMessage[s] != NULL) {
                 pStatus = ProtocolDecode(testMessage[s], &nData, &gData);
                 if (testMessage[s + 1] == NULL) {
-                    printf("DECODE STATUS: %d (0 means PROTOCOL_WAITING)\n", pStatus);
+                    printf("DECODE STATUS: %d (expect 2 for PROTOCOL_PARSED_COO_MESSAGE)\n", pStatus);
                 }
                 s++;
             }
@@ -144,12 +145,12 @@ int main()
         case 3:
 
             ProtocolEncodeHitMessage(testMessage, &gData);
-            printf("\n%s", testMessage);
+            printf("\nEncoding the following message: %s", testMessage);
             s = 0;
             while (testMessage[s] != NULL) {
                 pStatus = ProtocolDecode(testMessage[s], &nData, &gData);
                 if (testMessage[s + 1] == NULL) {
-                    printf("DECODE STATUS: %d (0 means PROTOCOL_WAITING)\n", pStatus);
+                    printf("DECODE STATUS: %d (expect 3 for PROTOCOL_PARSED_HIT_MESSAGE)\n", pStatus);
                 }
                 s++;
             }
