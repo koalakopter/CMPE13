@@ -3,11 +3,16 @@
 
 //CMPE13 Support Library
 #include "BOARD.h"
+#include "Protocol.h"
+#include "Ascii.h"
+#include "Agent.h"
+#include "Field.h"
+#include "FieldOled.h"
 
 // Microchip libraries
 #include <xc.h>
 #include <plib.h>
-
+#include <stdio.h>
 // User libraries
 
 
