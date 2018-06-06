@@ -148,7 +148,9 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
         if (in == '$') {
             //move to recording as per FSM definition
             currentStatus = RECORDING;
+            //set some stuff to default values
             decodeData.indexPos = 0;
+            decodeData.dataRecording[0], decodeData.dataRecording[1] = NULL;
             return PROTOCOL_PARSING_GOOD;
             break;
         }//if no dollar sign, keep waiting
@@ -199,7 +201,6 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
         //checks for the second checksum hex char
     case SECOND_CHECKSUM_HALF:
         if (VALID_HEX) {
-
             //store the second char
             decodeData.checkSum[1] = in;
             loop = 0;
@@ -211,9 +212,11 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
             }
             //according to StackOverflow, this converts an ASCII string to an int
             resultHash = xtoi(decodeData.checkSum);
+            printf("%d and %d", resultHash, originalHash);
 
             //compare the two hashes
             if (originalHash == resultHash) {
+                            
                 currentStatus = NEWLINE;
                 return PROTOCOL_PARSING_GOOD;
                 break;
@@ -232,22 +235,23 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
 
         //checks what kind of data is being received, and return appropriately
     case NEWLINE:
+                   
         //checks for the newline char
         if (in == '\n') {
             //determine what message has been sent by looking at the first characters
             decodeData.value = NULL;
-            printf("yeah");
+            printf("what");
             if (decodeData.dataRecording[0] == 'C' && decodeData.dataRecording[1] == 'O') {
-
+                printf("bowl");
                 decodeData.value = PROTOCOL_PARSED_COO_MESSAGE;
-            } else if (decodeData.dataRecording[0] == 'H') {
-
+            } else if (decodeData.dataRecording[0] == 'H' && decodeData.dataRecording[1] == 'I') {
+printf("meme");
                 decodeData.value = PROTOCOL_PARSED_HIT_MESSAGE;
-            } else if (decodeData.dataRecording[0] == 'D') {
-
+            } else if (decodeData.dataRecording[0] == 'D' && decodeData.dataRecording[1] == 'E' ) {
+printf("yeah");
                 decodeData.value = PROTOCOL_PARSED_DET_MESSAGE;
             } else if (decodeData.dataRecording[0] == 'C' && decodeData.dataRecording[1] == 'H') {
-
+printf("sup");
                 decodeData.value = PROTOCOL_PARSED_CHA_MESSAGE;
             }
 
@@ -296,9 +300,10 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
                 nData->hash = atoi(str2);
             }
             tag = tag; //makes unused variable error go away... its stupid but works
+            currentStatus = WAITING; //go back to default state
             return decodeData.value;
         }
-
+        decodeData.indexPos = 0;
         break;
         //if an invalid statement is passed in somehow...
     default:
@@ -307,8 +312,7 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
         break;
 
     }
-    //I have no idea how you got here
-    printf("meme");
+    //I have no idea how you got here (please stay out)
     return PROTOCOL_PARSING_FAILURE;
 
 }

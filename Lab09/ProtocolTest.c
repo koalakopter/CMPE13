@@ -100,11 +100,11 @@ int main()
 
     printf("\nTesting decode message function\n");
     int s = 0;
-    int testSwitch = 1;
+    int testSwitch = 0;
     while (TRUE) {
         switch (testSwitch) {
         case 0:
-            ProtocolEncodeChaMessage(testMessage, &nData);
+            ProtocolEncodeDetMessage(testMessage, &nData);
             printf("\n%s", testMessage);
             while (testMessage[s] != NULL) {
                 pStatus = ProtocolDecode(testMessage[s], &nData, &gData);
@@ -116,7 +116,7 @@ int main()
             testSwitch++;
             break;
         case 1:
-            ProtocolEncodeDetMessage(testMessage, &nData);
+            ProtocolEncodeChaMessage(testMessage, &nData);
             printf("\n%s", testMessage);
             s = 0;
             while (testMessage[s] != NULL) {
