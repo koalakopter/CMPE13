@@ -9,15 +9,14 @@
 #include <stdlib.h>
 
 //you and your opponents guess and negotiation data
-NegotiationData nData;
-NegotiationData nData_opp;
+static NegotiationData nData;
+static NegotiationData nData_opp;
 
-GuessData gData;
-GuessData gData_opp;
+static GuessData gData;
+static GuessData gData_opp;
 
-ProtocolParserStatus myStatus;
-ProtocolParserStatus theirStatus;
-int agentEvent = AGENT_EVENT_NONE; //flag for current AgentEvent
+static ProtocolParserStatus myStatus;
+static int agentEvent = AGENT_EVENT_NONE; //flag for current AgentEvent
 static AgentState checkState = AGENT_EVENT_NONE;
 
 //turn order
@@ -28,9 +27,11 @@ static Field *playerField;
 static Field *enemyField;
 
 //used to randomly generate rows and columns with rand()
-int randRow;
-int randCol;
-int alreadyGuessed[6][10]; //2d array to keep track of what has been guessed, 6 rows, 10 columns
+static int randRow;
+static int randCol;
+static int alreadyGuessed[6][10]; //2d array to keep track of what has been guessed, 6 rows, 10 columns
+
+static int time; //for the delay
 
 //Im doing Agent Run and AgentGetEnemyStatus
 
@@ -92,7 +93,6 @@ int AgentRun(char in, char *outBuffer)
             OledUpdate();
 
             checkState = AGENT_STATE_INVALID;
-            return AGENT_EVENT_NONE;
             break;
         }
         //if it doesn't fail, proceed as normal
@@ -115,7 +115,6 @@ int AgentRun(char in, char *outBuffer)
             OledUpdate();
 
             checkState = AGENT_STATE_INVALID;
-            return AGENT_EVENT_NONE;
             break;
         }
 
@@ -124,19 +123,11 @@ int AgentRun(char in, char *outBuffer)
         break;
 
     case AGENT_STATE_SEND_GUESS:
-        //randomly generate a guess
-
-        //generate a delay?
-        //delay(100);
-        if ((BOARD_GetPBClock() / 8) > 1) {
-            //artificial delay?
-        } else {
-            //do nothing
-            checkState = AGENT_STATE_SEND_GUESS;
-            break;
-        }
         //randomly generate a guess until one that hasn't been guessed already is given
         while (TRUE) {
+            for (time = 0; time < BOARD_GetPBClock() / 8; time++) {
+                //artificial delay
+            }
             randRow = rand() % 7;
             randCol = rand() % 10;
             //pass guess into gData struct
@@ -151,21 +142,65 @@ int AgentRun(char in, char *outBuffer)
         //encode a message
         ProtocolEncodeCooMessage(outBuffer, &gData);
         checkState = AGENT_STATE_WAIT_FOR_HIT; //move onto checking for hit
+        return strlen(outBuffer);
         break;
     case AGENT_STATE_WAIT_FOR_HIT:
         //decode enemy data about hit
         //first check to make sure hit message is recieved
-        if (agentEvent == AGENT_EVENT_RECEIVED_HIT_MESSAGE)
-        {
-            
-        }
-        else {
+        if (agentEvent == AGENT_EVENT_RECEIVED_HIT_MESSAGE) {
+            //check if there was a hit
+            FieldUpdateKnowledge(enemyField, &gData_opp);
+            //check if you won (0 means no boats left)
+            if (AgentGetEnemyStatus() == 0);
+            {
+                FieldOledDrawScreen(playerField, enemyField, FIELD_OLED_TURN_NONE);
+                checkState = AGENT_STATE_WON;
+            }
+            if (AgentGetEnemyStatus() != 0) {
+                //update screen, wait for opponent turn
+                FieldOledDrawScreen(playerField, enemyField, FIELD_OLED_TURN_THEIRS);
+                checkState = AGENT_STATE_WAIT_FOR_GUESS;
+            }
+
+        } else {
             //if something else is received, commit code sudoku
+            OledClear(0);
+            OledDrawString("ERROR_STRING_PARSING");
+            OledUpdate();
+
             checkState = AGENT_STATE_INVALID;
+            break;
         }
+        return 0;
         break;
     case AGENT_STATE_WAIT_FOR_GUESS:
+        //decode enemy data about opponent guess
+        //first check to make sure hit message is received
+        if (agentEvent == AGENT_EVENT_RECEIVED_COO_MESSAGE) {
+            //check if there was a hit
+            FieldUpdateKnowledge(enemyField, &gData_opp);
+            //check if you won (0 means no boats left)
+            if (AgentGetStatus() == 0);
+            {
+                FieldOledDrawScreen(playerField, enemyField, FIELD_OLED_TURN_NONE);
+                checkState = AGENT_STATE_LOST;
+            }
+            if (AgentGetStatus() != 0) {
+                //update screen, wait for opponent turn
+                FieldOledDrawScreen(playerField, enemyField, FIELD_OLED_TURN_THEIRS);
+                checkState = AGENT_STATE_SEND_GUESS;
+            }
 
+        } else {
+            //if something else is received, commit code sudoku
+            OledClear(0);
+            OledDrawString("ERROR_STRING_PARSING");
+            OledUpdate();
+
+            checkState = AGENT_STATE_INVALID;
+            break;
+        }
+        return 0;
         break;
 
         //somehow an invalid state happened
@@ -175,13 +210,20 @@ int AgentRun(char in, char *outBuffer)
         while (1);
         break;
     case AGENT_STATE_LOST:
-
+        //you lost (sorry man)
+        printf("\n'It is well war is so terrible, "
+                "otherwise we should grow to fond of it' -Robert E. Lee\n");
+        return 0;
         break;
     case AGENT_STATE_WON:
-
+        //you won (don't do anything next?)
+        printf("\n'War is cruelty. There is no use trying to reform it. "
+                "The crueler it is, the sooner it will be over.' -William Tecumseh Sherman\n");
+        return 0;
         break;
 
     }
+    return 0;
 }
 
 void AgentInit(void)
