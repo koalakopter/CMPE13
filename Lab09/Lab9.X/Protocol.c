@@ -8,6 +8,16 @@
 #define FALSE 0
 #define BOOLEAN int
 
+//short hand for checking chars (makes stuff look cleaner)
+#define VALID_CHAR in == '1' || in == '2' || in == '3' || in == '4' || in == '5' || in == '6' || \
+                in == '7' || in == '8' || in == '9' || in == '0' || in == 'A' || in == 'C' || \
+                in == 'D' || in == 'E' || in == 'H' || in == 'I' || in == 'O' || in == 'T' || in == ',' 
+
+#define VALID_HEX in == '1' || in == '2' || in == '3' || in == '4' || in == '5' || in == '6' || \
+                in == '7' || in == '8' || in == '9' || in == '0' || in == 'A' || in == 'B' || \
+                in == 'C' || in == 'D' || in == 'E' || in == 'F' || in == 'a' || in == 'b' || \
+                in == 'c' || in == 'd' || in == 'e' || in == 'f'
+
 //xor variables
 static uint8_t xorHash; //return value for the xor helper function
 
@@ -46,7 +56,7 @@ statusStates currentStatus = WAITING;
 uint8_t CheckSum(char *data)
 {
     loop = 0; //clear loop and xorhash
-    xorHash = 0; 
+    xorHash = 0;
     //increments through a loop until a NULL is found (the end of the array))
     while (data[loop] != NULL) {
         //xor operation on every element in array
@@ -150,10 +160,8 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
         //recording state, takes in all bytes until the asterisk(*) is reached    
     case RECORDING:
         //determines what the message is, breaking if an invalid char is given
-        //an invalid char is one that cannot show up in the preconstructed messages
-        if (in == '1' || in == '2' || in == '3' || in == '4' || in == '5' || in == '6' ||
-                in == '7' || in == '8' || in == '9' || in == '0' || in == 'A' || in == 'C' ||
-                in == 'D' || in == 'E' || in == 'H' || in == 'I' || in == 'O' || in == 'T') {
+        //an invalid char is one that cannot show up in the pre-constructed messages
+        if (VALID_CHAR) {
             //read and copy the character to the recording array, and increment loop
             decodeData.dataRecording[decodeData.indexPos] = in;
             decodeData.indexPos++;
@@ -174,10 +182,7 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
         //stores the first checksum hex char
     case FIRST_CHECKSUM_HALF:
         //checks for hex char (both upper and lower just in case)
-        if (in == '1' || in == '2' || in == '3' || in == '4' || in == '5' || in == '6' ||
-                in == '7' || in == '8' || in == '9' || in == '0' || in == 'A' || in == 'B' ||
-                in == 'C' || in == 'D' || in == 'E' || in == 'F' || in == 'a' || in == 'b' ||
-                in == 'c' || in == 'd' || in == 'e' || in == 'f') {
+        if (VALID_HEX) {
 
             //stores the first character into checkSum array
             decodeData.checkSum[0] = in;
@@ -193,10 +198,7 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
         break;
         //checks for the second checksum hex char
     case SECOND_CHECKSUM_HALF:
-        if (in == '1' || in == '2' || in == '3' || in == '4' || in == '5' || in == '6' ||
-                in == '7' || in == '8' || in == '9' || in == '0' || in == 'A' || in == 'B' ||
-                in == 'C' || in == 'D' || in == 'E' || in == 'F' || in == 'a' || in == 'b' ||
-                in == 'c' || in == 'd' || in == 'e' || in == 'f') {
+        if (VALID_HEX) {
 
             //store the second char
             decodeData.checkSum[1] = in;
@@ -233,6 +235,8 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
         //checks for the newline char
         if (in == '\n') {
             //determine what message has been sent by looking at the first characters
+            decodeData.value = NULL;
+            printf("yeah");
             if (decodeData.dataRecording[0] == 'C' && decodeData.dataRecording[1] == 'O') {
 
                 decodeData.value = PROTOCOL_PARSED_COO_MESSAGE;
@@ -304,7 +308,7 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
 
     }
     //I have no idea how you got here
-    printf("this should never happen");
+    printf("meme");
     return PROTOCOL_PARSING_FAILURE;
 
 }
@@ -355,7 +359,7 @@ TurnOrder ProtocolGetTurnOrder(const NegotiationData *myData, const NegotiationD
     //determine who goes first by comparing keys
     uint16_t compare = ((oppData->encryptionKey) ^ (myData->encryptionKey));
     //if the two fields OR'd is 1, if guess A > guess B, A goes first
-    if ((compare & 0x01) == 1) {
+    if ((compare & 1) == 1) {
         if (myData->encryptionKey > oppData->encryptionKey) {
             return TURN_ORDER_START;
         } else if (myData->encryptionKey < oppData->encryptionKey) {
@@ -363,8 +367,7 @@ TurnOrder ProtocolGetTurnOrder(const NegotiationData *myData, const NegotiationD
         } else {
             return TURN_ORDER_TIE;
         }
-    }
-   //if the two fields OR'd is 0, if guess A > guess B, B goes first
+    }        //if the two fields OR'd is 0, if guess A > guess B, B goes first
     else {
         if (myData->encryptionKey < oppData->encryptionKey) {
             return TURN_ORDER_START;

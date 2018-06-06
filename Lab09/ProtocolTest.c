@@ -88,18 +88,48 @@ int main()
     xData.encryptionKey = 16067;
     xData.guess = 52343;
     xData.hash = 70;
-    
+
     ProtocolGenerateNegotiationData(&nData);
     ProtocolGenerateNegotiationData(&xData);
-    
+
     tOrder = ProtocolGetTurnOrder(&nData, &xData);
     printf("Turn Order: %d\n", tOrder);
     tOrder = ProtocolGetTurnOrder(&xData, &nData);
     printf("Turn Order (Switched): %d\n", tOrder);
-    
-    printf("\nTesting the Protocol Decode function\n");
-    pStatus = ProtocolDecode(testMessage, &nData, &gData);
-    printf("DECODE STATUS: %d (0 means PROTOCOL_WAITING)\n", pStatus);
+
+
+    printf("\nTesting decode message function\n");
+    int s, testSwitch = 0;
+    while (TRUE) {
+        switch (testSwitch) {
+        case 0:
+            ProtocolEncodeChaMessage(testMessage, &nData);
+            while (testMessage[s] != NULL) {
+                pStatus = ProtocolDecode(testMessage[s], &nData, &gData);
+                if (testMessage[s + 1] == NULL) {
+                    printf("DECODE STATUS: %d (0 means PROTOCOL_WAITING)\n", pStatus);
+                }
+                s++;
+            }
+            testSwitch++;
+            break;
+        case 1:
+            ProtocolEncodeDetMessage(testMessage, &nData);
+            printf("%s\n", testMessage);
+            s = 0;
+            while (testMessage[s] != NULL) {
+                pStatus = ProtocolDecode(testMessage[s], &nData, &gData);
+                if (testMessage[s + 1] == NULL) {
+                    printf("DECODE STATUS: %d (0 means PROTOCOL_WAITING)\n", pStatus);
+                }
+                s++;
+            }
+            testSwitch++;
+            break;
+        default:
+            break;
+        }
+    }
     /******************************************************************************
      * Your code goes in between this comment and the preceeding one with asterisks
      *****************************************************************************/
