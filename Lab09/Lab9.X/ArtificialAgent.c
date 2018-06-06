@@ -1,6 +1,6 @@
 #include "Agent.h"
 #include "Protocol.h"
-#include "Field.h"
+    #include "Field.h"
 #include "FieldOled.h"
 #include "Oled.h"
 #include "Field.h"
@@ -23,8 +23,8 @@ static AgentState checkState = AGENT_EVENT_NONE;
 static TurnOrder order = TURN_ORDER_TIE; //starts at TIE to avoid cheating
 
 //creating fields for the player and the enemy
-static Field *playerField;
-static Field *enemyField;
+static Field playerField;
+static Field enemyField;
 
 //used to randomly generate rows and columns with rand()
 static int randRow;
@@ -35,9 +35,10 @@ static int time; //for the delay
 
 void AgentInit(void)
 {
+
     //init of the player and enemy fields
-    FieldInit(playerField, FIELD_POSITION_EMPTY);
-    FieldInit(enemyField, FIELD_POSITION_UNKNOWN);
+    FieldInit(&playerField, FIELD_POSITION_EMPTY);
+    FieldInit(&enemyField, FIELD_POSITION_UNKNOWN);
     
     //now for agent placement on its playerField
     
@@ -59,7 +60,7 @@ void AgentInit(void)
         switch(boatType)
         {
             case FIELD_BOAT_SMALL:
-                checkPlacedBoat = FieldAddBoat(playerField, randRow, randCol, randDir, boatType);
+                checkPlacedBoat = FieldAddBoat(&playerField, randRow, randCol, randDir, boatType);
 
                 if(checkPlacedBoat)
                 {
@@ -69,7 +70,7 @@ void AgentInit(void)
                 break;
 
             case FIELD_BOAT_MEDIUM:
-                checkPlacedBoat = FieldAddBoat(playerField, randRow, randCol, randDir, boatType);
+                checkPlacedBoat = FieldAddBoat(&playerField, randRow, randCol, randDir, boatType);
 
                 if(checkPlacedBoat)
                 {
@@ -79,7 +80,7 @@ void AgentInit(void)
                 break;
 
             case FIELD_BOAT_LARGE:
-                checkPlacedBoat = FieldAddBoat(playerField, randRow, randCol, randDir, boatType);
+                checkPlacedBoat = FieldAddBoat(&playerField, randRow, randCol, randDir, boatType);
 
                 if(checkPlacedBoat)
                 {
@@ -89,7 +90,7 @@ void AgentInit(void)
                 break;
 
             case FIELD_BOAT_HUGE:
-                checkPlacedBoat = FieldAddBoat(playerField, randRow, randCol, randDir, boatType);
+                checkPlacedBoat = FieldAddBoat(&playerField, randRow, randCol, randDir, boatType);
 
                 if(checkPlacedBoat)
                 {
@@ -105,8 +106,10 @@ void AgentInit(void)
 int AgentRun(char in, char *outBuffer)
 {
     myStatus = ProtocolDecode(in, &nData, &gData);
+   
     //check what ProtocolDecode returns and set a flag
     if (in != NULL) {
+
         if (myStatus == PROTOCOL_PARSING_GOOD) {
             agentEvent = AGENT_EVENT_NONE;
         } else if (myStatus == PROTOCOL_PARSED_CHA_MESSAGE) {
@@ -170,13 +173,14 @@ int AgentRun(char in, char *outBuffer)
             //you go first
             checkState = AGENT_STATE_SEND_GUESS;
             //draw the screen
-            FieldOledDrawScreen(playerField, enemyField, FIELD_OLED_TURN_MINE);
+            FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_MINE);
         } else if (order == TURN_ORDER_DEFER) {
             //they go first
             checkState = AGENT_STATE_WAIT_FOR_GUESS;
             //draw the screen
-            FieldOledDrawScreen(playerField, enemyField, FIELD_OLED_TURN_THEIRS);
+            FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_THEIRS);
         } else { //somehow a tie happened
+
             OledClear(0);
             OledDrawString("ERROR_STRING_ORDERING");
             OledUpdate();
@@ -216,16 +220,16 @@ int AgentRun(char in, char *outBuffer)
         //first check to make sure hit message is recieved
         if (agentEvent == AGENT_EVENT_RECEIVED_HIT_MESSAGE) {
             //check if there was a hit
-            FieldUpdateKnowledge(enemyField, &gData_opp);
+            FieldUpdateKnowledge(&enemyField, &gData_opp);
             //check if you won (0 means no boats left)
             if (AgentGetEnemyStatus() == 0);
             {
-                FieldOledDrawScreen(playerField, enemyField, FIELD_OLED_TURN_NONE);
+                FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_NONE);
                 checkState = AGENT_STATE_WON;
             }
             if (AgentGetEnemyStatus() != 0) {
                 //update screen, wait for opponent turn
-                FieldOledDrawScreen(playerField, enemyField, FIELD_OLED_TURN_THEIRS);
+                FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_THEIRS);
                 checkState = AGENT_STATE_WAIT_FOR_GUESS;
             }
 
@@ -245,16 +249,16 @@ int AgentRun(char in, char *outBuffer)
         //first check to make sure hit message is received
         if (agentEvent == AGENT_EVENT_RECEIVED_COO_MESSAGE) {
             //check if there was a hit
-            FieldUpdateKnowledge(enemyField, &gData_opp);
+            FieldUpdateKnowledge(&enemyField, &gData_opp);
             //check if you won (0 means no boats left)
             if (AgentGetStatus() == 0);
             {
-                FieldOledDrawScreen(playerField, enemyField, FIELD_OLED_TURN_NONE);
+                FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_NONE);
                 checkState = AGENT_STATE_LOST;
             }
             if (AgentGetStatus() != 0) {
                 //update screen, wait for opponent turn
-                FieldOledDrawScreen(playerField, enemyField, FIELD_OLED_TURN_THEIRS);
+                FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_THEIRS);
                 checkState = AGENT_STATE_SEND_GUESS;
             }
 
@@ -297,10 +301,10 @@ int AgentRun(char in, char *outBuffer)
 
 uint8_t AgentGetStatus(void)
 {
-    return FieldGetBoatStates(playerField);
+    return FieldGetBoatStates(&playerField);
 }
 
 uint8_t AgentGetEnemyStatus(void)
 {
-    return FieldGetBoatStates(enemyField);
+    return FieldGetBoatStates(&enemyField);
 }

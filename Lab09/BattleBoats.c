@@ -38,7 +38,6 @@ static uint8_t buttonEvents;
 
 int main()
 {
-        printf("fuuuasdasd");  
     BOARD_Init();
 
     // Set up UART1 for output.
