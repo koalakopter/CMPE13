@@ -142,6 +142,7 @@ int main()
             testSwitch++;
             break;
         case 3:
+
             ProtocolEncodeHitMessage(testMessage, &gData);
             printf("\n%s", testMessage);
             s = 0;

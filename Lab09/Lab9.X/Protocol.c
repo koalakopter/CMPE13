@@ -69,8 +69,9 @@ uint8_t CheckSum(char *data)
 int ProtocolEncodeCooMessage(char *message, const GuessData *data)
 {
     //allocates a temporary array that is the size of max message length
+    loop = 0;
     char temp[PROTOCOL_MAX_MESSAGE_LEN];
-    while (temp[loop] != NULL) {
+    while (loop < PROTOCOL_MAX_MESSAGE_LEN) {
         temp[loop] = NULL; //sets every element to NULL
         loop++;
     }
@@ -87,8 +88,9 @@ int ProtocolEncodeCooMessage(char *message, const GuessData *data)
 
 int ProtocolEncodeHitMessage(char *message, const GuessData *data)
 {
+    loop = 0;
     char temp[PROTOCOL_MAX_MESSAGE_LEN];
-    while (temp[loop] != NULL) {
+    while (loop < PROTOCOL_MAX_MESSAGE_LEN) {
         temp[loop] = NULL; //sets every element to NULL
         loop++;
     }
@@ -105,8 +107,9 @@ int ProtocolEncodeHitMessage(char *message, const GuessData *data)
 
 int ProtocolEncodeChaMessage(char *message, const NegotiationData *data)
 {
+    loop = 0;
     char temp[PROTOCOL_MAX_MESSAGE_LEN];
-    while (temp[loop] != NULL) {
+    while (loop < PROTOCOL_MAX_MESSAGE_LEN) {
         temp[loop] = NULL; //sets every element to NULL
         loop++;
     }
@@ -123,8 +126,9 @@ int ProtocolEncodeChaMessage(char *message, const NegotiationData *data)
 
 int ProtocolEncodeDetMessage(char *message, const NegotiationData *data)
 {
+    loop = 0;
     char temp[PROTOCOL_MAX_MESSAGE_LEN];
-    while (temp[loop] != NULL) {
+    while (loop < PROTOCOL_MAX_MESSAGE_LEN) {
         temp[loop] = NULL; //sets every element to NULL
         loop++;
     }
@@ -150,7 +154,13 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
             currentStatus = RECORDING;
             //set some stuff to default values
             decodeData.indexPos = 0;
-            decodeData.dataRecording[0], decodeData.dataRecording[1] = NULL;
+            int sloop = 0;
+            //clear the storage message array
+            while(sloop < PROTOCOL_MAX_MESSAGE_LEN)
+            {
+                decodeData.dataRecording[sloop] = NULL;
+                sloop++;
+            }
             return PROTOCOL_PARSING_GOOD;
             break;
         }//if no dollar sign, keep waiting
@@ -212,7 +222,6 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
             }
             //according to StackOverflow, this converts an ASCII string to an int
             resultHash = xtoi(decodeData.checkSum);
-            printf("%d and %d", resultHash, originalHash);
 
             //compare the two hashes
             if (originalHash == resultHash) {
@@ -240,18 +249,17 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
         if (in == '\n') {
             //determine what message has been sent by looking at the first characters
             decodeData.value = NULL;
-            printf("what");
             if (decodeData.dataRecording[0] == 'C' && decodeData.dataRecording[1] == 'O') {
-                printf("bowl");
+
                 decodeData.value = PROTOCOL_PARSED_COO_MESSAGE;
             } else if (decodeData.dataRecording[0] == 'H' && decodeData.dataRecording[1] == 'I') {
-printf("meme");
+
                 decodeData.value = PROTOCOL_PARSED_HIT_MESSAGE;
             } else if (decodeData.dataRecording[0] == 'D' && decodeData.dataRecording[1] == 'E' ) {
-printf("yeah");
+
                 decodeData.value = PROTOCOL_PARSED_DET_MESSAGE;
             } else if (decodeData.dataRecording[0] == 'C' && decodeData.dataRecording[1] == 'H') {
-printf("sup");
+
                 decodeData.value = PROTOCOL_PARSED_CHA_MESSAGE;
             }
 
