@@ -99,11 +99,13 @@ int main()
 
 
     printf("\nTesting decode message function\n");
-    int s, testSwitch = 0;
+    int s = 0;
+    int testSwitch = 1;
     while (TRUE) {
         switch (testSwitch) {
         case 0:
             ProtocolEncodeChaMessage(testMessage, &nData);
+            printf("\n%s", testMessage);
             while (testMessage[s] != NULL) {
                 pStatus = ProtocolDecode(testMessage[s], &nData, &gData);
                 if (testMessage[s + 1] == NULL) {
@@ -115,7 +117,33 @@ int main()
             break;
         case 1:
             ProtocolEncodeDetMessage(testMessage, &nData);
-            printf("%s\n", testMessage);
+            printf("\n%s", testMessage);
+            s = 0;
+            while (testMessage[s] != NULL) {
+                pStatus = ProtocolDecode(testMessage[s], &nData, &gData);
+                if (testMessage[s + 1] == NULL) {
+                    printf("DECODE STATUS: %d (0 means PROTOCOL_WAITING)\n", pStatus);
+                }
+                s++;
+            }
+            testSwitch++;
+            break;
+        case 2:
+            ProtocolEncodeCooMessage(testMessage, &gData);
+            printf("\n%s", testMessage);
+            s = 0;
+            while (testMessage[s] != NULL) {
+                pStatus = ProtocolDecode(testMessage[s], &nData, &gData);
+                if (testMessage[s + 1] == NULL) {
+                    printf("DECODE STATUS: %d (0 means PROTOCOL_WAITING)\n", pStatus);
+                }
+                s++;
+            }
+            testSwitch++;
+            break;
+        case 3:
+            ProtocolEncodeHitMessage(testMessage, &gData);
+            printf("\n%s", testMessage);
             s = 0;
             while (testMessage[s] != NULL) {
                 pStatus = ProtocolDecode(testMessage[s], &nData, &gData);
