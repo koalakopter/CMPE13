@@ -83,7 +83,7 @@ int ProtocolEncodeCooMessage(char *message, const GuessData *data)
     sprintf(message, MESSAGE_TEMPLATE, temp, CheckSum(temp));
 
     //returns length of string (its 11)
-    return 11;
+    return strlen(message);
 }
 
 int ProtocolEncodeHitMessage(char *message, const GuessData *data)
@@ -102,7 +102,7 @@ int ProtocolEncodeHitMessage(char *message, const GuessData *data)
     sprintf(message, MESSAGE_TEMPLATE, temp, CheckSum(temp));
 
     //returns length of string (its 13)
-    return 13;
+    return strlen(message);
 }
 
 int ProtocolEncodeChaMessage(char *message, const NegotiationData *data)
@@ -121,7 +121,7 @@ int ProtocolEncodeChaMessage(char *message, const NegotiationData *data)
     sprintf(message, MESSAGE_TEMPLATE, temp, CheckSum(temp));
 
     //returns length of string (its 20)
-    return 20;
+    return strlen(message);
 }
 
 int ProtocolEncodeDetMessage(char *message, const NegotiationData *data)
@@ -140,7 +140,7 @@ int ProtocolEncodeDetMessage(char *message, const NegotiationData *data)
     sprintf(message, MESSAGE_TEMPLATE, temp, CheckSum(temp));
 
     //returns length of string (its 28)
-    return 28;
+    return strlen(message);
 }
 
 ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *gData)

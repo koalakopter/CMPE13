@@ -29,7 +29,8 @@ ProtocolParserStatus pStatus;
 TurnOrder tOrder;
 
 char testMessage[PROTOCOL_MAX_PAYLOAD_LEN];
-int x;
+static int x;
+static float test;
 
 int main()
 {
@@ -50,12 +51,18 @@ int main()
     x = ProtocolEncodeCooMessage(testMessage, &gData);
     printf("Encoded string should have format: COO,%%u,%%u\n");
     printf("Encoded string: %sand Length of string: %d\n", testMessage, x);
+    if (x == 12) {
+        test++;
+    }
 
     printf("\ntesting encode HIT message\n");
     gData.hit = 0;
     x = ProtocolEncodeHitMessage(testMessage, &gData);
     printf("Encoded string should have format: HIT,%%u,%%u,%%u\n");
     printf("Encoded string: %sand Length of string: %d\n", testMessage, x);
+    if (x == 14) {
+        test++;
+    }
 
     printf("\ntesting encode CHA message\n");
     nData.hash = 139;
@@ -63,6 +70,9 @@ int main()
     x = ProtocolEncodeChaMessage(testMessage, &nData);
     printf("Encoded string should have format: CHA,%%u,%%u,\n");
     printf("Encoded string: %sand Length of string: %d\n", testMessage, x);
+    if (x == 18) {
+        test++;
+    }
 
     printf("\ntesting encode DET message\n");
     nData.encryptionKey = 21382;
@@ -70,20 +80,29 @@ int main()
     x = ProtocolEncodeDetMessage(testMessage, &nData);
     printf("Encoded string should have format: DET,%%u,%%u,\n");
     printf("Encoded string: %sand Length of string: %d\n", testMessage, x);
+    if (x == 20) {
+        test++;
+    }
 
     //testing generate and validate negotiation Data
     printf("\nTesting Generate and Validate Negotiation Data\n");
     ProtocolGenerateNegotiationData(&nData);
     x = ProtocolValidateNegotiationData(&nData);
     printf("Generated and validated valid NegotiationData, expect a 1 here for TRUE: %d\n", x);
+    if (x == 1) {
+        test++;
+    }
 
     //generate invalid negotiationData (please ignore the errors in compilation)
     ProtocolGenerateNegotiationData(&xData);
     xData.hash = 12345; //changed the hash to some random number
     x = ProtocolValidateNegotiationData(&xData);
     printf("Generated an invalid NegotiationData hash key expect a 0 here for FALSE: %d\n", x);
+    if (x == 0) {
+        test++;
+    }
 
-    printf("\nTesting Turn Order (-1: TIE, 0: DEFER, 1: START\n");
+    printf("\nTesting Turn Order (TIE: -1, DEFER: 0, START: 1\n");
     xData.encryptedGuess = 62132;
     xData.encryptionKey = 16067;
     xData.guess = 52343;
@@ -94,9 +113,14 @@ int main()
 
     tOrder = ProtocolGetTurnOrder(&nData, &xData);
     printf("Turn Order: %d\n", tOrder);
+    if (tOrder == 0) {
+        test++;
+    }
     tOrder = ProtocolGetTurnOrder(&xData, &nData);
     printf("Turn Order (Switched): %d\n", tOrder);
-
+    if (tOrder == 1) {
+        test++;
+    }
 
     printf("\nTesting decode message function, "
             "refer to enum in Protocol.h for expected output values\n");
@@ -112,6 +136,9 @@ int main()
                 if (testMessage[s + 1] == NULL) {
                     printf("DECODE STATUS: %d (expect 5 for PROTOCOL_PARSED_DET_MESSAGE)\n", pStatus);
                 }
+                if (pStatus == 5) {
+                    test++;
+                }
                 s++;
             }
             testSwitch++;
@@ -125,6 +152,9 @@ int main()
                 if (testMessage[s + 1] == NULL) {
                     printf("DECODE STATUS: %d (expect 4 for PROTOCOL_PARSED_DET_MESSAGE)\n", pStatus);
                 }
+                if (pStatus == 4) {
+                    test++;
+                }
                 s++;
             }
             testSwitch++;
@@ -137,6 +167,9 @@ int main()
                 pStatus = ProtocolDecode(testMessage[s], &nData, &gData);
                 if (testMessage[s + 1] == NULL) {
                     printf("DECODE STATUS: %d (expect 2 for PROTOCOL_PARSED_COO_MESSAGE)\n", pStatus);
+                }
+                if (pStatus == 2) {
+                    test++;
                 }
                 s++;
             }
@@ -152,14 +185,23 @@ int main()
                 if (testMessage[s + 1] == NULL) {
                     printf("DECODE STATUS: %d (expect 3 for PROTOCOL_PARSED_HIT_MESSAGE)\n", pStatus);
                 }
+                if (pStatus == 3) {
+                    test++;
+                }
                 s++;
             }
             testSwitch++;
             break;
         default:
+            printf("\n%f out of 12 tests passed\n", (double)test);
+            test = (test/12.0) * 100.0;
+            printf("\n%.2f out of 100%% tests passed", (double)test);
+            while(1);
             break;
         }
     }
+    
+    
     /******************************************************************************
      * Your code goes in between this comment and the preceeding one with asterisks
      *****************************************************************************/
