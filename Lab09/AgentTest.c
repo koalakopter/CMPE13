@@ -8,6 +8,8 @@
 #include "Agent.h"
 #include "Field.h"
 #include "FieldOled.h"
+#include "Leds.h"
+#include "Oled.h"
 
 // Microchip libraries
 #include <xc.h>
@@ -21,6 +23,8 @@
 // **** Declare any data types here ****
 
 // **** Define any module-level, global, or external variables here ****
+static Field *playerField;
+static Field *enemyField;
 
 
 // **** Declare any function prototypes here ****
@@ -36,7 +40,10 @@ int main()
 /******************************************************************************
  * Your code goes in between this comment and the following one with asterisks.
  *****************************************************************************/
-
+    OledInit();
+    LEDS_INIT();
+    AgentInit();
+    FieldOledDrawScreen(playerField, enemyField, FIELD_OLED_TURN_NONE);
 
 /******************************************************************************
  * Your code goes in between this comment and the preceeding one with asterisks
