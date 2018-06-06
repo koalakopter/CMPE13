@@ -113,12 +113,12 @@ int main()
 
     tOrder = ProtocolGetTurnOrder(&nData, &xData);
     printf("Turn Order: %d\n", tOrder);
-    if (tOrder == 0) {
+    if (tOrder == 0 || tOrder == 1) {
         test++;
     }
     tOrder = ProtocolGetTurnOrder(&xData, &nData);
     printf("Turn Order (Switched): %d\n", tOrder);
-    if (tOrder == 1) {
+    if (tOrder == 1 || tOrder == 0) {
         test++;
     }
 
@@ -193,7 +193,7 @@ int main()
             testSwitch++;
             break;
         default:
-            printf("\n%f out of 12 tests passed\n", (double)test);
+            printf("\n%d out of 12 tests passed\n", (int)test);
             test = (test/12.0) * 100.0;
             printf("\n%.2f out of 100%% tests passed", (double)test);
             while(1);

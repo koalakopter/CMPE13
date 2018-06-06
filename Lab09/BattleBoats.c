@@ -38,6 +38,7 @@ static uint8_t buttonEvents;
 
 int main()
 {
+        printf("fuuuasdasd");  
     BOARD_Init();
 
     // Set up UART1 for output.
@@ -62,9 +63,11 @@ int main()
 
     OledInit();
 
+
     // Prompt the user to start the game and block until the first character press.
     OledDrawString("Press BTN4 to start.");
     OledUpdate();
+
     while ((buttonEvents & BUTTON_EVENT_4UP) == 0);
 
     // The first part of our seed is a hash of the compilation time string. The lowest-8 bits

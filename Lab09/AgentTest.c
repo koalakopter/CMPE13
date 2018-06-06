@@ -40,10 +40,13 @@ int main()
 /******************************************************************************
  * Your code goes in between this comment and the following one with asterisks.
  *****************************************************************************/
+    //printf("Starting tests!\n");
     OledInit();
     LEDS_INIT();
     AgentInit();
     FieldOledDrawScreen(playerField, enemyField, FIELD_OLED_TURN_NONE);
+    //OledDrawString("FUUCCKKK");
+    OledUpdate();
 
 /******************************************************************************
  * Your code goes in between this comment and the preceeding one with asterisks
