@@ -1,3 +1,9 @@
+/*
+ * Julian To -- jcto@ucsc.edu
+ * Lab09 - Battle boats
+ * June 1, 2018 
+ */
+
 #include "Protocol.h"
 #include "Board.h"
 #include <stdio.h>
