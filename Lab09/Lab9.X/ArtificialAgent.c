@@ -33,6 +33,7 @@ static int alreadyGuessed[6][10]; //2d array to keep track of what has been gues
 
 static int time; //for the delay
 static int returnVal;
+static char bleh[50];
 
 void AgentInit(void)
 {
@@ -150,11 +151,12 @@ int AgentRun(char in, char *outBuffer)
         if (AGENT_EVENT_RECEIVED_CHA_MESSAGE == agentEvent) {
             returnVal = ProtocolEncodeDetMessage(outBuffer, &nData);
             checkState = AGENT_STATE_DETERMINE_TURN_ORDER;
-            puts("really?");
+            //agentEvent = AGENT_EVENT_NONE;
+            //puts("really?");
             return returnVal;
             break;
         } else if (AGENT_EVENT_NONE == agentEvent) {
-            puts("#########");
+            //puts("#########");
             return 0;
         } else {
             printf("???????");
@@ -170,17 +172,19 @@ int AgentRun(char in, char *outBuffer)
             return 0;
         } else if (agentEvent & AGENT_EVENT_RECEIVED_DET_MESSAGE) {
             puts("please?");
+
             //continue on
         } else if (agentEvent & AGENT_EVENT_MESSAGE_PARSING_FAILED) {
-            //puts("!!!!!!!!!");
+            puts("!!!!!!!!!");
             checkState = AGENT_STATE_INVALID;
             return 0;
         } else {
-            //puts("@@@@@@@@@");
+            puts("@@@@@@@@@");
             //checkState = AGENT_STATE_INVALID;
             return 0;
         }
         //validate opponent data, if fail, return error
+        agentEvent = AGENT_EVENT_NONE;
         ProtocolValidateNegotiationData(&nData_opp);
         if (ProtocolValidateNegotiationData(&nData_opp) == FALSE) {
 
@@ -225,18 +229,20 @@ int AgentRun(char in, char *outBuffer)
     case AGENT_STATE_SEND_GUESS:
         FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_MINE);
         //randomly generate a guess until one that hasn't been guessed already is given
+
+        //puts("WEEEE");
+        for (time = 0; time < BOARD_GetPBClock() / 8; time++) {
+            //artificial delay
+        }
         while (TRUE) {
-            puts("WEEEE");
-            for (time = 0; time < BOARD_GetPBClock() / 8; time++) {
-                //artificial delay
-            }
-            randRow = rand() % 7;
-            randCol = rand() % 10;
+            randRow = rand() % FIELD_ROWS;
+            randCol = rand() % FIELD_COLS;
             //pass guess into gData struct
 
             if (alreadyGuessed[randRow][randCol] != TRUE) {
                 //set a flag so that we can't guess that square again
-                puts("meme");
+                sprintf(bleh, "meme row: %d and row %d", randRow, randCol);
+                //puts(bleh);
                 alreadyGuessed[randRow][randCol] = TRUE;
                 gData.col = randCol;
                 gData.row = randRow;
@@ -254,16 +260,15 @@ int AgentRun(char in, char *outBuffer)
         //first check to make sure hit message is recieved
         if (agentEvent == AGENT_EVENT_RECEIVED_HIT_MESSAGE) {
             //check if there was a hit
-            puts("yurr durr");
+            agentEvent = AGENT_EVENT_NONE;
+            //puts("yurr durr");
             FieldUpdateKnowledge(&enemyField, &gData_opp);
             //check if you won (0 means no boats left)
-            if (AgentGetEnemyStatus() == 0);
-            {
+            if (AgentGetEnemyStatus() == 0) {
                 FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_NONE);
                 checkState = AGENT_STATE_WON;
                 return 0;
-            }
-            if (AgentGetEnemyStatus() != 0) {
+            } else {
                 //update screen, wait for opponent turn
                 FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_THEIRS);
                 checkState = AGENT_STATE_WAIT_FOR_GUESS;
@@ -283,34 +288,33 @@ int AgentRun(char in, char *outBuffer)
             checkState = AGENT_STATE_INVALID;
             break;
         } else {
+            agentEvent = AGENT_EVENT_NONE;
             return 0;
         }
         return 0;
         break;
     case AGENT_STATE_WAIT_FOR_GUESS:
-        FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_MINE);
+        FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_THEIRS);
         //decode enemy data about opponent guess
         //first check to make sure hit message is received
         if (agentEvent == AGENT_EVENT_RECEIVED_COO_MESSAGE) {
             returnVal = ProtocolEncodeHitMessage(outBuffer, &gData_opp);
-            puts("yee haww");
+            //puts("yee haww");
             //check if there was a hit
             FieldUpdateKnowledge(&enemyField, &gData_opp);
             //check if you won (0 means no boats left)
-            if (AgentGetStatus() == 0);
-            {
+            if (AgentGetStatus() == 0) {
                 FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_NONE);
                 checkState = AGENT_STATE_LOST;
                 return returnVal;
-            }
-            if (AgentGetStatus() != 0) {
+            } else {
                 //update screen, wait for opponent turn
                 FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_MINE);
                 checkState = AGENT_STATE_SEND_GUESS;
                 return returnVal;
             }
         } else if (agentEvent == AGENT_EVENT_NONE) {
-            puts("panzer vor");
+            //puts("panzer vor");
             return 0;
         } else if (agentEvent == AGENT_EVENT_MESSAGE_PARSING_FAILED) {
             //if something else is received, commit code sudoku 
@@ -337,14 +341,14 @@ int AgentRun(char in, char *outBuffer)
         //you lost (sorry man)
         printf("\n'It is well war is so terrible, "
                 "otherwise we should grow to fond of it' -Robert E. Lee\n");
-        while(1);
+        while (1);
         return 0;
         break;
     case AGENT_STATE_WON:
         //you won (don't do anything next?)
         printf("\n'War is cruelty. There is no use trying to reform it. "
                 "The crueler it is, the sooner it will be over.' -William Tecumseh Sherman\n");
-        while(1);
+        while (1);
         return 0;
         break;
 
