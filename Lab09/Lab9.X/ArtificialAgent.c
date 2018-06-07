@@ -32,6 +32,7 @@ static int randCol;
 static int alreadyGuessed[6][10]; //2d array to keep track of what has been guessed, 6 rows, 10 columns
 
 static int time; //for the delay
+static int returnVal;
 
 void AgentInit(void)
 {
@@ -104,12 +105,12 @@ void AgentInit(void)
 
 int AgentRun(char in, char *outBuffer)
 {
-    myStatus = ProtocolDecode(in, &nData, &gData);
+    myStatus = ProtocolDecode(in, &nData_opp, &gData_opp);
 
     //check what ProtocolDecode returns and set a flag
     if (in != NULL) {
 
-        if (myStatus == PROTOCOL_PARSING_GOOD) {
+        if (myStatus == PROTOCOL_PARSING_GOOD || myStatus == PROTOCOL_WAITING) {
             agentEvent = AGENT_EVENT_NONE;
         } else if (myStatus == PROTOCOL_PARSED_CHA_MESSAGE) {
             agentEvent = AGENT_EVENT_RECEIVED_CHA_MESSAGE;
@@ -120,12 +121,13 @@ int AgentRun(char in, char *outBuffer)
         } else if (myStatus == PROTOCOL_PARSED_HIT_MESSAGE) {
             agentEvent = AGENT_EVENT_RECEIVED_HIT_MESSAGE;
         } else {
-            //if the input isn't valid, set an error flag and commit code-sudoku
+            /*//if the input isn't valid, set an error flag and commit code-sudoku
+            //printf("fuck me");
             OledClear(0);
             OledDrawString("ERROR_STRING_PARSING");
             OledUpdate();
 
-            checkState = AGENT_STATE_INVALID;
+            checkState = AGENT_STATE_INVALID;*/
             agentEvent = AGENT_EVENT_MESSAGE_PARSING_FAILED;
         }
     }
@@ -137,41 +139,45 @@ int AgentRun(char in, char *outBuffer)
         ProtocolGenerateNegotiationData(&nData);
 
         //encode some challenge data
-        ProtocolEncodeChaMessage(outBuffer, &nData);
+        returnVal = ProtocolEncodeChaMessage(outBuffer, &nData);
         checkState = AGENT_STATE_SEND_CHALLENGE_DATA;
-        return strlen(outBuffer); //returns length of the outBuffer string
+        return returnVal; //returns length of the outBuffer string
         break;
 
     case AGENT_STATE_SEND_CHALLENGE_DATA:
 
         //send determine data
-        if (AGENT_EVENT_RECIEVED_CHA_MESSAGE == agentEvent) {
-            ProtocolEncodeDetMessage(outBuffer, &nData);
+        if (AGENT_EVENT_RECEIVED_CHA_MESSAGE == agentEvent) {
+            returnVal = ProtocolEncodeDetMessage(outBuffer, &nData);
             checkState = AGENT_STATE_DETERMINE_TURN_ORDER;
-            return strlen(outBuffer);
+            //printf("really?");
+            return returnVal;
             break;
         } else if (AGENT_EVENT_NONE == agentEvent) {
+            //printf("meme");
             return 0;
         } else {
-            checkState = AGENT_EVENT_INVALID;
+            printf("???????");
+            checkState = AGENT_STATE_INVALID;
             return 0;
             break;
         }
 
     case AGENT_STATE_DETERMINE_TURN_ORDER:
-        
-        
-        if (agentEvent == AGENT_EVENT_NONE)
-        {
+
+        if (agentEvent & AGENT_EVENT_NONE || agentEvent & AGENT_EVENT_RECEIVED_CHA_MESSAGE) {
+            puts("^^^^^^^^^");
             return 0;
-        }
-        else if (agentEvent == AGENT_EVENT_RECIEVED_DET_MESSAGE)
-        {
+        } else if (agentEvent & AGENT_EVENT_RECEIVED_DET_MESSAGE) {
+            puts("please?");
             //continue on
-        }
-        else
-        {
+        } else if (agentEvent & AGENT_EVENT_MESSAGE_PARSING_FAILED) {
+            //puts("!!!!!!!!!");
             checkState = AGENT_STATE_INVALID;
+            return 0;
+        } else {
+            puts("@@@@@@@@@");
+            //checkState = AGENT_STATE_INVALID;
             return 0;
         }
         //validate opponent data, if fail, return error
@@ -192,11 +198,13 @@ int AgentRun(char in, char *outBuffer)
         //checks who goes first
         if (order == TURN_ORDER_START) {
             //you go first
+            puts("start");
             checkState = AGENT_STATE_SEND_GUESS;
             //draw the screen
             FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_MINE);
         } else if (order == TURN_ORDER_DEFER) {
             //they go first
+            puts("not me");
             checkState = AGENT_STATE_WAIT_FOR_GUESS;
             //draw the screen
             FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_THEIRS);
@@ -217,17 +225,20 @@ int AgentRun(char in, char *outBuffer)
     case AGENT_STATE_SEND_GUESS:
         //randomly generate a guess until one that hasn't been guessed already is given
         while (TRUE) {
+            puts("WEEEE");
             for (time = 0; time < BOARD_GetPBClock() / 8; time++) {
                 //artificial delay
             }
             randRow = rand() % 7;
             randCol = rand() % 10;
             //pass guess into gData struct
-            gData.col = randCol;
-            gData.row = randRow;
+
             if (alreadyGuessed[randRow][randCol] != TRUE) {
                 //set a flag so that we can't guess that square again
+                puts("meme");
                 alreadyGuessed[randRow][randCol] = TRUE;
+                gData.col = randCol;
+                gData.row = randRow;
                 break;
             }
         }
@@ -241,6 +252,7 @@ int AgentRun(char in, char *outBuffer)
         //first check to make sure hit message is recieved
         if (agentEvent == AGENT_EVENT_RECEIVED_HIT_MESSAGE) {
             //check if there was a hit
+            puts("yurr durr");
             FieldUpdateKnowledge(&enemyField, &gData_opp);
             //check if you won (0 means no boats left)
             if (AgentGetEnemyStatus() == 0);
@@ -255,16 +267,19 @@ int AgentRun(char in, char *outBuffer)
             }
 
         } else if (agentEvent == AGENT_EVENT_NONE) {
+            puts("wee wee");
             return 0;
-        } else {
+        } else if (agentEvent == AGENT_EVENT_MESSAGE_PARSING_FAILED) {
             //if something else is received, commit code sudoku 
-            //printf("(ERROR Tag: GEARING)");
+            printf("(ERROR Tag: GEARING)");
             OledClear(0);
             OledDrawString("ERROR_STRING_PARSING");
             OledUpdate();
 
             checkState = AGENT_STATE_INVALID;
             break;
+        } else {
+            return 0;
         }
         return 0;
         break;
@@ -272,6 +287,7 @@ int AgentRun(char in, char *outBuffer)
         //decode enemy data about opponent guess
         //first check to make sure hit message is received
         if (agentEvent == AGENT_EVENT_RECEIVED_COO_MESSAGE) {
+            puts("yee haww");
             //check if there was a hit
             FieldUpdateKnowledge(&enemyField, &gData_opp);
             //check if you won (0 means no boats left)
@@ -286,16 +302,19 @@ int AgentRun(char in, char *outBuffer)
                 checkState = AGENT_STATE_SEND_GUESS;
             }
         } else if (agentEvent == AGENT_EVENT_NONE) {
+            puts("panzer vor");
             return 0;
-        } else {
+        } else if (agentEvent == AGENT_EVENT_MESSAGE_PARSING_FAILED) {
             //if something else is received, commit code sudoku 
-            //printf("(ERROR TAG: SHIMAKAZE)");
+            printf("(ERROR TAG: SHIMAKAZE)");
             OledClear(0);
             OledDrawString("ERROR_STRING_PARSING");
             OledUpdate();
 
             checkState = AGENT_STATE_INVALID;
             break;
+        } else {
+            return 0;
         }
         return 0;
         break;
