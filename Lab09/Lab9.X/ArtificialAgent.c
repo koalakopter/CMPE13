@@ -54,7 +54,7 @@ void AgentInit(void)
         //here we are getting the modulo of the rand so we ensure that our
         //value is 0-5 for rows, 0-9 for columns, and 0-3 for direction
 
-        randRow = rand() % 7;
+        randRow = rand() % 6;
         randCol = rand() % 10;
         randDir = rand() % 4;
 
@@ -122,8 +122,7 @@ int AgentRun(char in, char *outBuffer)
         } else if (myStatus == PROTOCOL_PARSED_HIT_MESSAGE) {
             agentEvent = AGENT_EVENT_RECEIVED_HIT_MESSAGE;
         } else {
-            /*//if the input isn't valid, set an error flag and commit code-sudoku
-            //printf("fuck me");
+            /*//if the input isn't valid, commit code-sudoku
             OledClear(0);
             OledDrawString("ERROR_STRING_PARSING");
             OledUpdate();
@@ -241,14 +240,13 @@ int AgentRun(char in, char *outBuffer)
 
             if (alreadyGuessed[randRow][randCol] != TRUE) {
                 //set a flag so that we can't guess that square again
-                sprintf(bleh, "meme row: %d and row %d", randRow, randCol);
-                //puts(bleh);
                 alreadyGuessed[randRow][randCol] = TRUE;
                 gData.col = randCol;
                 gData.row = randRow;
                 break;
             }
         }
+        //FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_MINE);
         //encode a message
         returnVal = ProtocolEncodeCooMessage(outBuffer, &gData);
         checkState = AGENT_STATE_WAIT_FOR_HIT; //move onto checking for hit
@@ -366,9 +364,4 @@ uint8_t AgentGetEnemyStatus(void)
     return FieldGetBoatStates(&enemyField);
 }
 
-//merely a test function for drawing the screen
 
-void AgentDrawScreen(void)
-{
-    FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_NONE);
-}
