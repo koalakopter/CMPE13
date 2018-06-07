@@ -276,7 +276,7 @@ int AgentRun(char in, char *outBuffer)
             }
 
         } else if (agentEvent == AGENT_EVENT_NONE) {
-            puts("wee wee");
+            //puts("wee wee");
             return 0;
         } else if (agentEvent == AGENT_EVENT_MESSAGE_PARSING_FAILED) {
             //if something else is received, commit code sudoku 

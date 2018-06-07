@@ -274,8 +274,8 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
             if (decodeData.value == PROTOCOL_PARSED_COO_MESSAGE) {
                 //tokenize the string into tag, row, col
                 tag = strtok(decodeData.dataRecording, ",");
-                str1 = strtok(decodeData.dataRecording, ",");
-                str2 = strtok(decodeData.dataRecording, ",");
+                str1 = strtok(NULL, ",");
+                str2 = strtok(NULL, "*");
 
                 //put results into GuessData
                 gData->row = atoi(str1); //convert string to int
@@ -284,10 +284,10 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
             } else if (decodeData.value == PROTOCOL_PARSED_HIT_MESSAGE) {
 
                 //tokenize the string into tag, row, col, hit  
-                tag = strtok(decodeData.dataRecording, ",");
-                str1 = strtok(decodeData.dataRecording, ",");
-                str2 = strtok(decodeData.dataRecording, ",");
-                str3 = strtok(decodeData.dataRecording, ",");
+                tag = strtok(decodeData, ",");
+                str1 = strtok(NULL, ",");
+                str2 = strtok(NULL, ",");
+                str3 = strtok(NULL, "*");
 
                 //put results into GuessData
                 gData->row = atoi(str1);
@@ -298,8 +298,8 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
 
                 //tokenize the string into tag, guess, encryptionKey
                 tag = strtok(decodeData.dataRecording, ",");
-                str1 = strtok(decodeData.dataRecording, ",");
-                str2 = strtok(decodeData.dataRecording, ",");
+                str1 = strtok(NULL, ",");
+                str2 = strtok(NULL, "*");
 
                 nData->guess = atoi(str1);
                 nData->encryptionKey = atoi(str2);
@@ -307,8 +307,8 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
 
                 //tokenize the string into tag, encryptedGuess, hash
                 tag = strtok(decodeData.dataRecording, ",");
-                str1 = strtok(decodeData.dataRecording, ",");
-                str2 = strtok(decodeData.dataRecording, ",");
+                str1 = strtok(NULL, ",");
+                str2 = strtok(NULL, "*");
 
                 nData->encryptedGuess = atoi(str1);
                 nData->hash = atoi(str2);
