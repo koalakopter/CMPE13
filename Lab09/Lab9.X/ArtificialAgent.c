@@ -299,9 +299,9 @@ int AgentRun(char in, char *outBuffer)
         //first check to make sure hit message is received
         if (agentEvent == AGENT_EVENT_RECEIVED_COO_MESSAGE) {
             returnVal = ProtocolEncodeHitMessage(outBuffer, &gData_opp);
-            //puts("yee haww");
-            //check if there was a hit
-            //FieldUpdateKnowledge(&enemyField, &gData_opp);
+            //update your screen with enemy guess
+            FieldRegisterEnemyAttack(&playerField, &gData_opp); 
+
             //check if you won (0 means no boats left)
             if (AgentGetStatus() == 0) {
                 FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_NONE);
