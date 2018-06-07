@@ -150,11 +150,11 @@ int AgentRun(char in, char *outBuffer)
         if (AGENT_EVENT_RECEIVED_CHA_MESSAGE == agentEvent) {
             returnVal = ProtocolEncodeDetMessage(outBuffer, &nData);
             checkState = AGENT_STATE_DETERMINE_TURN_ORDER;
-            //printf("really?");
+            puts("really?");
             return returnVal;
             break;
         } else if (AGENT_EVENT_NONE == agentEvent) {
-            //printf("meme");
+            puts("#########");
             return 0;
         } else {
             printf("???????");
@@ -176,7 +176,7 @@ int AgentRun(char in, char *outBuffer)
             checkState = AGENT_STATE_INVALID;
             return 0;
         } else {
-            puts("@@@@@@@@@");
+            //puts("@@@@@@@@@");
             //checkState = AGENT_STATE_INVALID;
             return 0;
         }
@@ -223,6 +223,7 @@ int AgentRun(char in, char *outBuffer)
         break;
 
     case AGENT_STATE_SEND_GUESS:
+        FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_MINE);
         //randomly generate a guess until one that hasn't been guessed already is given
         while (TRUE) {
             puts("WEEEE");
@@ -243,11 +244,12 @@ int AgentRun(char in, char *outBuffer)
             }
         }
         //encode a message
-        ProtocolEncodeCooMessage(outBuffer, &gData);
+        returnVal = ProtocolEncodeCooMessage(outBuffer, &gData);
         checkState = AGENT_STATE_WAIT_FOR_HIT; //move onto checking for hit
-        return strlen(outBuffer);
+        return returnVal;
         break;
     case AGENT_STATE_WAIT_FOR_HIT:
+        FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_MINE);
         //decode enemy data about hit
         //first check to make sure hit message is recieved
         if (agentEvent == AGENT_EVENT_RECEIVED_HIT_MESSAGE) {
@@ -259,11 +261,13 @@ int AgentRun(char in, char *outBuffer)
             {
                 FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_NONE);
                 checkState = AGENT_STATE_WON;
+                return 0;
             }
             if (AgentGetEnemyStatus() != 0) {
                 //update screen, wait for opponent turn
                 FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_THEIRS);
                 checkState = AGENT_STATE_WAIT_FOR_GUESS;
+                return 0;
             }
 
         } else if (agentEvent == AGENT_EVENT_NONE) {
@@ -284,9 +288,11 @@ int AgentRun(char in, char *outBuffer)
         return 0;
         break;
     case AGENT_STATE_WAIT_FOR_GUESS:
+        FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_MINE);
         //decode enemy data about opponent guess
         //first check to make sure hit message is received
         if (agentEvent == AGENT_EVENT_RECEIVED_COO_MESSAGE) {
+            returnVal = ProtocolEncodeHitMessage(outBuffer, &gData_opp);
             puts("yee haww");
             //check if there was a hit
             FieldUpdateKnowledge(&enemyField, &gData_opp);
@@ -295,11 +301,13 @@ int AgentRun(char in, char *outBuffer)
             {
                 FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_NONE);
                 checkState = AGENT_STATE_LOST;
+                return returnVal;
             }
             if (AgentGetStatus() != 0) {
                 //update screen, wait for opponent turn
-                FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_THEIRS);
+                FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_MINE);
                 checkState = AGENT_STATE_SEND_GUESS;
+                return returnVal;
             }
         } else if (agentEvent == AGENT_EVENT_NONE) {
             puts("panzer vor");
@@ -329,12 +337,14 @@ int AgentRun(char in, char *outBuffer)
         //you lost (sorry man)
         printf("\n'It is well war is so terrible, "
                 "otherwise we should grow to fond of it' -Robert E. Lee\n");
+        while(1);
         return 0;
         break;
     case AGENT_STATE_WON:
         //you won (don't do anything next?)
         printf("\n'War is cruelty. There is no use trying to reform it. "
                 "The crueler it is, the sooner it will be over.' -William Tecumseh Sherman\n");
+        while(1);
         return 0;
         break;
 
