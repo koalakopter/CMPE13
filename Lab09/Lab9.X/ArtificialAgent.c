@@ -17,7 +17,7 @@ static GuessData gData_opp;
 
 static ProtocolParserStatus myStatus;
 static int agentEvent = AGENT_EVENT_NONE; //flag for current AgentEvent
-static AgentState checkState = AGENT_EVENT_NONE;
+static AgentState checkState = AGENT_STATE_GENERATE_NEG_DATA;
 
 //turn order
 static TurnOrder order = TURN_ORDER_TIE; //starts at TIE to avoid cheating
@@ -145,13 +145,35 @@ int AgentRun(char in, char *outBuffer)
     case AGENT_STATE_SEND_CHALLENGE_DATA:
 
         //send determine data
-        ProtocolEncodeDetMessage(outBuffer, &nData);
-        checkState = AGENT_STATE_DETERMINE_TURN_ORDER;
-        return strlen(outBuffer);
-        break;
+        if (AGENT_EVENT_RECIEVED_CHA_MESSAGE == agentEvent) {
+            ProtocolEncodeDetMessage(outBuffer, &nData);
+            checkState = AGENT_STATE_DETERMINE_TURN_ORDER;
+            return strlen(outBuffer);
+            break;
+        } else if (AGENT_EVENT_NONE == agentEvent) {
+            return 0;
+        } else {
+            checkState = AGENT_EVENT_INVALID;
+            return 0;
+            break;
+        }
 
     case AGENT_STATE_DETERMINE_TURN_ORDER:
-
+        
+        
+        if (agentEvent == AGENT_EVENT_NONE)
+        {
+            return 0;
+        }
+        else if (agentEvent == AGENT_EVENT_RECIEVED_DET_MESSAGE)
+        {
+            //continue on
+        }
+        else
+        {
+            checkState = AGENT_STATE_INVALID;
+            return 0;
+        }
         //validate opponent data, if fail, return error
         ProtocolValidateNegotiationData(&nData_opp);
         if (ProtocolValidateNegotiationData(&nData_opp) == FALSE) {
@@ -232,6 +254,8 @@ int AgentRun(char in, char *outBuffer)
                 checkState = AGENT_STATE_WAIT_FOR_GUESS;
             }
 
+        } else if (agentEvent == AGENT_EVENT_NONE) {
+            return 0;
         } else {
             //if something else is received, commit code sudoku 
             //printf("(ERROR Tag: GEARING)");
@@ -261,7 +285,8 @@ int AgentRun(char in, char *outBuffer)
                 FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_THEIRS);
                 checkState = AGENT_STATE_SEND_GUESS;
             }
-
+        } else if (agentEvent == AGENT_EVENT_NONE) {
+            return 0;
         } else {
             //if something else is received, commit code sudoku 
             //printf("(ERROR TAG: SHIMAKAZE)");
