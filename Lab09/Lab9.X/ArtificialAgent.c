@@ -301,7 +301,7 @@ int AgentRun(char in, char *outBuffer)
             returnVal = ProtocolEncodeHitMessage(outBuffer, &gData_opp);
             //puts("yee haww");
             //check if there was a hit
-            FieldUpdateKnowledge(&enemyField, &gData_opp);
+            //FieldUpdateKnowledge(&enemyField, &gData_opp);
             //check if you won (0 means no boats left)
             if (AgentGetStatus() == 0) {
                 FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_NONE);

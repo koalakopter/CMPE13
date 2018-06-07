@@ -284,7 +284,7 @@ ProtocolParserStatus ProtocolDecode(char in, NegotiationData *nData, GuessData *
             } else if (decodeData.value == PROTOCOL_PARSED_HIT_MESSAGE) {
 
                 //tokenize the string into tag, row, col, hit  
-                tag = strtok(decodeData, ",");
+                tag = strtok(decodeData.dataRecording, ",");
                 str1 = strtok(NULL, ",");
                 str2 = strtok(NULL, ",");
                 str3 = strtok(NULL, "*");

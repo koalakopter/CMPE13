@@ -56,7 +56,7 @@ int main()
     }
 
     printf("\ntesting encode HIT message\n");
-    gData.hit = 0;
+    gData.hit = 1;
     x = ProtocolEncodeHitMessage(testMessage, &gData);
     printf("Encoded string should have format: HIT,%%u,%%u,%%u\n");
     printf("Encoded string: %sand Length of string: %d\n", testMessage, x);
@@ -150,7 +150,7 @@ int main()
             while (testMessage[s] != NULL) {
                 pStatus = ProtocolDecode(testMessage[s], &nData, &gData);
                 if (testMessage[s + 1] == NULL) {
-                    printf("DECODE STATUS: %d (expect 4 for PROTOCOL_PARSED_DET_MESSAGE)\n", pStatus);
+                    printf("DECODE STATUS: %d (expect 4 for PROTOCOL_PARSED_CHA_MESSAGE)\n", pStatus);
                 }
                 if (pStatus == 4) {
                     test++;
