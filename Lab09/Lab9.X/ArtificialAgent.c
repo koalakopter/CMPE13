@@ -262,7 +262,7 @@ int AgentRun(char in, char *outBuffer)
             //check if there was a hit
             agentEvent = AGENT_EVENT_NONE;  
             //puts("yurr durr");
-            FieldUpdateKnowledge(&enemyField, &gData_opp);
+            FieldUpdateKnowledge(&enemyField, &gData);
             //check if you won (0 means no boats left)
             if (AgentGetEnemyStatus() == 0) {
                 FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_NONE);
@@ -298,9 +298,11 @@ int AgentRun(char in, char *outBuffer)
         //decode enemy data about opponent guess
         //first check to make sure hit message is received
         if (agentEvent == AGENT_EVENT_RECEIVED_COO_MESSAGE) {
-            returnVal = ProtocolEncodeHitMessage(outBuffer, &gData_opp);
             //update your screen with enemy guess
             FieldRegisterEnemyAttack(&playerField, &gData_opp); 
+            returnVal = ProtocolEncodeHitMessage(outBuffer, &gData_opp);
+            
+            
 
             //check if you won (0 means no boats left)
             if (AgentGetStatus() == 0) {
