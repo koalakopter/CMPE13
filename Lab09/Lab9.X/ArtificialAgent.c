@@ -168,18 +168,18 @@ int AgentRun(char in, char *outBuffer)
     case AGENT_STATE_DETERMINE_TURN_ORDER:
 
         if (agentEvent & AGENT_EVENT_NONE || agentEvent & AGENT_EVENT_RECEIVED_CHA_MESSAGE) {
-            puts("^^^^^^^^^");
+            //puts("^^^^^^^^^");
             return 0;
         } else if (agentEvent & AGENT_EVENT_RECEIVED_DET_MESSAGE) {
-            puts("please?");
+            //puts("please?");
 
             //continue on
         } else if (agentEvent & AGENT_EVENT_MESSAGE_PARSING_FAILED) {
-            puts("!!!!!!!!!");
+            //puts("!!!!!!!!!");
             checkState = AGENT_STATE_INVALID;
             return 0;
         } else {
-            puts("@@@@@@@@@");
+            puts(""); //removing this breaks the code????
             //checkState = AGENT_STATE_INVALID;
             return 0;
         }
@@ -202,13 +202,13 @@ int AgentRun(char in, char *outBuffer)
         //checks who goes first
         if (order == TURN_ORDER_START) {
             //you go first
-            puts("start");
+            //puts("start");
             checkState = AGENT_STATE_SEND_GUESS;
             //draw the screen
             FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_MINE);
         } else if (order == TURN_ORDER_DEFER) {
             //they go first
-            puts("not me");
+            //puts("not me");
             checkState = AGENT_STATE_WAIT_FOR_GUESS;
             //draw the screen
             FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_THEIRS);
@@ -280,7 +280,7 @@ int AgentRun(char in, char *outBuffer)
             return 0;
         } else if (agentEvent == AGENT_EVENT_MESSAGE_PARSING_FAILED) {
             //if something else is received, commit code sudoku 
-            printf("(ERROR Tag: GEARING)");
+            //printf("(ERROR Tag: GEARING)");
             OledClear(0);
             OledDrawString("ERROR_STRING_PARSING");
             OledUpdate();
@@ -320,7 +320,7 @@ int AgentRun(char in, char *outBuffer)
             return 0;
         } else if (agentEvent == AGENT_EVENT_MESSAGE_PARSING_FAILED) {
             //if something else is received, commit code sudoku 
-            printf("(ERROR TAG: SHIMAKAZE)");
+            //printf("(ERROR TAG: SHIMAKAZE)");
             OledClear(0);
             OledDrawString("ERROR_STRING_PARSING");
             OledUpdate();
