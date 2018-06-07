@@ -45,8 +45,9 @@ int main()
     //copied from StackOverflow to generate a random seed based on time
 
     //srand(time(NULL));
-    srand(45);
+    srand(59);
     AgentInit();
+
 
 
 

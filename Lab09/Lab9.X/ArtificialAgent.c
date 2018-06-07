@@ -95,6 +95,9 @@ void AgentInit(void)
         }
     }
     FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_NONE);
+    for (time = 0; time < BOARD_GetPBClock() / 8; time++) {
+        //artificial delay
+    }
 }
 
 //Im doing Agent Run and AgentGetEnemyStatus
