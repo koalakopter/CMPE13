@@ -97,6 +97,14 @@ uint8_t FieldAddBoat(Field *f, uint8_t row, uint8_t col, BoatDirection dir, Boat
                 {
                     return FALSE;
                 }
+                
+                for(i = 0; i < lives; i++)
+                {
+                    if(f->field[row - i][col] != FIELD_POSITION_EMPTY)
+                    {
+                        return FALSE;
+                    }
+                }
 
                 for(i = 0; i < lives; i++)
                 {
@@ -112,6 +120,14 @@ uint8_t FieldAddBoat(Field *f, uint8_t row, uint8_t col, BoatDirection dir, Boat
                 if((col + lives) > FIELD_COLS)
                 {
                     return FALSE;
+                }
+                
+                for(i = 0; i < lives; i++)
+                {
+                    if(f->field[row][col + i] != FIELD_POSITION_EMPTY)
+                    {
+                        return FALSE;
+                    }
                 }
 
                 for(i = 0; i < lives; i++)
@@ -129,6 +145,14 @@ uint8_t FieldAddBoat(Field *f, uint8_t row, uint8_t col, BoatDirection dir, Boat
                 {
                     return FALSE;
                 }
+                
+                for(i = 0; i < lives; i++)
+                {
+                    if(f->field[row + i][col] != FIELD_POSITION_EMPTY)
+                    {
+                        return FALSE;
+                    }
+                }
 
                 for(i = 0; i < lives; i++)
                 {
@@ -144,6 +168,14 @@ uint8_t FieldAddBoat(Field *f, uint8_t row, uint8_t col, BoatDirection dir, Boat
                 if((col - lives) < 0)
                 {
                     return FALSE;
+                }
+                
+                for(i = 0; i < lives; i++)
+                {
+                    if(f->field[row][col - i] != FIELD_POSITION_EMPTY)
+                    {
+                        return FALSE;
+                    }
                 }
 
                 for(i = 0; i < lives; i++)
