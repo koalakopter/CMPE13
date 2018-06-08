@@ -88,7 +88,7 @@ int ProtocolEncodeCooMessage(char *message, const GuessData *data)
     //compiles the final output string into message using calculated XOR values
     sprintf(message, MESSAGE_TEMPLATE, temp, CheckSum(temp));
 
-    //returns length of string (its 11)
+    //returns length of string 
     return strlen(message);
 }
 
@@ -107,7 +107,7 @@ int ProtocolEncodeHitMessage(char *message, const GuessData *data)
     //compiles the final output string into message using calculated XOR values
     sprintf(message, MESSAGE_TEMPLATE, temp, CheckSum(temp));
 
-    //returns length of string (its 13)
+    //returns length of string 
     return strlen(message);
 }
 
@@ -126,7 +126,7 @@ int ProtocolEncodeChaMessage(char *message, const NegotiationData *data)
     //compiles the final output string into message using calculated XOR values
     sprintf(message, MESSAGE_TEMPLATE, temp, CheckSum(temp));
 
-    //returns length of string (its 20)
+    //returns length of string 
     return strlen(message);
 }
 
@@ -145,7 +145,7 @@ int ProtocolEncodeDetMessage(char *message, const NegotiationData *data)
     //compiles the final output string into message using calculated XOR values
     sprintf(message, MESSAGE_TEMPLATE, temp, CheckSum(temp));
 
-    //returns length of string (its 28)
+    //returns length of string 
     return strlen(message);
 }
 
