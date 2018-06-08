@@ -193,15 +193,15 @@ int main()
             testSwitch++;
             break;
         default:
-            printf("\n%d out of 12 tests passed\n", (int)test);
-            test = (test/12.0) * 100.0;
-            printf("\n%.2f out of 100%% tests passed", (double)test);
-            while(1);
+            printf("\n%d out of 12 tests passed\n", (int) test);
+            test = (test / 12.0) * 100.0;
+            printf("\n%.2f out of 100%% tests passed", (double) test);
+            while (1);
             break;
         }
     }
-    
-    
+
+
     /******************************************************************************
      * Your code goes in between this comment and the preceeding one with asterisks
      *****************************************************************************/
