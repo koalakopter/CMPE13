@@ -265,7 +265,7 @@ int AgentRun(char in, char *outBuffer)
             //check if there was a hit
             agentEvent = AGENT_EVENT_NONE;
             //puts("yurr durr");
-            FieldUpdateKnowledge(&enemyField, &gData);
+            FieldUpdateKnowledge(&enemyField, &gData_opp);
             //check if you won (0 means no boats left)
             if (AgentGetEnemyStatus() == 0) {
                 FieldOledDrawScreen(&playerField, &enemyField, FIELD_OLED_TURN_NONE);
