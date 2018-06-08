@@ -157,6 +157,9 @@ int AgentRun(char in, char *outBuffer)
             break;
         } else if (AGENT_EVENT_NONE == agentEvent) {
             //puts("#########");
+            for (time = 0; time < BOARD_GetPBClock() / 256; time++) {
+                //artificial delay
+            }
             return 0;
         } else {
             printf("???????");
@@ -260,7 +263,7 @@ int AgentRun(char in, char *outBuffer)
         //first check to make sure hit message is recieved
         if (agentEvent == AGENT_EVENT_RECEIVED_HIT_MESSAGE) {
             //check if there was a hit
-            agentEvent = AGENT_EVENT_NONE;  
+            agentEvent = AGENT_EVENT_NONE;
             //puts("yurr durr");
             FieldUpdateKnowledge(&enemyField, &gData);
             //check if you won (0 means no boats left)
@@ -299,10 +302,10 @@ int AgentRun(char in, char *outBuffer)
         //first check to make sure hit message is received
         if (agentEvent == AGENT_EVENT_RECEIVED_COO_MESSAGE) {
             //update your screen with enemy guess
-            FieldRegisterEnemyAttack(&playerField, &gData_opp); 
+            FieldRegisterEnemyAttack(&playerField, &gData_opp);
             returnVal = ProtocolEncodeHitMessage(outBuffer, &gData_opp);
-            
-            
+
+
 
             //check if you won (0 means no boats left)
             if (AgentGetStatus() == 0) {
