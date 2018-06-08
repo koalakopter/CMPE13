@@ -51,7 +51,7 @@ int main()
     x = ProtocolEncodeCooMessage(testMessage, &gData);
     printf("Encoded string should have format: COO,%%u,%%u\n");
     printf("Encoded string: %sand Length of string: %d\n", testMessage, x);
-    if (x == 12) {
+    if (x == 11) {
         test++;
     }
 
@@ -60,7 +60,7 @@ int main()
     x = ProtocolEncodeHitMessage(testMessage, &gData);
     printf("Encoded string should have format: HIT,%%u,%%u,%%u\n");
     printf("Encoded string: %sand Length of string: %d\n", testMessage, x);
-    if (x == 14) {
+    if (x == 13) {
         test++;
     }
 
@@ -70,7 +70,7 @@ int main()
     x = ProtocolEncodeChaMessage(testMessage, &nData);
     printf("Encoded string should have format: CHA,%%u,%%u,\n");
     printf("Encoded string: %sand Length of string: %d\n", testMessage, x);
-    if (x == 18) {
+    if (x == 17) {
         test++;
     }
 
@@ -80,7 +80,7 @@ int main()
     x = ProtocolEncodeDetMessage(testMessage, &nData);
     printf("Encoded string should have format: DET,%%u,%%u,\n");
     printf("Encoded string: %sand Length of string: %d\n", testMessage, x);
-    if (x == 20) {
+    if (x == 19) {
         test++;
     }
 
