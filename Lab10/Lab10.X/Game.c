@@ -1,151 +1,66 @@
-/* ************************************************************************** */
-/** Descriptive File Name
+#include "Game.h"
+#include "UNIXBOARD.h"
+#include <stdio.h>
 
-  @Company
-    Company Name
+static struct {
+    char title[GAME_MAX_ROOM_TITLE_LENGTH + 1]; //includes the \0
+    char description[GAME_MAX_ROOM_DESC_LENGTH + 1];
+    uint8_t exits[3]; //4 exits 0 = N, 1 = E, 2 = S, 3 = W
+    uint8_t roomNum;
 
-  @File Name
-    filename.c
+    char fileName[20]; //for storing the name of the file?
+} theRoom; //oh hai Mark
 
-  @Summary
-    Brief description of the file.
+static FILE *file;
 
-  @Description
-    Describe the purpose of this file.
- */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* Section: Included Files                                                    */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-/* This section lists the other files that are included in this file.
- */
-
-/* TODO:  Include other files here if needed. */
-
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* Section: File Scope or Global Data                                         */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-/*  A brief description of a section can be given directly below the section
-    banner.
- */
-
-/* ************************************************************************** */
-/** Descriptive Data Item Name
-
-  @Summary
-    Brief one-line summary of the data item.
-    
-  @Description
-    Full description, explaining the purpose and usage of data item.
-    <p>
-    Additional description in consecutive paragraphs separated by HTML 
-    paragraph breaks, as necessary.
-    <p>
-    Type "JavaDoc" in the "How Do I?" IDE toolbar for more information on tags.
-    
-  @Remarks
-    Any additional remarks
- */
-int global_data;
-
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-// Section: Local Functions                                                   */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-/*  A brief description of a section can be given directly below the section
-    banner.
- */
-
-/* ************************************************************************** */
-
-/** 
-  @Function
-    int ExampleLocalFunctionName ( int param1, int param2 ) 
-
-  @Summary
-    Brief one-line description of the function.
-
-  @Description
-    Full description, explaining the purpose and usage of the function.
-    <p>
-    Additional description in consecutive paragraphs separated by HTML 
-    paragraph breaks, as necessary.
-    <p>
-    Type "JavaDoc" in the "How Do I?" IDE toolbar for more information on tags.
-
-  @Precondition
-    List and describe any required preconditions. If there are no preconditions,
-    enter "None."
-
-  @Parameters
-    @param param1 Describe the first parameter to the function.
-    
-    @param param2 Describe the second parameter to the function.
-
-  @Returns
-    List (if feasible) and describe the return values of the function.
-    <ul>
-      <li>1   Indicates an error occurred
-      <li>0   Indicates an error did not occur
-    </ul>
-
-  @Remarks
-    Describe any special behavior not described above.
-    <p>
-    Any additional remarks.
-
-  @Example
-    @code
-    if(ExampleFunctionName(1, 2) == 0)
-    {
-        return 3;
+int GameGoNorth(void)
+{
+    //if exit doesn't exist, return error
+    if (theRoom.exits[0] == 0) {
+        return STANDARD_ERROR;
     }
- */
-static int ExampleLocalFunction(int param1, int param2)
-{
-    return 0;
+    //get the filename
+    sprintf(theRoom.fileName, "RoomFiles/room%u.txt", theRoom.roomNum);
+    file = fopen(theRoom.fileName, "r"); //opens a file for reading
+    //checks if the file is valid
+    if (file == NULL) {
+        //FATAL_ERROR();
+    }
+    //GET TITLE OF ROOM
+    
 }
 
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-// Section: Interface Functions                                               */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-/*  A brief description of a section can be given directly below the section
-    banner.
- */
-
-// *****************************************************************************
-
-/** 
-  @Function
-    int ExampleInterfaceFunctionName ( int param1, int param2 ) 
-
-  @Summary
-    Brief one-line description of the function.
-
-  @Remarks
-    Refer to the example_file.h interface header for function usage details.
- */
-int ExampleInterfaceFunction(int param1, int param2)
+int GameGoEast(void)
 {
-    return 0;
+    
 }
 
+int GameGoSouth(void)
+{
+    
+}
 
-/* *****************************************************************************
- End of File
- */
+int GameGoWest(void)
+{
+    
+}
+
+int GameInit(void)
+{
+    theRoom.roomNum = STARTING_ROOM;
+}
+
+int GameGetCurrentRoomTitle(char *title)
+{
+    
+}
+
+int GameGetCurrentRoomDescription(char *desc)
+{
+    
+}
+
+uint8_t GameGetCurrentRoomExits(void)
+{
+    
+}
