@@ -5,18 +5,23 @@
 static struct {
     char title[GAME_MAX_ROOM_TITLE_LENGTH + 1]; //includes the \0
     char description[GAME_MAX_ROOM_DESC_LENGTH + 1];
-    uint8_t exits[3]; //4 exits 0 = N, 1 = E, 2 = S, 3 = W
+    uint8_t exits; //exits
     uint8_t roomNum;
 
     char fileName[20]; //for storing the name of the file?
+    
+    int titleLen;
+    int descLen;
+    int encryptKey;
 } theRoom; //oh hai Mark
 
 static FILE *file;
+static int loop; // for loops ofc
 
 int GameGoNorth(void)
 {
     //if exit doesn't exist, return error
-    if (theRoom.exits[0] == 0) {
+    if (theRoom.exits & GAME_ROOM_EXIT_NORTH_EXISTS) {
         return STANDARD_ERROR;
     }
     //get the filename
@@ -26,7 +31,13 @@ int GameGoNorth(void)
     if (file == NULL) {
         //FATAL_ERROR();
     }
-    //GET TITLE OF ROOM
+    //decrypt the file
+    fseek(file, 0, SEEK_SET); //go to beginning of file
+    theRoom.encryptKey =  theRoom.roomNum + DECRYPTION_BASE_KEY;
+    while(getc(file) != NULL)
+    {
+        
+    }
     
 }
 
@@ -52,7 +63,18 @@ int GameInit(void)
 
 int GameGetCurrentRoomTitle(char *title)
 {
-    
+    if (file == NULL)
+    {
+        return STANDARD_ERROR;
+    }
+    theRoom.titleLen = getc(file);
+    for(loop = 0; loop < theRoom.titleLen; loop++)
+    {
+        //get characters one at a time
+        theRoom.title[loop] = getc(file);
+    }
+    theRoom.title[loop] = '\0'; //finish it off with a null
+    return theRoom.titleLen;
 }
 
 int GameGetCurrentRoomDescription(char *desc)
