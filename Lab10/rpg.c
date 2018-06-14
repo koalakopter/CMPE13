@@ -10,7 +10,8 @@
 
 
 // User libraries
-
+#include "Player.h"
+#include "Game.h"
 
 // **** Set any macros or preprocessor directives here ****
 
@@ -23,12 +24,9 @@
 int main()
 {
 
-
-
     /******************************** Your custom code goes below here ********************************/
-
-
-
+    //printf("hiii");
+    GameInit();
     /**************************************************************************************************/
 }
 
