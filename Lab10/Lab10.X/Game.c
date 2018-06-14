@@ -78,26 +78,13 @@ int GameGoWest(void)
 int GameInit(void)
 {
     theRoom.roomNum = STARTING_ROOM;
-    GameGetCurrentRoomTitle(tit);
-    GameGetCurrentRoomDescription(des);
-    printf("ROOM: %s, DESCRIPTION: %s, EXITS %d", tit, des, theRoom.exits);
+    //checks if you got the room title and room description correctly
+    if (GameGetCurrentRoomTitle(tit) && GameGetCurrentRoomDescription(des)) {
+        printf("ROOM: %s, DESCRIPTION: %s, EXITS %d", tit, des, theRoom.exits);
+        return SUCCESS;
+    }
 
-    return SUCCESS;
-    //    sprintf(theRoom.fileName, "RoomFiles/room%d.txt", theRoom.roomNum);
-    //    file = fopen(theRoom.fileName, "rb"); //opens a file for reading
-    //    if (file == NULL) {
-    //        return STANDARD_ERROR;
-    //    }
-    //    fseek(file, 0, SEEK_SET); //go to beginning of file
-    //    theRoom.encryptKey = theRoom.roomNum + DECRYPTION_BASE_KEY;
-    //    loop = 0;
-    //    while (getc(file) != NULL) {
-    //        theRoom.fileContents[loop] = getc(file);
-    //        printf("%c", theRoom.fileContents);
-    //        loop++;
-    //    }
-    //    printf("%s", theRoom.fileContents);
-    //    return 1;
+    return STANDARD_ERROR;
 }
 
 static char temp;
