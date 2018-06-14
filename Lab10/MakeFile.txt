@@ -1,0 +1,13 @@
+HEADERS = Game.h Player.h
+
+default: rpg
+
+rpg.o: rpg.c $(HEADERS)
+	gcc -c rpg.c -o rpg.o
+
+program: rpg.o
+	gcc rpg.o -o rpg
+
+clean:
+	-rm -f rpg.o
+	-rm -f rpg
