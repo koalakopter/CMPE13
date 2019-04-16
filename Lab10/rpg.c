@@ -29,11 +29,13 @@ int main()
     //printf("hiii");
     printf("\033[2J\n"); //clear the screen
     if (GameInit() == STANDARD_ERROR) {
+        printf("ERROR");
         //FATAL_ERROR();
         //idk but this causes the code to not compile
+        STANDARD_ERROR;
     }
     while (1) {
-        printf("Please select a direction to go! n-North s-South e-East w-West, or q-Quit");
+        printf("\nPlease select a direction to go! n-North s-South e-East w-West, or q-Quit\n");
         input = getchar();
         if (input != EOF) //checks for a single char
         {
